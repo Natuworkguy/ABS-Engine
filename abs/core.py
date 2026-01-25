@@ -1,28 +1,30 @@
+from typing import Optional
 import pygame
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
 
 class Entity:
-    def __init__(self, x, y, width, height, color=(255, 255, 255), scriptfile=None):
+    def __init__(self, x: float, y: float, width: float, height: float, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.rect = pygame.Rect(x, y, width, height)
         self.color = color
         self.scriptfile = scriptfile
-        try:
-            spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
+        if scriptfile is not None:
+            try:
+                spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
 
-            if spec:
-                self.scriptfile_module = importlib.util.module_from_spec(spec)
-                sys.modules["scriptfile_module"] = self.scriptfile_module
-
-                if spec.loader:
-                    spec.loader.exec_module(self.scriptfile_module)
-        except ModuleNotFoundError:
-            messagebox.showerror("Error", f"Script file '{scriptfile}' not found.")
-            pygame.quit()
+                if spec:
+                    self.scriptfile_module = importlib.util.module_from_spec(spec)
+                    sys.modules["scriptfile_module"] = self.scriptfile_module
+    
+                    if spec.loader:
+                        spec.loader.exec_module(self.scriptfile_module)
+            except ModuleNotFoundError:
+                messagebox.showerror("Error", f"Script file '{scriptfile}' not found.")
+                pygame.quit()
 
     def update(self, dt):
-        if self.scriptfile_module and hasattr(self.scriptfile_module, 'update'):
+        if self.scriptfile is not None and hasattr(self.scriptfile_module, 'update'):
             self.scriptfile_module.update(self, dt)
 
     def draw(self, surface):
