@@ -121,7 +121,7 @@ class Engine:
 
         self.exit_button = ttk.Button(self.abs_section, text='Exit', command=self.quit, width=25)
         self.exit_button.pack(padx=5, pady=5)
-    
+
     def delete_entity(self) -> None:
         try:
             selected_item = self.entity_list.get(self.entity_list.curselection()[0])

@@ -68,9 +68,9 @@ class Scene:
 
 
 class Game:
-    def __init__(self, title="ABS Game"):
+    def __init__(self, title="ABS Game", width=800, height=600):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption(title=title)
         self.clock = pygame.time.Clock()
         self.running = False

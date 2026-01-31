@@ -19,7 +19,7 @@ def save_project(engine: Any) -> None:
         with open(file.name, "w") as f:
             dump({
                 "name": engine.project_name,
-                "entities": engine.entities
+                "entities": engine.entities,
             }, f)
             f.close()
         messagebox.showinfo("Success", "Project saved successfully.")
