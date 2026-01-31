@@ -6,7 +6,7 @@ import sys
 
 
 class Entity:
-    def __init__(self, x: float, y: float, width: float, height: float, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
+    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.x = x
         self.y = y
         self.width = width
@@ -31,7 +31,7 @@ class Entity:
             if hasattr(self.scriptfile_module, 'init'):
                 self.scriptfile_module.init(self)
 
-    def update_entity(self):
+    def update_rect(self):
         self.rect.x = self.x
         self.rect.y = self.y
         self.rect.width = self.width

@@ -251,6 +251,9 @@ class Engine:
             self.core_game.scene.add(entity)
 
         def run_core_game():
+            if self.core_game is None:
+                return
+
             self.core_game.run()
 
         game_thread = threading.Thread(target=run_core_game, daemon=True)
