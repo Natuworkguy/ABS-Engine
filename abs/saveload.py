@@ -6,6 +6,7 @@ from tkinter import filedialog as filedialog
 from json import dump, load
 from typing import Optional, Any
 
+
 def save_project(engine: Any) -> None:
     file = filedialog.asksaveasfile(
         defaultextension=".abs",
@@ -22,6 +23,7 @@ def save_project(engine: Any) -> None:
             }, f)
             f.close()
         messagebox.showinfo("Success", "Project saved successfully.")
+
 
 def load_project() -> Optional[dict]:
     file = filedialog.askopenfile(

@@ -1,14 +1,20 @@
-from typing import Optional
+from typing import Optional, Any
 import pygame
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
 
+
 class Entity:
     def __init__(self, x: float, y: float, width: float, height: float, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
-        self.rect = pygame.Rect(x, y, width, height)
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
         self.color = color
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.scriptfile = scriptfile
+
         if scriptfile is not None:
             try:
                 spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
@@ -25,6 +31,12 @@ class Entity:
             if hasattr(self.scriptfile_module, 'init'):
                 self.scriptfile_module.init(self)
 
+    def update_entity(self):
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.rect.width = self.width
+        self.rect.height = self.height
+
     def update(self, dt):
         if self.scriptfile is not None and hasattr(self.scriptfile_module, 'update'):
             self.scriptfile_module.update(self, dt)
@@ -32,23 +44,31 @@ class Entity:
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
+
 class Scene:
     def __init__(self):
         self.objects = []
+        self.no_entities = True
 
     def add(self, obj):
         self.objects.append(obj)
 
+        if self.no_entities:
+            self.no_entities = False
+
     def update(self, dt):
-        for obj in self.objects:
-            obj.update(dt)
+        if not self.no_entities:
+            for obj in self.objects:
+                obj.update(dt)
 
     def draw(self, surface):
-        for obj in self.objects:
-            obj.draw(surface)
+        if not self.no_entities:
+            for obj in self.objects:
+                obj.draw(surface)
+
 
 class Game:
-    def __init__(self, width=800, height=600, title="2D Game Engine"):
+    def __init__(self, title="ABS Game"):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption(title=title)

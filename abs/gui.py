@@ -12,6 +12,7 @@ from .saveload import save_project, load_project as sl_load_project
 from .core import Game as CoreGame, Entity, Scene
 import threading
 
+
 class Engine:
     root: tk.Tk
     abs_section: tk.LabelFrame
@@ -20,6 +21,9 @@ class Engine:
     entity_data: Optional[tk.Text]
 
     def __init__(self) -> None:
+        self.core_game = None
+        self.entity_data_save_button = None
+        self.entity_data_close_button = None
         self.view_popup = None
         self.entity_data = None
 
@@ -30,7 +34,7 @@ class Engine:
         self.root.title("ABS Engine")
         self.root.geometry("450x600")
         self.root.iconphoto(True, tk.PhotoImage(file="assets/icon.png"))
-        self.root.resizable(True, True)
+        self.root.resizable(False, False)
 
         self.project_section = tk.LabelFrame(self.root, width=200, height=100, text="Project")
         self.project_section.pack(fill="both", padx=5, pady=5)
@@ -228,7 +232,6 @@ class Engine:
 
         messagebox.showinfo("Success", "Project loaded successfully.")
 
-
     def save_name(self, name: str) -> None:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
@@ -246,12 +249,12 @@ class Engine:
                 scriptfile=entity_data.get("scriptfile", None)
             )
             self.core_game.scene.add(entity)
-        self.game_loop()
 
-    def game_loop(self) -> None:
         def run_core_game():
-            self.core_game.run()  # Assumes CoreGame has its own loop and window
-        threading.Thread(target=run_core_game, daemon=True).start()
+            self.core_game.run()
+
+        game_thread = threading.Thread(target=run_core_game, daemon=True)
+        game_thread.run()
 
     def run(self) -> None:
         self.root.mainloop()
