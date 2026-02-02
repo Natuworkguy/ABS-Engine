@@ -33,7 +33,15 @@ class Engine:
         self.root = tk.Tk()
         self.root.title("ABS Engine")
         self.root.geometry("450x600")
-        self.root.iconphoto(True, tk.PhotoImage(file=resource_path("assets/icon.png")))
+
+        if not '-noicon' in sys.argv:
+            try:
+                self.root.iconphoto(True, tk.PhotoImage(file=resource_path("assets/icon.png")))
+            except tk.TclError:
+                print("Warning: Could not load icon image.")
+                print("Try running with the -noicon flag if this persists.")
+                raise
+
         self.root.resizable(False, False)
 
         self.project_section = tk.LabelFrame(self.root, width=200, height=100, text="Project")
