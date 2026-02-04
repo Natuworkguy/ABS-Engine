@@ -17,7 +17,7 @@ def resource_path(relative):
 def save_project(engine: Any) -> None:
     file = filedialog.asksaveasfile(
         defaultextension=".abs",
-        filetypes=[("ABS Project Files", "*.absproj"), ("JSON Files", "*.json")],
+        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
         initialfile=f"{engine.project_name.replace(' ', '_')}.absproj"
     )
@@ -35,7 +35,7 @@ def save_project(engine: Any) -> None:
 def load_project() -> Optional[dict]:
     file = filedialog.askopenfile(
         defaultextension=".abs",
-        filetypes=[("ABS Project Files", "*.absproj"), ("JSON Files", "*.json")],
+        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Load ABS Project"
     )
 
