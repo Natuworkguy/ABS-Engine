@@ -251,6 +251,8 @@ class Engine:
             entity = Entity(
                 x=entity_data.get("x", 0),
                 y=entity_data.get("y", 0),
+                width=entity_data.get("width", 50),
+                height=entity_data.get("height", 50),
                 color=tuple(entity_data.get("color", (255, 255, 255))),
                 scriptfile=entity_data.get("scriptfile", None)
             )
