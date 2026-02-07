@@ -19,7 +19,7 @@ def save_project(engine: Any) -> None:
         defaultextension=".abs",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
-        initialfile=f"{engine.project_name.replace(' ', '_')}.absp"
+        initialfile=f"{engine.project_name.replace(' ', '_').lower()}.absp"
     )
 
     if file:
