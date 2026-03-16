@@ -73,10 +73,12 @@ class Entity:
 
 
 class Scene:
-    def __init__(self):
-        self.objects = []
-        self.scenedata = {} # For communication between entities
+    def __init__(self, *, IS_EDITOR: bool = False):
+        # For use by entities
+        self.IS_EDITOR = IS_EDITOR
+        self.scenedata = {}
 
+        self.objects = []
         self.no_entities = True
 
         logger(LOGSOURCE, "Initialized scene")
@@ -104,13 +106,13 @@ class Scene:
 
 
 class Game:
-    def __init__(self, title="Game", /, width=800, height=600):
+    def __init__(self, title="Game", /, width=800, height=600, *, IS_EDITOR = False):
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption(title=title)
         self.clock = pygame.time.Clock()
         self.running = False
-        self.scene = Scene()
+        self.scene = Scene(IS_EDITOR=False)
 
         logger(LOGSOURCE, "Initialized game")
 

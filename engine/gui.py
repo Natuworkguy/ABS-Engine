@@ -352,7 +352,7 @@ class Engine:
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
     def run_game(self) -> None:
-        self.core_game = CoreGame(self.project_name, width=self.game_dimensions[0], height=self.game_dimensions[1])
+        self.core_game = CoreGame(self.project_name, width=self.game_dimensions[0], height=self.game_dimensions[1], IS_EDITOR=True)
 
         for entity_name, entity_data in self.entities.items():
             entity = Entity(
