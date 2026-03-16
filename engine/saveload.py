@@ -8,31 +8,35 @@ from typing import Optional, Any
 import sys
 import os
 
-def resource_path(relative):
+def resource_path(relative: str) -> str:
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative) # pyright: ignore[reportAttributeAccessIssue]
     return os.path.join(os.path.abspath("."), relative)
 
 
-def save_project(engine: Any) -> None:
+def save_project(engine: Any) -> Optional[Any]:
     file = filedialog.asksaveasfile(
         defaultextension=".abs",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
-        initialfile=f"{engine.project_name.replace(' ', '_').lower()}.absp"
+        initialfile=f"game.absp"
     )
 
     if file:
         with open(file.name, "w") as f:
             dump({
                 "name": engine.project_name,
+                "game": {
+                    "dimensions": engine.game_dimensions
+                },
                 "entities": engine.entities,
             }, f)
             f.close()
         messagebox.showinfo("Success", "Project saved successfully.")
 
+        return file
 
-def load_project() -> Optional[dict]:
+def load_project() -> Optional[list]:
     file = filedialog.askopenfile(
         defaultextension=".abs",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
@@ -43,4 +47,5 @@ def load_project() -> Optional[dict]:
         with open(file.name, "r") as f:
             data: dict = load(f)
             f.close()
-        return data
+
+        return [data, file]

@@ -1,12 +1,19 @@
-from typing import Optional, Any
-import pygame
+# Copyright (C) Above and Below Studios
+# See the LICENSE file for GPLv3
+
+from typing import Optional, Any, Final
+import pygame # pyright: ignore[reportMissingImports]
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
 
+from .logger import logger
+
+LOGSOURCE: Final[str] = "ENGINE.CORE"
 
 class Entity:
-    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
+    def __init__(self, parent: "Game", x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
+        self.parent = parent
         self.x = x
         self.y = y
         self.width = width
@@ -14,6 +21,10 @@ class Entity:
         self.color = color
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.scriptfile = scriptfile
+        self.parent = None
+
+        self.scriptfile_update_exists = False
+        self.scriptfile_event_exists = False
 
         if scriptfile is not None:
             try:
@@ -28,8 +39,17 @@ class Entity:
             except ModuleNotFoundError:
                 messagebox.showerror("Error", f"Script file '{scriptfile}' not found.")
                 pygame.quit()
-            if hasattr(self.scriptfile_module, 'init'):
-                self.scriptfile_module.init(self)
+
+            if self.scriptfile is not None:
+                if hasattr(self.scriptfile_module, 'init'):
+                    self.scriptfile_module.init(self)
+
+                if hasattr(self.scriptfile_module, 'update'):
+                    self.scriptfile_update_exists = True
+
+                if hasattr(self.scriptfile_module, 'event'):
+                    self.scriptfile_event_exists = True
+
 
     def update_rect(self):
         self.rect.x = self.x
@@ -38,20 +58,32 @@ class Entity:
         self.rect.height = self.height
 
     def update(self, dt):
-        if self.scriptfile is not None and hasattr(self.scriptfile_module, 'update'):
+        if self.scriptfile_update_exists:
             self.scriptfile_module.update(self, dt)
+
+    def event(self, event):
+        if self.scriptfile_event_exists:
+            self.scriptfile_module.event(self, event)
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
+
+    def setparent(self, parent):
+        self.parent = parent
 
 
 class Scene:
     def __init__(self):
         self.objects = []
+        self.scenedata = {} # For communication between entities
+
         self.no_entities = True
 
-    def add(self, obj):
+        logger(LOGSOURCE, "Initialized scene")
+
+    def add(self, obj: Entity):
         self.objects.append(obj)
+        obj.setparent(self)
 
         if self.no_entities:
             self.no_entities = False
@@ -61,6 +93,10 @@ class Scene:
             for obj in self.objects:
                 obj.update(dt)
 
+    def event(self, event):
+        for obj in self.objects:
+            obj.event(event)
+
     def draw(self, surface):
         if not self.no_entities:
             for obj in self.objects:
@@ -68,7 +104,7 @@ class Scene:
 
 
 class Game:
-    def __init__(self, title="ABS Game", width=800, height=600):
+    def __init__(self, title="Game", /, width=800, height=600):
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption(title=title)
@@ -76,13 +112,18 @@ class Game:
         self.running = False
         self.scene = Scene()
 
+        logger(LOGSOURCE, "Initialized game")
+
     def run(self, fps=60):
+        logger(LOGSOURCE, "Starting game loop")
+
         self.running = True
         while self.running:
             dt = self.clock.tick(fps) / 1000.0
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                self.scene.event(event)
 
             self.scene.update(dt)
             self.screen.fill((0, 0, 0))
