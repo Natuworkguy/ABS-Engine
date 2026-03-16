@@ -59,7 +59,7 @@ class Engine:
             except TclError as e:
                 logger(LOGSOURCE, "Could not load icon image.", status=LoggerStatus.CRITICAL)
                 logger(LOGSOURCE, "Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
-                logger(LOGSOURCE, "Error: {e}", status=LoggerStatus.CRITICAL)
+                logger(LOGSOURCE, f"Error: {e}", status=LoggerStatus.CRITICAL)
                 sys.exit(1)
 
         self.root.resizable(False, False)

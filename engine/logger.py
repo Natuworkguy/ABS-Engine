@@ -3,6 +3,7 @@
 
 from enum import Enum
 from typing import Literal
+from colorama import Fore, Style
 
 class Status:
     CRITICAL = "Critical"
@@ -10,4 +11,10 @@ class Status:
     INFO = "Info"
 
 def logger(source: str, message: str, *, status: Literal["Critical", "Warning", "Info"] = Status.INFO) -> None:
+    if status == Status.CRITICAL:
+        print(Fore.RED)
+    elif status == Status.WARNING:
+        print(Fore.YELLOW)
+
     print(f"({status}) {source}: {message}")
+    print(Style.RESET_ALL)
