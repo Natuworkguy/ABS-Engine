@@ -6,6 +6,8 @@ import pygame
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
+import uuid
+
 from .logger import logger
 
 LOGSOURCE: Final[str] = "ENGINE.CORE"
@@ -20,6 +22,7 @@ class Entity():
         self.color = color
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.scriptfile = scriptfile
+        self.id = str(uuid.uuid4())
         self.parent = None
 
         self.scriptfile_update_exists = False
@@ -31,7 +34,7 @@ class Entity():
 
                 if spec:
                     self.scriptfile_module = importlib.util.module_from_spec(spec)
-                    sys.modules["scriptfile_module"] = self.scriptfile_module
+                    sys.modules[self.id] = self.scriptfile_module
     
                     if spec.loader:
                         spec.loader.exec_module(self.scriptfile_module)
