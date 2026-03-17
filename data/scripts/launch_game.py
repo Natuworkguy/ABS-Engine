@@ -4,7 +4,7 @@ except ModuleNotFoundError:
     print("Info:\nCould not import engine.core.\nMake sure that the engine directory is in the same folder as this script.\nRe-raising error.")
     raise
 
-import os
+import os.path
 import sys
 
 from json import load
@@ -20,8 +20,6 @@ def resource_path(relative: str) -> str:
 def game_path(relative: str) -> str:
     directory = Path(__file__).parent
     return resource_path(os.path.join(str(directory), relative))
-
-print(game_path("ee"), game_path("EE/aa/ea"))
 
 if not os.path.exists(PROJECT_FILE):
     print("Error:\ngame.absp project file does not exist in this directory.")
