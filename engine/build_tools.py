@@ -5,8 +5,6 @@ import os
 
 from pathlib import Path
 import shutil
-from tkinter import E
-
 from .saveload import resource_path
 
 engine_path = Path(__file__).parent
