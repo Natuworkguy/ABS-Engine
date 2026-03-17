@@ -14,13 +14,12 @@ To package the game into a single execuatable file,
 use a tool like Pyinstaller. The command should look like this:
 
 ```bash
-pyinstaller --onefile --add-file "data:data MyGame/run.py
+pyinstaller --onefile --add-data 'scripts:scripts' --add-data 'game.absp:.' run.py
 ```
 
-Or, for windows users:
-```powershell
-pyinstaller --onefile --add-file "data;data" MyGame/run.py
-```
+Pyinstaller adds `engine/` without any additional flags because
+it is directly imported.
+Use `--icon <file>` to add an icon.
 
 >[!IMPORTANT]
 > Make sure your project file is named exactly "game.absp".
