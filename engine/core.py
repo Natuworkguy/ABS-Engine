@@ -6,12 +6,12 @@ import pygame # pyright: ignore[reportMissingImports]
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
-
+from abc import ABC, abstractmethod
 from .logger import logger
 
 LOGSOURCE: Final[str] = "ENGINE.CORE"
 
-class Entity:
+class Entity(ABC):
     def __init__(self, parent: "Game", x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.parent = parent
         self.x = x
@@ -57,14 +57,17 @@ class Entity:
         self.rect.width = self.width
         self.rect.height = self.height
 
+    @abstractmethod
     def update(self, dt):
         if self.scriptfile_update_exists:
             self.scriptfile_module.update(self, dt)
 
+    @abstractmethod
     def event(self, event):
         if self.scriptfile_event_exists:
             self.scriptfile_module.event(self, event)
 
+    @abstractmethod
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
