@@ -26,8 +26,11 @@ from ast import literal_eval
 GP_BASE_PATH: str = str(Path(__file__).parent)
 LOGSOURCE: Final[str] = "ENGINE.GUI"
 
-def game_path(relative: str) -> str:
+def game_path(relative: Optional[str]) -> Optional[str]:
     global GP_BASE_PATH
+
+    if relative is None:
+        return
 
     return os.path.join(str(GP_BASE_PATH), relative)
 
