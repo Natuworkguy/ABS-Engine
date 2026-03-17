@@ -65,7 +65,7 @@ The entity parameter is the entity class itself.
 In this code, we add one to th entity's `x` value ("entity.x += 1"),
 then tell it to visually update it's position ("entity.update_rect()").
 
-The Entity class has the following values:
+The engine.core.Entity class has the following values:
 `parent`      - Parent game                - engine.core.Scene
 `x`           - X position.                - float
 `y`           - Y position.                - float
