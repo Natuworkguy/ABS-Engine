@@ -49,7 +49,6 @@ class Entity():
                 if hasattr(self.scriptfile_module, 'event'):
                     self.scriptfile_event_exists = True
 
-
     def update_rect(self):
         self.rect.x = self.x
         self.rect.y = self.y
