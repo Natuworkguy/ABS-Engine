@@ -2,7 +2,7 @@
 # See the LICENSE file for GPLv3
 
 from typing import Optional, Any, Final
-import pygame # pyright: ignore[reportMissingImports]
+import pygame
 import importlib.util
 import tkinter.messagebox as messagebox
 import sys
