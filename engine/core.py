@@ -8,7 +8,7 @@ import tkinter.messagebox as messagebox
 import sys
 import uuid
 
-from .logger import logger
+from .logger import logger, Status as LoggerStatus
 
 LOGSOURCE: Final[str] = "ENGINE.CORE"
 
@@ -21,36 +21,35 @@ class Entity():
         self.height = height
         self.color = color
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.scriptfile = scriptfile
         self.id = str(uuid.uuid4())
         self.parent = None
-
+        self.scriptfile = scriptfile
+        self.scriptfile_module = None
         self.scriptfile_update_exists = False
         self.scriptfile_event_exists = False
 
         if scriptfile is not None:
-            try:
-                spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
+            spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
 
-                if spec:
-                    self.scriptfile_module = importlib.util.module_from_spec(spec)
-                    sys.modules[self.id] = self.scriptfile_module
+            if spec:
+                self.scriptfile_module = importlib.util.module_from_spec(spec)
+                sys.modules[self.id] = self.scriptfile_module
+
+                if spec.loader:
+                    spec.loader.exec_module(self.scriptfile_module)
+
+            if self.scriptfile_module is not None:
+                if self.scriptfile is not None:
+                    if hasattr(self.scriptfile_module, 'init'):
+                        self.scriptfile_module.init(self)
     
-                    if spec.loader:
-                        spec.loader.exec_module(self.scriptfile_module)
-            except ModuleNotFoundError:
-                messagebox.showerror("Error", f"Script file '{scriptfile}' not found.")
-                pygame.quit()
-
-            if self.scriptfile is not None:
-                if hasattr(self.scriptfile_module, 'init'):
-                    self.scriptfile_module.init(self)
-
-                if hasattr(self.scriptfile_module, 'update'):
-                    self.scriptfile_update_exists = True
-
-                if hasattr(self.scriptfile_module, 'event'):
-                    self.scriptfile_event_exists = True
+                    if hasattr(self.scriptfile_module, 'update'):
+                        self.scriptfile_update_exists = True
+    
+                    if hasattr(self.scriptfile_module, 'event'):
+                        self.scriptfile_event_exists = True
+            else:
+                logger(LOGSOURCE, f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
 
     def update_rect(self):
         self.rect.x = self.x
@@ -59,12 +58,14 @@ class Entity():
         self.rect.height = self.height
 
     def update(self, dt):
-        if self.scriptfile_update_exists:
-            self.scriptfile_module.update(self, dt)
+        if self.scriptfile_module is not None:
+            if self.scriptfile_update_exists:
+                self.scriptfile_module.update(self, dt)
 
     def event(self, event):
-        if self.scriptfile_event_exists:
-            self.scriptfile_module.event(self, event)
+        if self.scriptfile_module is not None:
+            if self.scriptfile_event_exists:
+                self.scriptfile_module.event(self, event)
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
