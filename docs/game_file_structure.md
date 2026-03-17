@@ -5,7 +5,7 @@ This is the needed file structure for games made with ABS Engine. It is necessar
 ```
 MyGame
   |
-  |--------- data/              Folder that stores game assets.
+  |--------- data/                Folder that stores game assets.
   |              |
   |-- scripts/   |------          Folder that stores scripts.
   |      |             |
