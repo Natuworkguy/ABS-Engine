@@ -7,6 +7,7 @@ except ModuleNotFoundError:
 import os.path
 import sys
 
+from typing import Optional
 from json import load
 from pathlib import Path
 
@@ -18,11 +19,15 @@ def resource_path(relative: str) -> str:
     return os.path.join(os.path.abspath("."), relative)
 
 def game_path(relative: str) -> str:
+    if relative is None:
+        return ''
+
     directory = Path(__file__).parent
     return resource_path(os.path.join(str(directory), relative))
 
-if not os.path.exists(PROJECT_FILE):
+if not os.path.exists(game_path(PROJECT_FILE)):
     print("Error:\ngame.absp project file does not exist in this directory.")
+    sys.exit(1)
 
 with open(game_path(PROJECT_FILE), "r") as f:
     data: dict = load(f)
@@ -33,6 +38,10 @@ game_dimensions = data["game"]["dimensions"]
 core_game = CoreGame(data["name"], width=game_dimensions[0], height=game_dimensions[1])
 
 for entity_name, entity_data in data["entities"].items():
+    scriptfile = game_path(entity_data.get("scriptfile", None))
+    if scriptfile == '':
+        scriptfile = None
+
     entity = Entity(
         parent=core_game,
         x=entity_data.get("x", 0),
@@ -40,7 +49,7 @@ for entity_name, entity_data in data["entities"].items():
         width=entity_data.get("width", 50),
         height=entity_data.get("height", 50),
         color=tuple(entity_data.get("color", (255, 255, 255))),
-        scriptfile=game_path(entity_data.get("scriptfile", None))
+        scriptfile=scriptfile
     )
     core_game.scene.add(entity)
 
