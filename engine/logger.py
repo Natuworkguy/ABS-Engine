@@ -5,12 +5,12 @@ from enum import Enum
 from typing import Literal
 from colorama import Fore, Style
 
-class Status:
+class Status(Enum):
     CRITICAL = "Critical"
     WARNING = "Warning"
     INFO = "Info"
 
-def logger(source: str, message: str, *, status: Literal["Critical", "Warning", "Info"] = Status.INFO) -> None:
+def logger(source: str, message: str, *, status: Status = Status.INFO) -> None:
     if status == Status.CRITICAL:
         print(Fore.RED)
     elif status == Status.WARNING:
