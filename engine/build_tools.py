@@ -9,7 +9,7 @@ from .saveload import resource_path
 
 engine_path = Path(__file__).parent
 
-def build(dir: Path):
+def build(dir: Path, ENGINE_DATA_PATH):
     global engine_path
 
     launch_game_script = None
@@ -23,3 +23,4 @@ def build(dir: Path):
         f.close()
 
     shutil.copytree(engine_path, os.path.join(dir, "engine"), dirs_exist_ok=True)
+    shutil.copytree(ENGINE_DATA_PATH, os.path.join(dir, "data"), dirs_exist_ok=True)

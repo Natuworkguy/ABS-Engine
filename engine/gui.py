@@ -25,6 +25,7 @@ from ast import literal_eval
 
 GP_BASE_PATH: str = str(Path(__file__).parent)
 LOGSOURCE: Final[str] = "ENGINE.GUI"
+ENGINE_DATA_PATH = resource_path("data")
 
 def game_path(relative: Optional[str]) -> Optional[str]:
     global GP_BASE_PATH
@@ -58,7 +59,7 @@ class Engine:
 
         if not '-noicon' in sys.argv:
             try:
-                self.root.iconphoto(True, tk.PhotoImage(file=resource_path("data/images/icon.png")))
+                self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "icon.png")))
             except TclError as e:
                 logger(LOGSOURCE, "Could not load icon image.", status=LoggerStatus.CRITICAL)
                 logger(LOGSOURCE, "Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
@@ -167,7 +168,7 @@ class Engine:
 
         logger(LOGSOURCE, "Build Tools: Starting build")
 
-        build(Path(GP_BASE_PATH))
+        build(Path(GP_BASE_PATH), ENGINE_DATA_PATH=ENGINE_DATA_PATH)
 
         logger(LOGSOURCE, "Build Tools: Waiting for root")
         self.root.after(3000, lambda: None)
