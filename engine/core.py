@@ -74,11 +74,12 @@ class Entity():
 
 
 class Scene:
-    def __init__(self, *, IS_EDITOR: bool = False):
+    def __init__(self, *, parent: "Game", IS_EDITOR: bool = False):
         # For use by entities
         self.IS_EDITOR = IS_EDITOR
         self.scenedata = {}
 
+        self.parent = parent
         self.objects = []
         self.no_entities = True
 
@@ -110,10 +111,11 @@ class Game:
     def __init__(self, title="Game", /, width=800, height=600, *, IS_EDITOR = False):
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
+        self.wsize = (width, height)
         pygame.display.set_caption(title=title)
         self.clock = pygame.time.Clock()
         self.running = False
-        self.scene = Scene(IS_EDITOR=IS_EDITOR)
+        self.scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
 
         logger(LOGSOURCE, "Initialized game")
 
