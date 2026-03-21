@@ -22,6 +22,7 @@ it is directly imported.
 Use `--icon <file>` to add an icon.
 
 Here is the command template I find most useful:
+
 ```bash
 pyinstaller --onefile --name MyGame --add-data "game.absp:." --add-data "scripts:scripts" --add-data "data:data" run.py
 ```

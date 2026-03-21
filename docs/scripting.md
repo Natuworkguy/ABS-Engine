@@ -17,12 +17,13 @@ Make a new entity (use "Player" as the name).
 Once the entity has been created, click it on the list.
 Click "Edit Data".
 Type:
+
 ```json
 {"scriptfile": 'scripts/player.py'}
 ```
 
 >[!Tip]
-> Make sure to name your script after the 
+> Make sure to name your script after the
 > entity it is attached to. This ensures
 > that you can identify it easily.
 
@@ -30,6 +31,7 @@ Click "Save", then "Save Project".
 Make sure game.py is saved in your project folder.
 
 In `scripts/player.py`, add the following.
+
 ```python
 def init(entity):
     pass
@@ -48,12 +50,13 @@ def update(entity, dt):
 > the player entity (The entity that the
 > player controls). This is called a main
 > script. If your game does not have a player
-> entity, place a new entity off screen that 
+> entity, place a new entity off screen that
 > has the main script attached to it.
 
 Let's unpack what this does.
 In a scriptfile, 2 functions are expected:
-```
+
+```python
 init(entity: Entity) -> None
 update(entity: Entity, dt: float)
 ```

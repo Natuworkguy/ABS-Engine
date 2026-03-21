@@ -2,7 +2,7 @@
 
 This is the needed file structure for games made with ABS Engine. It is necessary because the engine assumes that all game resources are in the same directory as the project file.
 
-```
+```text
 MyGame
   |
   |--------- data/                Folder that stores game assets.
