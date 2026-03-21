@@ -59,7 +59,7 @@ class Engine:
 
         if not '-noicon' in sys.argv:
             try:
-                self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "icon.png")))
+                self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")))
             except TclError as e:
                 logger(LOGSOURCE, "Could not load icon image.", status=LoggerStatus.CRITICAL)
                 logger(LOGSOURCE, "Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
