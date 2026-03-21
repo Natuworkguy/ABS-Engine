@@ -1,7 +1,7 @@
 # Scripting
 
 ABS Engine has Python scripting built in.
-Using this feture, it is possible to,
+Using this feature, it is possible to,
 move and manipulate objects, make animations,
 and more. English translation: scripting allows
 you to make entities in your game _do things_,
@@ -27,7 +27,7 @@ Type:
 > that you can identify it easily.
 
 Click "Save", then "Save Project".
-Make sure game.absp is saved in your project folder.
+Make sure game.py is saved in your project folder.
 
 In `scripts/player.py`, add the following.
 ```python
@@ -135,7 +135,7 @@ def event(entity, event):
 
 >[!NOTE]
 > pygame.rect.draw (The function that draws the entity on screen) takes the
-> of the entity's color as a prameter, and it runs every tick.
+> of the entity's color as a parameter, and it runs every tick.
 > This means that you _don't_ have to use entity.update_rect()
 > when you update an entity's color.
 
