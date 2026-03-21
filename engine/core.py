@@ -13,8 +13,7 @@ from .logger import logger, Status as LoggerStatus
 LOGSOURCE: Final[str] = "ENGINE.CORE"
 
 class Entity():
-    def __init__(self, parent: "Game", x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
-        self.parent = parent
+    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.x = x
         self.y = y
         self.width = width

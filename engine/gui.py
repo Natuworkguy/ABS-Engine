@@ -359,7 +359,6 @@ class Engine:
 
         for entity_name, entity_data in self.entities.items():
             entity = Entity(
-                parent=self.core_game,
                 x=entity_data.get("x", 0),
                 y=entity_data.get("y", 0),
                 width=entity_data.get("width", 50),
