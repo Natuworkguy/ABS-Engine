@@ -113,7 +113,7 @@ class Game:
         pygame.display.set_caption(title=title)
         self.clock = pygame.time.Clock()
         self.running = False
-        self.scene = Scene(IS_EDITOR=False)
+        self.scene = Scene(IS_EDITOR=IS_EDITOR)
 
         logger(LOGSOURCE, "Initialized game")
 
