@@ -31,7 +31,6 @@ def save_project(engine: Any) -> Optional[Any]:
                 },
                 "entities": engine.entities,
             }, f)
-            f.close()
         messagebox.showinfo("Success", "Project saved successfully.")
 
         return file
@@ -46,6 +45,5 @@ def load_project() -> Optional[list]:
     if file:
         with open(file.name, "r") as f:
             data: dict = load(f)
-            f.close()
 
         return [data, file]

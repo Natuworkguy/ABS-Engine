@@ -31,7 +31,6 @@ if not os.path.exists(game_path(PROJECT_FILE)):
 
 with open(game_path(PROJECT_FILE), "r") as f:
     data: dict = load(f)
-    f.close()
 
 game_dimensions = data["game"]["dimensions"]
 
