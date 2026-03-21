@@ -27,7 +27,7 @@ Type:
 > that you can identify it easily.
 
 Click "Save", then "Save Project".
-Make sure game.py is saved in your project folder.
+Make sure game.absp is saved in your project folder.
 
 In `scripts/player.py`, add the following.
 ```python
