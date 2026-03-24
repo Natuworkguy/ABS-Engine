@@ -3,9 +3,15 @@
  
 import os
 
-from pathlib import Path
 import shutil
+
+from tkinter import messagebox
+from pathlib import Path
+
 from .saveload import resource_path
+from .logger import logger, Status
+
+LOGSOURCE = "ENGINE.BUILD_TOOLS"
 
 engine_path = Path(__file__).parent
 
@@ -13,6 +19,11 @@ def build(dir: Path, ENGINE_DATA_PATH):
     global engine_path
 
     launch_game_script = None
+
+    if not os.path.exists(dir):
+        logger(LOGSOURCE, f"Build directory \"{str(dir.resolve())}\" does not exist.", status=Status.WARNING)
+        messagebox.showerror("Build Error", f"Build directory \"{str(dir.resolve())}\" does not exist. Save the project to a valid location and try again.")
+        return
 
     with open(resource_path("data/scripts/launch_game.py")) as f:
         launch_game_script = f.read()
