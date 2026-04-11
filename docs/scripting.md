@@ -113,9 +113,9 @@ def update(entity, dt):
         entity.y -= step_size
     elif held['a'] and not entity.x == 0:
         entity.x -= step_size
-    elif held['s'] and not entity.y == entity.parent.parent.wsize[0] - ENTITY_SIZE[0]:
+    elif held['s'] and not entity.y == entity.parent.parent.wsize[1] - ENTITY_SIZE[0]:
         entity.y += step_size
-    elif held['d'] and not entity.x == entity.parent.parent.wsize[1] - ENTITY_SIZE[1]:
+    elif held['d'] and not entity.x == entity.parent.parent.wsize[0] - ENTITY_SIZE[1]:
         entity.x += step_size
     entity.update_rect()
 
