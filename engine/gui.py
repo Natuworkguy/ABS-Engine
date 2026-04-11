@@ -376,7 +376,7 @@ class Engine:
             self.core_game.run()
 
         game_thread = threading.Thread(target=run_core_game, daemon=True)
-        game_thread.run()
+        game_thread.start()
 
     def run(self) -> None:
         self.root.mainloop()
