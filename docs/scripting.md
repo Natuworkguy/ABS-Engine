@@ -16,13 +16,13 @@ Then, launch ABS Engine and follow these steps:
 4. Click "Edit Data"
 5. Enter the following:
 
-```json
-{"scriptfile": "scripts/player.py"}
-```
+   ```json
+   {"scriptfile": "scripts/player.py"}
+   ```
 
->[!Tip]
-> Name your scripts after the entity they're attached to.
-> This makes it easy to identify them later.
+   >[!Tip]
+   > Name your scripts after the entity they're attached to.
+   > This makes it easy to identify them later.
 
 6. Click "Save", then "Save Project"
 7. Verify that `game.absp` was saved in your project folder
