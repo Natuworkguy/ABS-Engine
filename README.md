@@ -18,14 +18,19 @@ ABS-Engine is a game engine developed by Above and Below Studios, designed for p
     git clone https://github.com/Above-and-Below/ABS-Engine.git
     cd ABS-Engine
     ```
+
 2. Install dependencies
+
     ```bash
     pip install -r requirements.txt
     ```
+
 3. Start engine
+
    ```bash
    python3 run.pyw
    ```
+
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests.
