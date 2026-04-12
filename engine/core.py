@@ -69,6 +69,10 @@ class Entity():
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
+    def collides_with(self, other: "Entity") -> bool:
+        """Check if this entity collides with another entity using AABB collision detection."""
+        return self.rect.colliderect(other.rect)
+
     def setparent(self, parent):
         self.parent = parent
 
@@ -105,6 +109,14 @@ class Scene:
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
+
+    def get_colliding_entities(self, entity: Entity) -> list[Entity]:
+        """Return a list of all entities that are colliding with the given entity."""
+        colliding = []
+        for obj in self.objects:
+            if obj != entity and entity.collides_with(obj):
+                colliding.append(obj)
+        return colliding
 
 
 class Game:
