@@ -6,10 +6,10 @@ Open ABS Engine, make a new entity, then save the project inside
 the game's root folder.
 Click "Build Game", then "Yes".
 
-ABS Engine will now compile the game and all of it's dependencies
+ABS Engine will now compile the game and all of its dependencies
 to the folder that contains the project file.
-When you run the new run.py file in that folder,
-ABS Engine will emulate it's original environment.
+When you run the new `run.py` file in that folder,
+ABS Engine will emulate its original environment.
 To package the game into a single executable file,
 use a tool like Pyinstaller. The command should look like this:
 

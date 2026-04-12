@@ -15,7 +15,7 @@ Let's break down this log message:
 ENGINE.CORE: Initialized game
 ```
 
-These are the 2 main parts of the message:
+Here are the main parts of the message:
 
 ```text
 (Info) ENGINE.CORE: Initialized game
@@ -26,10 +26,7 @@ These are the 2 main parts of the message:
    |Type|
 ```
 
-Source:
-This part shows where the message is coming from.
-Example:
-From this part, we know that this message came from engine/core.py
+**Source:** Shows which module the message originated from. In this example, the message came from `engine/core.py`.
 
 Example of a critical error message:
 

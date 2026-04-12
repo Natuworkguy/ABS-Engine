@@ -1,34 +1,31 @@
 # Scripting
 
 ABS Engine has Python scripting built in.
-Using this feature, it is possible to,
-move and manipulate objects, make animations,
-and more. English translation: scripting allows
-you to make entities in your game _do things_,
-Here's how to do it:
+With scripting, you can move and manipulate objects, create animations, and much more.
+In other words, scripting allows you to make entities in your game _do things_.
+Here's how to get started:
 
-To make a script file, first follow the
-[best game file structure](game_file_structure.md).
-The assets/ folder is not needed for this demo.
-Launch ABS Engine.
+To create a script file, first follow the
+[recommended file structure](game_file_structure.md).
+The `assets/` folder is not needed for this tutorial.
+Then, launch ABS Engine and follow these steps:
 
-Make a name for your game, then click "Save name".
-Make a new entity (use "Player" as the name).
-Once the entity has been created, click it on the list.
-Click "Edit Data".
-Type:
+1. Create a name for your game and click "Save name"
+2. Create a new entity (name it "Player")
+3. Select the entity in the list
+4. Click "Edit Data"
+5. Enter the following:
 
 ```json
-{"scriptfile": 'scripts/player.py'}
+{"scriptfile": "scripts/player.py"}
 ```
 
 >[!Tip]
-> Make sure to name your script after the
-> entity it is attached to. This ensures
-> that you can identify it easily.
+> Name your scripts after the entity they're attached to.
+> This makes it easy to identify them later.
 
-Click "Save", then "Save Project".
-Make sure game.py is saved in your project folder.
+6. Click "Save", then "Save Project"
+7. Verify that `game.absp` was saved in your project folder
 
 In `scripts/player.py`, add the following.
 
@@ -53,42 +50,46 @@ def update(entity, dt):
 > entity, place a new entity off screen that
 > has the main script attached to it.
 
-Let's unpack what this does.
-In a scriptfile, 2 functions are expected:
+Let's break down what this code does.
+In a script file, three functions are commonly defined:
 
 ```python
 init(entity: Entity) -> None
-update(entity: Entity, dt: float)
+update(entity: Entity, dt: float) -> None
+event(entity: Entity, event: pygame.event.Event) -> None
 ```
 
-`init` is called once the game starts.
-`update` is called every game tick.
+`init()`   - Called once when the game starts
+`update()` - Called every frame (multiple times per second)
+`event()`  - Called when a pygame event is triggered
 
-The entity parameter is the entity class itself.
-In this code, we add one to th entity's `x` value ("entity.x += 1"),
-then tell it to visually update it's position ("entity.update_rect()").
+## Entity Properties
 
-The engine.core.Entity class has the following values:
-`parent`      - Parent game                - engine.core.Scene
-`x`           - X position.                - float
-`y`           - Y position.                - float
-`width`       - Width of entity.           - float
-`height`      - Height of entity.          - float
-`color`       - RGB color of entity.       - tuple[int, int, int],
-`rect`        - Rect object on screen      - pygame.Rect
-`scriptfile`  - Path to script             - str
+The `entity` parameter refers to the entity object itself.
+In this code, we add one to the entity's `x` value (`entity.x += 1`),
+and then update its visual position (`entity.update_rect()`).
 
-Event functions are the functions that ABS Engine
-triggers when something happens.
-These are the functions that it uses:
-`init`        - Called on game start        - Callable[[engine.core.Entity], None]
-`update`      - Called on every tick        - Callable[[engine.core.Entity, float], None]
-`event`       - Called on registered event  - Callable[[engine.core.Entity, pygame.event.Event], None]
+The `engine.core.Entity` class has the following properties:
+`parent`      - Parent scene object              - `engine.core.Scene`
+`x`           - X position in pixels               - `float`
+`y`           - Y position in pixels               - `float`
+`width`       - Width in pixels                    - `float`
+`height`      - Height in pixels                   - `float`
+`color`       - RGB color value                    - `tuple[int, int, int]`
+`rect`        - Pygame rect object on screen       - `pygame.Rect`
+`scriptfile`  - Path to the attached script        - `str`
 
-This is an example script to make a simple game with these features.
-The game is from a top-down perspective. It has a cube that can be
-controlled with the W/A/S/D keys. The game does not the player move
-out of the space that the player can see.
+## Script Functions
+
+The `init()`, `update()`, and `event()` functions are callback functions that ABS Engine calls at specific times:
+
+- `init(entity: Entity) -> None` - Called when the game starts
+- `update(entity: Entity, dt: float) -> None` - Called every frame
+- `event(entity: Entity, event: pygame.event.Event) -> None` - Called when an input event occurs
+
+Here's an example script that creates a simple game with player movement.
+The game uses a top-down perspective with a player-controlled square
+that can move with W/A/S/D keys. The player cannot move outside the visible game area.
 
 ```python
 import pygame
@@ -141,17 +142,13 @@ def event(entity, event):
 ```
 
 >[!NOTE]
-> pygame.rect.draw (The function that draws the entity on screen) takes the
-> of the entity's color as a parameter, and it runs every tick.
-> This means that you _don't_ have to use entity.update_rect()
-> when you update an entity's color.
+> The `pygame.draw.rect()` function that renders the entity on screen automatically uses the entity's color.
+> Since it runs every tick, you do _not_ need to call `entity.update_rect()` when only changing the entity's color.
 
-Go back to ABS Engine, then click "Run".
-You should see a white cube moving from the left to the right
-side of the screen.
+Go back to ABS Engine and click "Run".
+You should see a white square moving continuously from left to right.
 
 >[!IMPORTANT]
-> If the game window freezes, or is completely black at start,
-> check that the script file has no errors. it is completely
-> normal for a game to crash if the code has errors.
-> [Debug the game](debugging_games.md) to easily see the error.
+> If the game window freezes or shows a black screen at startup,
+> check that your script file has no syntax errors. It is completely normal for a game to crash if there are code errors.
+> See [Debugging Games](debugging_games.md) for help diagnosing issues.

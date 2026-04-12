@@ -1,8 +1,8 @@
-# Accessing The Console
+# Accessing the Console
 
 Getting the console to show is simple.
-The main executable, `run.pyw` uses the `.pyw` extension to hide the console.
-By going to the terminal and running it with Python shows the console.
+The main executable, `run.pyw`, uses the `.pyw` extension to hide the console.
+You can show the console by running it from the terminal with Python.
 
 Example:
 
@@ -10,9 +10,9 @@ Example:
 python3 run.pyw
 ```
 
-## Note for Windows users
+## Note for Windows Users
 
-Make sure you are using the python3/py command, otherwise it will run as normal.
+Make sure you run it with the `python3` or `py` command. Directly clicking the file will not show the console.
 
 Bad Example:
 

@@ -1,6 +1,6 @@
 # File Structure for ABS Games
 
-This is the needed file structure for games made with ABS Engine. It is necessary because the engine assumes that all game resources are in the same directory as the project file.
+This is the recommended file structure for ABS Engine games. The engine assumes that all game resources are in the same directory as the project file.
 
 ```text
 MyGame
