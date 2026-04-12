@@ -37,7 +37,7 @@ def save_project(engine: Any) -> Optional[Any]:
 
 def load_project() -> Optional[list]:
     file = filedialog.askopenfile(
-        defaultextension=".abs",
+        defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Load ABS Project"
     )
