@@ -28,11 +28,13 @@ class Entity:
         self.scriptfile_event_exists = False
 
         if scriptfile is not None:
-            spec = importlib.util.spec_from_file_location("scriptfile_module", scriptfile)
+            esfid = f"esf-{self.id}"
+
+            spec = importlib.util.spec_from_file_location(esfid, scriptfile)
 
             if spec:
                 self.scriptfile_module = importlib.util.module_from_spec(spec)
-                sys.modules[self.id] = self.scriptfile_module
+                sys.modules[esfid] = self.scriptfile_module
 
                 if spec.loader:
                     spec.loader.exec_module(self.scriptfile_module)
