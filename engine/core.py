@@ -50,6 +50,12 @@ class Entity:
             else:
                 logger(LOGSOURCE, f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
 
+    def __str__(self) -> str:
+        return f"<{self.__class__.__name__} with id {self.id}>"
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
+
     def _collides_with(self, other: "Entity") -> bool:
         """Check if this entity collides with another entity using AABB collision detection."""
         return self.rect.colliderect(other.rect)
