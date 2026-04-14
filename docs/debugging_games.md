@@ -12,29 +12,32 @@ This action always happens, so it is a good way to test if you can see the log.
 Let's break down this log message:
 
 ```text
-ENGINE.CORE: Initialized game
+(Status.INFO) ENGINE.CORE: Initialized game
 ```
 
 Here are the main parts of the message:
 
 ```text
-(Info) ENGINE.CORE: Initialized game
-   |  |              |
-   |  |______        |_______
-   |  |Source|       |Message|
+(Status.INFO) ENGINE.CORE: Initialized game
+   |          |            |
+   |          |______      |_______
+   |          |Source|     |Message|
    |____
    |Type|
 ```
 
-**Source:** Shows which module the message originated from. In this example, the message came from `engine/core.py`.
+
+**Type**: The severity of the message
+**Source**: Shows which module the message originated from. In this example, the message came from `engine/core.py`.
+**Message**: The message being printed
 
 Example of a critical error message:
 
 ```text
-(Critical) ENGINE.GUI: Initialized game
-   |  |              |
-   |  |______        |_______
-   |  |Source|       |Message|
+(Status.CRITICAL) ENGINE.GUI: Initialized game
+   |              |           |
+   |              |______     |_______
+   |              |Source|    |Message|
    |____
    |Type|
 ```
