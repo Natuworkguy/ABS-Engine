@@ -4,7 +4,6 @@
 from typing import Optional, Final
 import pygame
 import importlib.util
-import tkinter.messagebox as messagebox
 import sys
 import uuid
 
