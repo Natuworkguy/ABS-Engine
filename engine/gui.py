@@ -56,7 +56,7 @@ class Engine:
         self.root.title("ABS Engine")
         self.root.geometry("530x700")
 
-        if not '-noicon' in sys.argv:
+        if '-noicon' not in sys.argv:
             try:
                 self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")))
             except TclError as e:
