@@ -12,7 +12,7 @@ from .logger import logger, Status as LoggerStatus
 
 LOGSOURCE: Final[str] = "ENGINE.CORE"
 
-class Entity():
+class Entity:
     def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.x = x
         self.y = y
@@ -50,6 +50,10 @@ class Entity():
             else:
                 logger(LOGSOURCE, f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
 
+    def _collides_with(self, other: "Entity") -> bool:
+        """Check if this entity collides with another entity using AABB collision detection."""
+        return self.rect.colliderect(other.rect)
+
     def update_rect(self):
         self.rect.x = self.x
         self.rect.y = self.y
@@ -69,12 +73,14 @@ class Entity():
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 
-    def collides_with(self, other: "Entity") -> bool:
-        """Check if this entity collides with another entity using AABB collision detection."""
-        return self.rect.colliderect(other.rect)
-
     def setparent(self, parent):
         self.parent = parent
+
+    def get_colliding_entities(self) -> Optional[list["Entity"]]:
+        if self.parent is None:
+            return
+
+        return self.parent._get_colliding_entities(self)
 
 
 class Scene:
@@ -88,6 +94,14 @@ class Scene:
         self.no_entities = True
 
         logger(LOGSOURCE, "Initialized scene")
+
+    def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
+        """Return a list of all entities that are colliding with the given entity."""
+        colliding = []
+        for obj in self.objects:
+            if obj != entity and entity._collides_with(obj):
+                colliding.append(obj)
+        return colliding
 
     def add(self, obj: Entity):
         self.objects.append(obj)
@@ -109,14 +123,6 @@ class Scene:
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
-
-    def get_colliding_entities(self, entity: Entity) -> list[Entity]:
-        """Return a list of all entities that are colliding with the given entity."""
-        colliding = []
-        for obj in self.objects:
-            if obj != entity and entity.collides_with(obj):
-                colliding.append(obj)
-        return colliding
 
 
 class Game:

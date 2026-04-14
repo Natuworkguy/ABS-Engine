@@ -78,6 +78,11 @@ The `engine.core.Entity` class has the following properties:
 `color`       - RGB color value                    - `tuple[int, int, int]`
 `rect`        - Pygame rect object on screen       - `pygame.Rect`
 `scriptfile`  - Path to the attached script        - `str`
+`id`          - Unique entity UUID                 - `str`
+`get_colliding_entities`                           - `Callable[[], list[Entity]]`
+
+> [!Note]
+> Entity.parent can only be called in update()
 
 ## Script Functions
 
