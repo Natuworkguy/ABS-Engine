@@ -19,9 +19,12 @@ class Entity:
         self.width = width
         self.height = height
         self.color = color
+
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.id = str(uuid.uuid4())
+
         self.parent = None
+
         self.scriptfile = scriptfile
         self.scriptfile_module = None
         self.scriptfile_update_exists = False
