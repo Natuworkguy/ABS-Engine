@@ -19,7 +19,6 @@ from .core import Game as CoreGame, Entity
 from .logger import logger, Status as LoggerStatus
 from .build_tools import build
 
-import threading
 from pathlib import Path
 from ast import literal_eval
 
