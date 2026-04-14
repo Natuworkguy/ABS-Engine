@@ -70,7 +70,7 @@ In this code, we add one to the entity's `x` value (`entity.x += 1`),
 and then update its visual position (`entity.update_rect()`).
 
 The `engine.core.Entity` class has the following properties:
-`parent`      - Parent scene object              - `engine.core.Scene`
+`parent`      - Parent scene object                - `engine.core.Scene`
 `x`           - X position in pixels               - `float`
 `y`           - Y position in pixels               - `float`
 `width`       - Width in pixels                    - `float`
