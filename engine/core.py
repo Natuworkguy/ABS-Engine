@@ -1,7 +1,7 @@
 # Copyright (C) Above and Below Studios
 # See the LICENSE file for GPLv3
 
-from typing import Optional, Final
+from typing import Optional, Final, Any
 import pygame
 import importlib.util
 import sys
@@ -96,12 +96,12 @@ class Entity:
 class Scene:
     def __init__(self, *, parent: "Game", IS_EDITOR: bool = False):
         # For use by entities
-        self.IS_EDITOR = IS_EDITOR
-        self.scenedata = {}
+        self.IS_EDITOR: bool = IS_EDITOR
+        self.scenedata: dict[Any, Any] = {}
 
-        self.parent = parent
-        self.objects = []
-        self.no_entities = True
+        self.parent: "Game" = parent
+        self.objects: list[Entity] = []
+        self.no_entities: bool = True
 
         logger(LOGSOURCE, "Initialized scene")
 
