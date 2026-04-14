@@ -54,6 +54,9 @@ class Entity:
         """Check if this entity collides with another entity using AABB collision detection."""
         return self.rect.colliderect(other.rect)
 
+    def _setparent(self, parent):
+        self.parent = parent
+
     def update_rect(self):
         self.rect.x = self.x
         self.rect.y = self.y
@@ -72,9 +75,6 @@ class Entity:
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
-
-    def setparent(self, parent):
-        self.parent = parent
 
     def get_colliding_entities(self) -> Optional[list["Entity"]]:
         if self.parent is None:
@@ -105,7 +105,7 @@ class Scene:
 
     def add(self, obj: Entity):
         self.objects.append(obj)
-        obj.setparent(self)
+        obj._setparent(self)
 
         if self.no_entities:
             self.no_entities = False
