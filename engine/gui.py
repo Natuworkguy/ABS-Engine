@@ -277,9 +277,9 @@ class Engine:
             self.entity_data.pack(padx=5, pady=5)
 
             def save_edits() -> None:
-                if self.entity_data == None:
+                if self.entity_data is None:
                     return
-                elif self.view_popup == None:
+                elif self.view_popup is None:
                     return
 
                 try:
