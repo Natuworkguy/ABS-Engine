@@ -2,7 +2,6 @@
 # See the LICENSE file for GPLv3
 
 from enum import Enum
-from typing import Literal
 from colorama import Fore, Style
 
 class Status(Enum):
