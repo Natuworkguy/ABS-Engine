@@ -7,7 +7,6 @@ except ModuleNotFoundError:
 import os.path
 import sys
 
-from typing import Optional
 from json import load
 from pathlib import Path
 
