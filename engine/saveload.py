@@ -19,7 +19,7 @@ def save_project(engine: Any) -> Optional[Any]:
         defaultextension=".abs",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
-        initialfile=f"game.absp"
+        initialfile="game.absp"
     )
 
     if file:
