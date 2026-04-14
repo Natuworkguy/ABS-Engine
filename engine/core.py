@@ -126,8 +126,9 @@ class Scene:
                 obj.update(dt)
 
     def event(self, event):
-        for obj in self.objects:
-            obj.event(event)
+        if not self.no_entities:
+            for obj in self.objects:
+                obj.event(event)
 
     def draw(self, surface):
         if not self.no_entities:
