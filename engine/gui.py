@@ -1,9 +1,9 @@
 # Copyright (C) Above and Below Studios
 # See the LICENSE file for GPLv3
 
-from io import TextIOWrapper
 import sys
 import os
+import json
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
@@ -11,8 +11,8 @@ import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 from _tkinter import TclError
 
-from pprint import pformat
-from typing import Optional, Final
+from typing import Optional
+from io import TextIOWrapper
 
 from .saveload import save_project as sl_save_project, load_project as sl_load_project, resource_path
 from .core import Game as CoreGame, Entity
@@ -272,7 +272,7 @@ class Engine:
             self.view_popup.wm_title("Entity Data | ABS Engine")
 
             self.entity_data = tk.Text(self.view_popup, width=50, height=20)
-            self.entity_data.insert(tk.END, pformat(self.entities[selected_item]))
+            self.entity_data.insert(tk.END, json.dumps(self.entities[selected_item], indent=4))
             self.entity_data.pack(padx=5, pady=5)
 
             def save_edits() -> None:
@@ -282,13 +282,11 @@ class Engine:
                     return
 
                 try:
-                    self.entities[selected_item] = dict(
-                        literal_eval(
+                    self.entities[selected_item] = json.loads(
                             self.entity_data.get("1.0", tk.END + '-1c')
-                        )
                     )
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to save entity data: {e}\nPlease ensure the data is in valid dictionary format.")
+                    messagebox.showerror("Error", f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.")
                     self.entity_data.focus_set()
 
                     return
