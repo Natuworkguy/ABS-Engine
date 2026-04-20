@@ -201,13 +201,14 @@ class Engine:
 
                 if width != '':
                     try:
-                        self.game_dimensions[0] = int(eval(width))
+                        self.game_dimensions[0] = int(width)
                     except ValueError:
                         messagebox.showerror("Error", "Width value must be an integer.")
                         return
+
                 if height != '':
                     try:
-                        self.game_dimensions[1] = int(eval(height))
+                        self.game_dimensions[1] = int(height)
                     except ValueError:
                         messagebox.showerror("Error", "Width value must be an integer.")
                         return
