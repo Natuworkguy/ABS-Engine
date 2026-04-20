@@ -11,8 +11,6 @@ from pathlib import Path
 from .saveload import resource_path
 from .logger import logger, Status
 
-LOGSOURCE = "ENGINE.BUILD_TOOLS"
-
 engine_path = Path(__file__).parent
 
 def build(dir: Path, ENGINE_DATA_PATH):
@@ -21,7 +19,7 @@ def build(dir: Path, ENGINE_DATA_PATH):
     launch_game_script = None
 
     if not os.path.exists(dir):
-        logger(LOGSOURCE, f"Build directory \"{str(dir.resolve())}\" does not exist.", status=Status.WARNING)
+        logger(f"Build directory \"{str(dir.resolve())}\" does not exist.", status=Status.WARNING)
         messagebox.showerror("Build Error", f"Build directory \"{str(dir.resolve())}\" does not exist. Save the project to a valid location and try again.")
         return
 

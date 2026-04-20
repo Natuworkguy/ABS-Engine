@@ -3,4 +3,4 @@
 
 from .logger import Status, logger
 
-logger("ENGINE.__MAIN__", "Use run.pyw to start ABS Engine.", status=Status.CRITICAL)
+logger("Use run.pyw to start ABS Engine.", status=Status.CRITICAL)

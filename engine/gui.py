@@ -23,7 +23,6 @@ from pathlib import Path
 from ast import literal_eval
 
 GP_BASE_PATH: str = str(Path(__file__).parent)
-LOGSOURCE: Final[str] = "ENGINE.GUI"
 ENGINE_DATA_PATH = resource_path("data")
 
 def game_path(relative: Optional[str]) -> Optional[str]:
@@ -60,9 +59,9 @@ class Engine:
             try:
                 self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")))
             except TclError as e:
-                logger(LOGSOURCE, "Could not load icon image.", status=LoggerStatus.CRITICAL)
-                logger(LOGSOURCE, "Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
-                logger(LOGSOURCE, f"Error: {e}", status=LoggerStatus.CRITICAL)
+                logger("Could not load icon image.", status=LoggerStatus.CRITICAL)
+                logger("Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
+                logger(f"Error: {e}", status=LoggerStatus.CRITICAL)
                 sys.exit(1)
 
         self.root.resizable(False, False)
@@ -165,13 +164,13 @@ class Engine:
         if not do_build:
             return
 
-        logger(LOGSOURCE, "Build Tools: Starting build")
+        logger("Build Tools: Starting build")
 
         build(Path(GP_BASE_PATH), ENGINE_DATA_PATH=ENGINE_DATA_PATH)
 
-        logger(LOGSOURCE, "Build Tools: Waiting for root")
+        logger("Build Tools: Waiting for root")
         self.root.after(3000, lambda: None)
-        logger(LOGSOURCE, "Build Tools: Build completed")
+        logger("Build Tools: Build completed")
         messagebox.showinfo("Build Tools | ABS Engine", "The build has been completed.")
 
     def game_settings(self) -> None:

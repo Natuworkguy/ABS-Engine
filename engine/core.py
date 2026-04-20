@@ -9,8 +9,6 @@ import uuid
 
 from .logger import logger, Status as LoggerStatus
 
-LOGSOURCE: Final[str] = "ENGINE.CORE"
-
 class Entity:
     def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.x = x
@@ -52,7 +50,7 @@ class Entity:
                     if hasattr(self.scriptfile_module, 'event'):
                         self.scriptfile_event_exists = True
             else:
-                logger(LOGSOURCE, f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
+                logger(f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
 
     def __str__(self) -> str:
         return f"<{self.__class__.__name__} with id {self.id}>"
@@ -103,7 +101,7 @@ class Scene:
         self.objects: list[Entity] = []
         self.no_entities: bool = True
 
-        logger(LOGSOURCE, "Initialized scene")
+        logger("Initialized scene")
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
         """Return a list of all entities that are colliding with the given entity."""
@@ -146,10 +144,10 @@ class Game:
         self.running = False
         self.scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
 
-        logger(LOGSOURCE, "Initialized game")
+        logger("Initialized game")
 
     def run(self, fps=60):
-        logger(LOGSOURCE, "Starting game loop")
+        logger("Starting game loop")
 
         self.running = True
         while self.running:
