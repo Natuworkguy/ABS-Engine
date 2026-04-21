@@ -20,7 +20,6 @@ from .logger import logger, Status as LoggerStatus
 from .build_tools import build
 
 from pathlib import Path
-from ast import literal_eval
 
 GP_BASE_PATH: str = str(Path(__file__).parent)
 ENGINE_DATA_PATH = resource_path("data")
