@@ -1,7 +1,7 @@
 # Copyright (C) Above and Below Studios
 # See the LICENSE file for GPLv3
 
-from typing import Optional, Final, Any
+from typing import Optional, Any
 import pygame
 import importlib.util
 import sys
