@@ -1,0 +1,30 @@
+name: Bug Report
+description: Something is broken
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: How can we recreate it?
+      placeholder: |
+        1. Go to...
+        2. Click...
+        3. Crash
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What should’ve happened?
+
+  - type: input
+    attributes:
+      label: Environment
+      placeholder: Windows / Linux / Mac
