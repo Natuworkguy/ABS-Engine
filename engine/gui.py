@@ -18,6 +18,7 @@ from .saveload import save_project as sl_save_project, load_project as sl_load_p
 from .core import Game as CoreGame, Entity
 from .logger import logger, Status as LoggerStatus
 from .build_tools import build
+from .tcl_loader import tcl_source
 
 from pathlib import Path
 
@@ -53,6 +54,7 @@ class Engine:
         self.root = tk.Tk()
         self.root.title("ABS Engine")
         self.root.geometry("530x700")
+        self.load_theme()
 
         if '-noicon' not in sys.argv:
             try:
@@ -156,6 +158,13 @@ class Engine:
 
         self.exit_button = ttk.Button(self.engine_section, text='Exit', command=self.quit, width=25)
         self.exit_button.pack(padx=5, pady=5)
+
+    def load_theme(self) -> None:
+        try:
+            tcl_source("theme.tcl", self.root)
+        except TclError as e:
+            logger("Failed to load theme.", status=LoggerStatus.WARNING)
+            logger(f"Error: {e}", status=LoggerStatus.WARNING)
 
     def build_game(self) -> None:
         do_build = messagebox.askyesno("Build Tools | ABS Engine", "This will build to the folder containing the .absp project file. Do you want to continue?")
