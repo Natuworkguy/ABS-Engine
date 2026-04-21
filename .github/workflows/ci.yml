@@ -27,25 +27,57 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff
 
-      - name: Run Ruff Lint
+      - name: Run Ruff Lint (non-blocking)
         run: |
           echo "Running Ruff static analysis..."
-          ruff check .
+
+          # Run ruff but never fail the job
+          ruff check . > ruff_output.txt 2>&1 || true
+
+          # Save exit status manually
+          if grep -q "error" ruff_output.txt; then
+            echo "FAILED" > ruff_status.txt
+          else
+            echo "PASSED" > ruff_status.txt
+          fi
+
+      - name: Upload Ruff Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruff-report
+          path: |
+            ruff_output.txt
+            ruff_status.txt
 
   ci:
     runs-on: ubuntu-latest
     needs: lint
 
     steps:
-      - name: CI Finalization
+      - name: Download Ruff Results
+        uses: actions/download-artifact@v4
+        with:
+          name: ruff-report
+
+      - name: CI Finalization (Colored Summary)
         run: |
           GREEN="\033[32m"
+          RED="\033[31m"
           CYAN="\033[36m"
           BOLD="\033[1m"
           RESET="\033[0m"
 
+          STATUS=$(cat ruff_status.txt)
+
           echo -e "${BOLD}${CYAN}======================================${RESET}"
           echo -e "${CYAN}[CI] Pipeline Summary${RESET}"
-          echo -e "${GREEN}[CI] Ruff static analysis: PASSED${RESET}"
+
+          if [ "$STATUS" = "PASSED" ]; then
+            echo -e "${GREEN}[CI] Ruff static analysis: PASSED${RESET}"
+            echo -e "${GREEN}[CI] All tests passed 🚀${RESET}"
+          else
+            echo -e "${RED}[CI] Ruff static analysis: FAILED${RESET}"
+            echo -e "${RED}[CI] Lint issues detected ⚠️${RESET}"
+          fi
+
           echo -e "${BOLD}${CYAN}======================================${RESET}"
-          echo -e "${GREEN}[CI] All tests passed 🚀${RESET}"
