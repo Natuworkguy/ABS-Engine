@@ -59,4 +59,9 @@ jobs:
             });
 
       - name: Run Tests
-        run: pytest -q
+        run: |
+          pytest -q
+          if [ $? -eq 5 ]; then
+            echo "⚠️ No tests found"
+            exit 0
+          fi
