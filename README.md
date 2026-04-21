@@ -1,6 +1,6 @@
-# ABS-Engine
+# ABS Engine
 
-ABS-Engine is a game engine developed by Above and Below Studios, designed for public use. It provides tools and features to help you create games efficiently.
+ABS Engine is a game engine developed by Above and Below Studios, designed for public use. It provides tools and features to help you create games efficiently.
 
 ## Features
 
