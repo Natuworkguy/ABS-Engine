@@ -5,6 +5,7 @@ from typing import Optional, Final, Any
 import pygame
 import importlib.util
 import sys
+import tkinter.messagebox
 import uuid
 
 from .logger import logger, Status as LoggerStatus
@@ -37,7 +38,10 @@ class Entity:
                 sys.modules[esfid] = self.scriptfile_module
 
                 if spec.loader:
-                    spec.loader.exec_module(self.scriptfile_module)
+                    try:
+                        spec.loader.exec_module(self.scriptfile_module)
+                    except FileNotFoundError:
+                        tkinter.messagebox.showerror("Error", f"Script file \"{scriptfile}\" not found. Please ensure the file exists and try again.")
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
