@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   lint:
@@ -27,7 +26,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff
 
-      - name: Run Ruff Lint (non-blocking)
+      - name: Install Flake8
+        run: |
+          pip install flake8
+
+      - name: Run Ruff Lint
         run: |
           echo "Running Ruff static analysis..."
 
@@ -38,28 +41,46 @@ jobs:
             echo "::warning title=Ruff Lint Failed::Ruff detected issues. Check artifacts."
           fi
 
+      - name: Run Flake8 Lint
+        run: |
+          echo "Running Flake8 static analysis..."
+
+          if flake8 . > flake8_output.txt 2>&1; then
+            echo "PASSED" > flake8_status.txt
+          else
+            echo "FAILED" > flake8_status.txt
+            echo "::warning title=Flake8 Lint Failed::Flake8 detected issues. Check artifacts."
+          fi
+
       - name: Upload Ruff Results
         uses: actions/upload-artifact@v4
         with:
-          name: ruff-report
+          name: lint-report
           path: |
             ruff_output.txt
             ruff_status.txt
+            flake8_output.txt
+            flake8_status.txt
 
   ci:
     runs-on: ubuntu-latest
     needs: lint
 
     steps:
-      - name: Download Ruff Results
+      - name: Download Results
         uses: actions/download-artifact@v4
         with:
-          name: ruff-report
+          name: lint-report
 
       - name: Display Ruff Results
         run: |
           echo "Ruff Static Analysis Results:"
           cat ruff_output.txt
+
+      - name: Display Flake8 Results
+        run: |
+          echo "Flake8 Static Analysis Results:"
+          cat flake8_output.txt
 
       - name: CI Finalization (Summary)
         run: |
@@ -68,18 +89,32 @@ jobs:
           CYAN="\033[36m"
           BOLD="\033[1m"
           RESET="\033[0m"
-          
-          STATUS=$(cat ruff_status.txt 2>/dev/null || echo "FAILED")
+
+          RUFF_STATUS=$(cat ruff_status.txt 2>/dev/null || echo "FAILED")
+          FLAKE8_STATUS=$(cat flake8_status.txt 2>/dev/null || echo "FAILED")
+
+          NO_ERRORS=true
 
           echo -e "${BOLD}${CYAN}======================================${RESET}"
           echo -e "${CYAN}[CI] Pipeline Summary${RESET}"
 
-          if [ "$STATUS" = "PASSED" ]; then
+          if [ "$RUFF_STATUS" = "PASSED" ]; then
             echo -e "${GREEN}[CI] Ruff static analysis: PASSED${RESET}"
-            echo -e "${GREEN}[CI] All tests passed 🚀${RESET}"
           else
             echo -e "${RED}[CI] Ruff static analysis: FAILED${RESET}"
-            echo -e "${RED}[CI] Lint issues detected ⚠️${RESET}"
+            NO_ERRORS=false
           fi
 
+          if [ "$FLAKE8_STATUS" = "PASSED" ]; then
+            echo -e "${GREEN}[CI] Flake8 static analysis: PASSED${RESET}"
+          else
+            echo -e "${RED}[CI] Flake8 static analysis: FAILED${RESET}"
+            NO_ERRORS=false
+          fi
+
+          if [ "$NO_ERRORS" = "true" ]; then
+            echo -e "${GREEN}[CI] All tests passed 🚀${RESET}"
+          else
+            echo -e "${RED}[CI] Lint issues detected ⚠️${RESET}"
+          fi
           echo -e "${BOLD}${CYAN}======================================${RESET}"
