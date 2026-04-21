@@ -51,7 +51,7 @@ jobs:
           echo "Running Ruff static analysis..."
 
           # Run Ruff with GitHub Actions annotation output
-          if ruff check . --format=github > ruff_output.txt 2>&1; then
+          if ruff check . > ruff_output.txt 2>&1; then
             echo "PASSED" > ruff_status.txt
           else
             echo "FAILED" > ruff_status.txt
