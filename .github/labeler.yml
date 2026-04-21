@@ -1,0 +1,15 @@
+docs:
+  - "**/*.md"
+  - "docs/**"
+
+config:
+  - ".github/**"
+  - "*.yml"
+  - "*.yaml"
+  - "*.json"
+
+assets:
+  - "data/images/**"
+  - "**/*.png"
+  - "**/*.jpg"
+  - "**/*.svg"
