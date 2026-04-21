@@ -31,12 +31,11 @@ jobs:
         run: |
           echo "Running Ruff static analysis..."
 
-          ruff check . > ruff_output.txt 2>&1 || true
-
-          if grep -q "error" ruff_output.txt; then
-            echo "FAILED" > ruff_status.txt
-          else
+          if ruff check . > ruff_output.txt 2>&1; then
             echo "PASSED" > ruff_status.txt
+          else
+            echo "FAILED" > ruff_status.txt
+            echo "::warning title=Ruff Lint Failed::Ruff detected issues. Check artifacts."
           fi
 
       - name: Upload Ruff Results
@@ -60,7 +59,7 @@ jobs:
       - name: Display Ruff Results
         run: |
           echo "Ruff Static Analysis Results:"
-            cat ruff_output.txt
+          cat ruff_output.txt
 
       - name: CI Finalization (Summary)
         run: |
@@ -69,8 +68,8 @@ jobs:
           CYAN="\033[36m"
           BOLD="\033[1m"
           RESET="\033[0m"
-
-          STATUS=$(cat ruff_status.txt)
+          
+          STATUS=$(cat ruff_status.txt 2>/dev/null || echo "FAILED")
 
           echo -e "${BOLD}${CYAN}======================================${RESET}"
           echo -e "${CYAN}[CI] Pipeline Summary${RESET}"
