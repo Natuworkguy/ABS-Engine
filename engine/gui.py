@@ -182,49 +182,49 @@ class Engine:
         messagebox.showinfo("Build Tools | ABS Engine", "The build has been completed.")
 
     def game_settings(self) -> None:
-            self.game_settings_popup = tk.Toplevel(self.root, height=150)
-            self.game_settings_popup.wm_title("Game Settings | ABS Engine")
+        self.game_settings_popup = tk.Toplevel(self.root, height=150)
+        self.game_settings_popup.wm_title("Game Settings | ABS Engine")
 
-            self.game_settings_dimensions_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Dimensions")
-            self.game_settings_dimensions_section.pack(padx=5, pady=5)
+        self.game_settings_dimensions_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Dimensions")
+        self.game_settings_dimensions_section.pack(padx=5, pady=5)
 
-            self.game_settings_width_label = ttk.Label(self.game_settings_dimensions_section, text="Width")
-            self.game_settings_width_label.pack(padx=5, pady=5)
-            self.game_settings_width = ttk.Entry(self.game_settings_dimensions_section)
-            self.game_settings_width.pack(padx=5, pady=5)
-            self.game_settings_width.insert(tk.END, str(self.game_dimensions[0]))
+        self.game_settings_width_label = ttk.Label(self.game_settings_dimensions_section, text="Width")
+        self.game_settings_width_label.pack(padx=5, pady=5)
+        self.game_settings_width = ttk.Entry(self.game_settings_dimensions_section)
+        self.game_settings_width.pack(padx=5, pady=5)
+        self.game_settings_width.insert(tk.END, str(self.game_dimensions[0]))
 
-            self.game_settings_height_label = ttk.Label(self.game_settings_dimensions_section, text="Height")
-            self.game_settings_height_label.pack(padx=5, pady=5)
-            self.game_settings_height = ttk.Entry(self.game_settings_dimensions_section)
-            self.game_settings_height.pack(padx=5, pady=5)
-            self.game_settings_height.insert(tk.END, str(self.game_dimensions[1]))
+        self.game_settings_height_label = ttk.Label(self.game_settings_dimensions_section, text="Height")
+        self.game_settings_height_label.pack(padx=5, pady=5)
+        self.game_settings_height = ttk.Entry(self.game_settings_dimensions_section)
+        self.game_settings_height.pack(padx=5, pady=5)
+        self.game_settings_height.insert(tk.END, str(self.game_dimensions[1]))
 
-            def game_settings_dimensions_save() -> None:
-                width = self.game_settings_width.get()
-                height = self.game_settings_height.get()
+        def game_settings_dimensions_save() -> None:
+            width = self.game_settings_width.get()
+            height = self.game_settings_height.get()
 
-                if self.game_settings_popup is not None:
-                    self.game_settings_popup.destroy()
+            if self.game_settings_popup is not None:
+                self.game_settings_popup.destroy()
 
-                if width != '':
-                    try:
-                        self.game_dimensions[0] = int(width)
-                    except ValueError:
-                        messagebox.showerror("Error", "Width value must be an integer.")
-                        return
+            if width != '':
+                try:
+                    self.game_dimensions[0] = int(width)
+                except ValueError:
+                    messagebox.showerror("Error", "Width value must be an integer.")
+                    return
 
-                if height != '':
-                    try:
-                        self.game_dimensions[1] = int(height)
-                    except ValueError:
-                        messagebox.showerror("Error", "Width value must be an integer.")
-                        return
+            if height != '':
+                try:
+                    self.game_dimensions[1] = int(height)
+                except ValueError:
+                    messagebox.showerror("Error", "Width value must be an integer.")
+                    return
 
-                messagebox.showinfo("Success", "Settings saved")
+            messagebox.showinfo("Success", "Settings saved")
 
-            self.game_settings_dimensions_save_button = ttk.Button(self.game_settings_dimensions_section, text="Save and Close", command=game_settings_dimensions_save)
-            self.game_settings_dimensions_save_button.pack(padx=5, pady=5)
+        self.game_settings_dimensions_save_button = ttk.Button(self.game_settings_dimensions_section, text="Save and Close", command=game_settings_dimensions_save)
+        self.game_settings_dimensions_save_button.pack(padx=5, pady=5)
 
     def delete_entity(self) -> None:
         try:
