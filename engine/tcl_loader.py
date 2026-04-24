@@ -17,6 +17,7 @@ if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
     logger("Could not find engine/tcl/ directory.", status=Status.CRITICAL)
     sys.exit(1)
 
+
 def tcl_source(script_name: str, root: Optional[tk.Tk] = None) -> str:
     """Run a Tcl script from engine/tcl"""
 
@@ -30,6 +31,7 @@ def tcl_source(script_name: str, root: Optional[tk.Tk] = None) -> str:
         sys.exit(1)
 
     return root.tk.eval("source {" + script_path + "}")
+
 
 def tcl_eval(tcl: str, root: Optional[tk.Tk] = None) -> str:
     """Evaluate a Tcl statement"""
