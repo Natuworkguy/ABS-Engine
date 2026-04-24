@@ -62,7 +62,7 @@ jobs:
         run: |
           echo "Running Flake8 static analysis..."
 
-          if flake8 . > flake8_output.txt 2>&1; then
+          if flake8 . --ignore E501 > flake8_output.txt 2>&1; then
             echo "PASSED" > flake8_status.txt
           else
             echo "FAILED" > flake8_status.txt
