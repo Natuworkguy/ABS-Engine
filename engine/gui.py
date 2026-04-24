@@ -290,7 +290,7 @@ class Engine:
 
                 try:
                     self.entities[selected_item] = json.loads(
-                            self.entity_data.get("1.0", tk.END + '-1c')
+                        self.entity_data.get("1.0", tk.END + '-1c')
                     )
                 except Exception as e:
                     messagebox.showerror("Error", f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.")
