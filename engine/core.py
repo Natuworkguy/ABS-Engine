@@ -51,7 +51,7 @@ class Entity:
 
                     if hasattr(self.scriptfile_module, 'update'):
                         self.scriptfile_update_exists = True
-    
+
                     if hasattr(self.scriptfile_module, 'event'):
                         self.scriptfile_event_exists = True
             else:
