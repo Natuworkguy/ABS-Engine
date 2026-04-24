@@ -12,6 +12,7 @@ from pathlib import Path
 
 PROJECT_FILE = "game.absp"
 
+
 def resource_path(relative: str) -> str:
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative) # pyright: ignore[reportAttributeAccessIssue]
