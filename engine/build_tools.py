@@ -13,6 +13,7 @@ from .logger import logger, Status
 
 engine_path = Path(__file__).parent
 
+
 def build(dir: Path, ENGINE_DATA_PATH):
     global engine_path
 
