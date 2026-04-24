@@ -10,6 +10,7 @@ import uuid
 
 from .logger import logger, Status as LoggerStatus
 
+
 class Entity:
     def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None):
         self.x = x
