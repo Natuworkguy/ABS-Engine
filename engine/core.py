@@ -48,7 +48,7 @@ class Entity:
                 if self.scriptfile is not None:
                     if hasattr(self.scriptfile_module, 'init'):
                         self.scriptfile_module.init(self)
-    
+
                     if hasattr(self.scriptfile_module, 'update'):
                         self.scriptfile_update_exists = True
     
