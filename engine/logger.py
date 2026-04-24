@@ -6,10 +6,12 @@ import inspect
 from enum import Enum
 from colorama import Fore, Style
 
+
 class Status(Enum):
     CRITICAL = "Critical"
     WARNING = "Warning"
     INFO = "Info"
+
 
 def _get_caller_module():
     frame = inspect.currentframe()
@@ -23,6 +25,7 @@ def _get_caller_module():
         frame = frame.f_back
 
     return "Unknown"
+
 
 def logger(message: str, *, status: Status = Status.INFO) -> None:
     source = _get_caller_module().upper()
