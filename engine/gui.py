@@ -315,7 +315,7 @@ class Engine:
 
         except IndexError:
             messagebox.showerror("Error", "No entity selected.")
-    
+
     def load_project(self) -> None:
         global GP_BASE_PATH
 
