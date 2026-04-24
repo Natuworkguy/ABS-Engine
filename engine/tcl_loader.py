@@ -28,7 +28,7 @@ def tcl_source(script_name: str, root: Optional[tk.Tk] = None) -> str:
     if not os.path.exists(script_path) or not os.path.isfile(script_path):
         logger(f"Could not find Tcl file {script_path}.", status=Status.CRITICAL)
         sys.exit(1)
-    
+
     return root.tk.eval("source {" + script_path + "}")
 
 def tcl_eval(tcl: str, root: Optional[tk.Tk] = None) -> str:
