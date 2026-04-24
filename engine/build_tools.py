@@ -15,8 +15,6 @@ engine_path = Path(__file__).parent
 
 
 def build(dir: Path, ENGINE_DATA_PATH):
-    global engine_path
-
     launch_game_script = None
 
     if not os.path.exists(dir):
