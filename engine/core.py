@@ -140,7 +140,7 @@ class Scene:
 
 
 class Game:
-    def __init__(self, title="Game", /, width=800, height=600, *, IS_EDITOR = False):
+    def __init__(self, title="Game", /, width=800, height=600, *, IS_EDITOR=False):
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         self.wsize = (width, height)
