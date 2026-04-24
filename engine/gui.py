@@ -25,6 +25,7 @@ from pathlib import Path
 GP_BASE_PATH: str = str(Path(__file__).parent)
 ENGINE_DATA_PATH = resource_path("data")
 
+
 def game_path(relative: Optional[str]) -> Optional[str]:
     if relative is None:
         return

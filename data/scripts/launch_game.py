@@ -18,12 +18,14 @@ def resource_path(relative: str) -> str:
         return os.path.join(sys._MEIPASS, relative)  # pyright: ignore[reportAttributeAccessIssue]
     return os.path.join(os.path.abspath("."), relative)
 
+
 def game_path(relative: str) -> str:
     if relative is None:
         return ''
 
     directory = Path(__file__).parent
     return resource_path(os.path.join(str(directory), relative))
+
 
 if not os.path.exists(game_path(PROJECT_FILE)):
     print("Error:\ngame.absp project file does not exist in this directory.")
