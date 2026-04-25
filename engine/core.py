@@ -104,7 +104,7 @@ class Scene:
         self.IS_EDITOR: bool = IS_EDITOR
         self.scenedata: dict[Any, Any] = {}
 
-        self.parent: "Game" = parent
+        self.game: "Game" = parent
         self.objects: list[Entity] = []
         self.no_entities: bool = True
 
