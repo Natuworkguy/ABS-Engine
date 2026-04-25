@@ -1,12 +1,13 @@
 # Copyright (C) Above and Below Studios
 # See the LICENSE file for GPLv3
 
-from typing import Optional, Any
 import pygame
 import importlib.util
 import sys
 import tkinter.messagebox
 import uuid
+
+from typing import Optional, Any
 
 from .logger import logger, Status as LoggerStatus
 
