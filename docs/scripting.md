@@ -82,7 +82,7 @@ The `engine.core.Entity` class has the following properties:
 `get_colliding_entities`                           - `Callable[[], list[Entity]]`
 
 > [!Note]
-> Entity.parent can only be called in update()
+> Entity.parent can only be used in update()
 
 ## Script Functions
 
