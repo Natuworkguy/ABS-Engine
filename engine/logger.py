@@ -31,8 +31,8 @@ def logger(message: str, *, status: Status = Status.INFO) -> None:
     source = _get_caller_module().upper()
 
     if status == Status.CRITICAL:
-        print(Fore.RED)
+        print(Fore.RED, end="")
     elif status == Status.WARNING:
-        print(Fore.YELLOW)
+        print(Fore.YELLOW, end="")
 
     print(f"({status}) {source}: {message}{Style.RESET_ALL}")
