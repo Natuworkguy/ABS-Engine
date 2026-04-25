@@ -19,7 +19,7 @@ if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
 
 
 def tcl_source(script_name: str, root: Optional[tk.Tk] = None) -> str:
-    """Run a Tcl script from engine/tcl"""
+    """Run a Tcl script from engine/tcl/"""
 
     if root is None:
         root = tk.Tk()
