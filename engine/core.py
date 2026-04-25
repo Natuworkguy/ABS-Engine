@@ -43,6 +43,8 @@ class Entity:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
                         tkinter.messagebox.showerror("Error", f"Script file \"{scriptfile}\" not found. Please ensure the file exists and try again.")
+                    except ImportError as e:
+                        tkinter.messagebox.showerror("Error", f"Error when loading script: {e}")
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
