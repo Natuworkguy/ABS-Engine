@@ -96,7 +96,7 @@ class Engine:
         self.project_load_button = ttk.Button(
             self.project_section,
             text="Load Project",
-            command=lambda: self.load_project()
+            command=self.load_project
         )
         self.project_load_button.pack(padx=5, pady=5)
 
