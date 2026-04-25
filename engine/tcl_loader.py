@@ -44,16 +44,16 @@ def tcl_eval(tcl: str, root: Optional[tk.Tk] = None) -> str:
 
 def tcl_call_procedure(procedure_name: str, *args, root: Optional[tk.Tk] = None) -> str:
     """Call a Tcl procedure with arguments and return result
-    
+
     Example:
         result = tcl_call_procedure("show_info", "Title", "Message", root=tk_root)
     """
-    
+
     if root is None:
         root = tk.Tk()
-    
+
     # Escape arguments and build Tcl command
     escaped_args = ["{" + str(arg).replace("}", "\\}") + "}" for arg in args]
     tcl_command = f"{procedure_name} {' '.join(escaped_args)}"
-    
+
     return root.tk.eval(tcl_command)
