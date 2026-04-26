@@ -24,14 +24,3 @@ option add *LabelFrame.foreground   [dict get $ui_color text]
 option add *LabelFrame.background   [dict get $ui_color background]
 
 option add *LabelFrame.relief       solid
-
-
-proc get_color {color_name} {
-    global ui_color
-
-    if {[dict exists $ui_color $color_name]} {
-        return [dict get $ui_color $color_name]
-    }
-
-    error "get_color: Invalid color name: \"$color_name\""
-}
