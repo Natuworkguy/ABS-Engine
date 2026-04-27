@@ -206,19 +206,16 @@ class Engine:
             if self.game_settings_popup is not None:
                 self.game_settings_popup.destroy()
 
-            if width.strip():
+            if width.strip() and height.strip():
                 try:
                     self.game_dimensions[0] = int(width)
-                except ValueError:
-                    messagebox.showerror("Error", "Width value must be an integer.")
-                    return
-
-            if height.strip():
-                try:
                     self.game_dimensions[1] = int(height)
                 except ValueError:
-                    messagebox.showerror("Error", "Width value must be an integer.")
+                    messagebox.showerror("Error", "Width and height values must both be of type integer.")
                     return
+            else:
+                messagebox.showerror("Error", "Width and height values must be given.")
+                return
 
             messagebox.showinfo("Success", "Settings saved")
 
