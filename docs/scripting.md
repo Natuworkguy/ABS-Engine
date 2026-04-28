@@ -154,6 +154,8 @@ def event(entity, event):
 > The `pygame.draw.rect()` function that renders the entity on screen automatically uses the entity's color.
 > Since it runs every tick, you do _not_ need to call `entity.update_rect()` when only changing the entity's color.
 
+---
+
 >[!IMPORTANT]
 > If the game window freezes or shows a black screen at startup,
 > check that your script file has no syntax errors. It is completely normal for a game to crash if there are code errors.
