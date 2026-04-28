@@ -9,6 +9,7 @@ ABS Engine is a game engine developed by Above and Below Studios, designed for p
 - User-friendly API
 - Comprehensive documentation
 - Built-in collision detection (AABB)
+- Image rendering for entities with automatic scaling and positioning
 
 ## Getting Started
 

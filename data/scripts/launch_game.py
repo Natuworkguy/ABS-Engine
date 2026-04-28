@@ -43,13 +43,20 @@ for entity_name, entity_data in data["entities"].items():
     if scriptfile == '':
         scriptfile = None
 
+    image_path = entity_data.get("image")
+    if image_path:
+        image = game_path(image_path)
+    else:
+        image = None
+
     entity = Entity(
         x=entity_data.get("x", 0),
         y=entity_data.get("y", 0),
         width=entity_data.get("width", 50),
         height=entity_data.get("height", 50),
         color=tuple(entity_data.get("color", (255, 255, 255))),
-        scriptfile=scriptfile
+        scriptfile=scriptfile,
+        image=image
     )
     core_game.scene.add(entity)
 

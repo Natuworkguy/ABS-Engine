@@ -22,7 +22,7 @@ from .tcl_loader import tcl_source
 
 from pathlib import Path
 
-GP_BASE_PATH: str = str(Path(__file__).parent)
+GP_BASE_PATH: str = str(Path(__file__).parent.parent)
 ENGINE_DATA_PATH = resource_path("data")
 
 
@@ -360,13 +360,20 @@ class Engine:
         self.core_game = CoreGame(self.project_name, width=self.game_dimensions[0], height=self.game_dimensions[1], IS_EDITOR=True)
 
         for entity_name, entity_data in self.entities.items():
+            scriptfile = game_path(entity_data.get("scriptfile", None))
+            image_path = entity_data.get("image")
+            if image_path:
+                image = game_path(image_path)
+            else:
+                image = None
             entity = Entity(
                 x=entity_data.get("x", 0),
                 y=entity_data.get("y", 0),
                 width=entity_data.get("width", 50),
                 height=entity_data.get("height", 50),
                 color=tuple(entity_data.get("color", (255, 255, 255))),
-                scriptfile=game_path(entity_data.get("scriptfile", None))
+                scriptfile=scriptfile,
+                image=image
             )
             self.core_game.scene.add(entity)
 
