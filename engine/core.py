@@ -12,6 +12,14 @@ from typing import Optional, Any
 from .logger import logger, Status as LoggerStatus
 
 
+class EntityImage:
+    def __init__(self, image_path: str):
+        self.set_image(image_path)
+
+    def set_image(self, image_path: str):
+        self.surface = pygame.image.load(image_path).convert_alpha()
+
+
 class Entity:
     def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None):
         self.x = x
@@ -33,7 +41,7 @@ class Entity:
         self.image = None
         if image is not None:
             try:
-                self.image = pygame.image.load(image).convert_alpha()
+                self.image = EntityImage(image)
             except pygame.error as e:
                 logger(f"Failed to load image '{image}': {str(e)}", status=LoggerStatus.WARNING)
             except FileNotFoundError as e:
@@ -100,8 +108,8 @@ class Entity:
 
     def draw(self, surface):
         if self.image is not None:
-            scaled_image = pygame.transform.scale(self.image, (self.width, self.height))
-            surface.blit(scaled_image, (self.x, self.y))
+            scaled_image = pygame.transform.scale(self.image.surface, (self.rect.width, self.rect.height))
+            surface.blit(scaled_image, (self.rect.x, self.rect.y))
         else:
             pygame.draw.rect(surface, self.color, self.rect)
 
