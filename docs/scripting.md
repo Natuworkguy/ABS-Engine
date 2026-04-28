@@ -38,6 +38,9 @@ def update(entity, dt):
     entity.update_rect()
 ```
 
+Go back to ABS Engine and click "Run".
+You should see a white square moving continuously from left to right.
+
 >[!Tip]
 > Because the engine requires a script to
 > be attached to an entity in your game,
@@ -150,9 +153,6 @@ def event(entity, event):
 >[!NOTE]
 > The `pygame.draw.rect()` function that renders the entity on screen automatically uses the entity's color.
 > Since it runs every tick, you do _not_ need to call `entity.update_rect()` when only changing the entity's color.
-
-Go back to ABS Engine and click "Run".
-You should see a white square moving continuously from left to right.
 
 >[!IMPORTANT]
 > If the game window freezes or shows a black screen at startup,
