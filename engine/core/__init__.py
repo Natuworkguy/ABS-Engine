@@ -119,7 +119,10 @@ class Entity:
 
     def destroy(self) -> None:
         if self.parent is not None:
-            self.parent.objects.remove(self)
+            try:
+                self.parent.objects.remove(self)
+            except ValueError:
+                logger("Invalid target for destruction", status=LoggerStatus.WARNING)
 
 
 class Scene:
