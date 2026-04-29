@@ -362,10 +362,12 @@ class Engine:
         for entity_name, entity_data in self.entities.items():
             scriptfile = game_path(entity_data.get("scriptfile", None))
             image_path = entity_data.get("image")
+
             if image_path:
                 image = game_path(image_path)
             else:
                 image = None
+
             entity = Entity(
                 x=entity_data.get("x", 0),
                 y=entity_data.get("y", 0),
