@@ -12,7 +12,7 @@ python3 run.pyw
 
 ## Note for Windows Users
 
-Make sure you run it with the `python3` or `py` command. Directly clicking the file will not show the console.
+Make sure you run it with the `python3` or `py` command. Directly using the file path will not show the console.
 
 Bad Example:
 
