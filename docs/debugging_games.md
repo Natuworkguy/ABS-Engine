@@ -26,7 +26,7 @@ Here are the main parts of the message:
    |Type|
 ```
 
-**Type**: The severity of the message
+**Type**: The severity of the message (can be "INFO", "WARNING", or "CRITICAL")
 **Source**: Shows which module the message originated from. In this example, the message came from `engine/core.py`.
 **Message**: The message being printed
 
