@@ -73,26 +73,26 @@ In this code, we add one to the entity's `x` value (`entity.x += 1`),
 and then update its visual position (`entity.update_rect()`).
 
 The `engine.core.Entity` class has the following properties:
-`parent`      - Parent scene object                - `engine.core.Scene`
-`x`           - X position in pixels               - `float`
-`y`           - Y position in pixels               - `float`
-`width`       - Width in pixels                    - `float`
-`height`      - Height in pixels                   - `float`
-`color`       - RGB color value                    - `tuple[int, int, int]`
-`rect`        - Pygame rect object on screen       - `pygame.Rect`
-`scriptfile`  - Path to the attached script        - `str`
-`image`       - Loaded pygame image surface        - `pygame.Surface` or `None`
-`id`          - Unique entity UUID                 - `str`
-`get_colliding_entities`                           - `Callable[[], list[Entity]]`
-`destroy`     - Destroy the entity                 - `Callable[[], None]`
+`parent`                  - Parent scene object                  - `engine.core.Scene`
+`x`                       - X position in pixels                 - `float`
+`y`                       - Y position in pixels                 - `float`
+`width`                   - Width in pixels                      - `float`
+`height`                  - Height in pixels                     - `float`
+`color`                   - RGB color value                      - `tuple[int, int, int]`
+`rect`                    - Pygame rect object on screen         - `pygame.Rect`
+`scriptfile`              - Path to the attached script          - `str`
+`image`                   - Loaded pygame image surface          - `pygame.Surface` or `None`
+`id`                      - Unique entity UUID                   - `str`
+`get_colliding_entities`  - Return a list of colliding entities  - `Callable[[], list[Entity]]`
+`destroy`                 - Destroy the entity                   - `Callable[[], None]`
 
 ## Script Functions
 
 The `init()`, `update()`, and `event()` functions are callback functions that ABS Engine calls at specific times:
 
-- `init(entity: Entity) -> None` - Called when the game starts
-- `update(entity: Entity, dt: float) -> None` - Called every frame
-- `event(entity: Entity, event: pygame.event.Event) -> None` - Called when an input event occurs
+- `init(entity: Entity) -> None`                              - Called when the game starts
+- `update(entity: Entity, dt: float) -> None`                 - Called every frame
+- `event(entity: Entity, event: pygame.event.Event) -> None`  - Called when an a pygame event occurs
 
 Here's an example script that creates a simple game with player movement.
 The game uses a top-down perspective with a player-controlled square
