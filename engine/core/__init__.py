@@ -186,7 +186,7 @@ class Game:
         logger("Initialized game")
 
     def _set_bg_color(self, color: tuple[int, int, int]) -> None:
-        self.bg_color = color
+        self._bg_color = color
 
     def run(self, fps=60):
         logger("Starting game loop")
@@ -200,7 +200,7 @@ class Game:
                 self.scene.event(event)
 
             self.scene.update(dt)
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self._bg_color)
             self.scene.draw(self.screen)
             pygame.display.flip()
         pygame.quit()
