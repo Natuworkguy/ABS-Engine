@@ -173,11 +173,21 @@ class Scene:
 
 
 class Game:
-    def __init__(self, title="Game", /, width=800, height=600, *, IS_EDITOR=False):
+    def __init__(
+        self,
+        title="Game",
+        /,
+        width=800,
+        height=600,
+        *,
+        cursor_visible=True,
+        IS_EDITOR=False,
+    ):
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         self.wsize = (width, height)
         pygame.display.set_caption(title=title)
+        pygame.mouse.set_visible(cursor_visible)
         self.clock = pygame.time.Clock()
         self.running = False
         self.scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)

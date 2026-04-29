@@ -48,6 +48,7 @@ class Engine:
 
         self.project_name = "Untitled Project"
         self.game_dimensions = [800, 600]
+        self.cursor_visible = True
         self.entities = {}
 
         self.root = tk.Tk()
@@ -199,9 +200,21 @@ class Engine:
         self.game_settings_height.pack(padx=5, pady=5)
         self.game_settings_height.insert(tk.END, str(self.game_dimensions[1]))
 
-        def game_settings_dimensions_save() -> None:
+        self.game_settings_display_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Display")
+        self.game_settings_display_section.pack(padx=5, pady=5, fill="x")
+
+        self.game_settings_cursor_visible = tk.BooleanVar(value=self.cursor_visible)
+        self.game_settings_cursor_visible_checkbox = ttk.Checkbutton(
+            self.game_settings_display_section,
+            text="Cursor Visible",
+            variable=self.game_settings_cursor_visible
+        )
+        self.game_settings_cursor_visible_checkbox.pack(padx=5, pady=5)
+
+        def game_settings_save() -> None:
             width = self.game_settings_width.get()
             height = self.game_settings_height.get()
+            cursor_visible = self.game_settings_cursor_visible.get()
 
             if self.game_settings_popup is not None:
                 self.game_settings_popup.destroy()
@@ -210,6 +223,7 @@ class Engine:
                 try:
                     self.game_dimensions[0] = int(width)
                     self.game_dimensions[1] = int(height)
+                    self.cursor_visible = cursor_visible
                 except ValueError:
                     messagebox.showerror("Error", "Width and height values must both be of type integer.")
                     return
@@ -219,8 +233,8 @@ class Engine:
 
             messagebox.showinfo("Success", "Settings saved")
 
-        self.game_settings_dimensions_save_button = ttk.Button(self.game_settings_dimensions_section, text="Save and Close", command=game_settings_dimensions_save)
-        self.game_settings_dimensions_save_button.pack(padx=5, pady=5)
+        self.game_settings_save_button = ttk.Button(self.game_settings_popup, text="Save and Close", command=game_settings_save)
+        self.game_settings_save_button.pack(padx=5, pady=5)
 
     def delete_entity(self) -> None:
         try:
@@ -330,6 +344,7 @@ class Engine:
         self.entities = data.get("entities", {})
         game = data.get("game", {})
         self.game_dimensions = game.get("dimensions", [800, 600])
+        self.cursor_visible = game.get("cursor_visible", True)
         self.project_name = data.get("name", "Untitled Project")
         self.project_name_input.delete(0, tk.END)
         self.project_name_input.insert(0, self.project_name)
@@ -357,7 +372,13 @@ class Engine:
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
     def run_game(self) -> None:
-        self.core_game = CoreGame(self.project_name, width=self.game_dimensions[0], height=self.game_dimensions[1], IS_EDITOR=True)
+        self.core_game = CoreGame(
+            self.project_name,
+            width=self.game_dimensions[0],
+            height=self.game_dimensions[1],
+            cursor_visible=self.cursor_visible,
+            IS_EDITOR=True
+        )
 
         for entity_name, entity_data in self.entities.items():
             scriptfile = game_path(entity_data.get("scriptfile", None))

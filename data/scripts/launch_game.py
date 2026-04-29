@@ -35,8 +35,14 @@ with open(game_path(PROJECT_FILE), "r") as f:
     data: dict = load(f)
 
 game_dimensions = data["game"]["dimensions"]
+cursor_visible = data["game"].get("cursor_visible", True)
 
-core_game = CoreGame(data["name"], width=game_dimensions[0], height=game_dimensions[1])
+core_game = CoreGame(
+    data["name"],
+    width=game_dimensions[0],
+    height=game_dimensions[1],
+    cursor_visible=cursor_visible
+)
 
 for entity_name, entity_data in data["entities"].items():
     scriptfile = game_path(entity_data.get("scriptfile", None))

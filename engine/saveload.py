@@ -28,7 +28,8 @@ def save_project(engine: Any) -> Optional[Any]:
             dump({
                 "name": engine.project_name,
                 "game": {
-                    "dimensions": engine.game_dimensions
+                    "dimensions": engine.game_dimensions,
+                    "cursor_visible": engine.cursor_visible
                 },
                 "entities": engine.entities,
             }, f)
