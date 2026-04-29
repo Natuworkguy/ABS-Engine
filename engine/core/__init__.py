@@ -132,6 +132,9 @@ class Scene:
                 colliding.append(obj)
         return colliding
 
+    def set_bg_color(self, color: tuple[int, int, int]) -> None:
+        self.game._set_bg_color(color)
+
     def add(self, obj: Entity):
         self.objects.append(obj)
         obj._setparent(self)
@@ -164,8 +167,12 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = False
         self.scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
+        self._bg_color = (0, 0, 0)
 
         logger("Initialized game")
+
+    def _set_bg_color(self, color: tuple[int, int, int]) -> None:
+        self.bg_color = color
 
     def run(self, fps=60):
         logger("Starting game loop")
@@ -179,7 +186,7 @@ class Game:
                 self.scene.event(event)
 
             self.scene.update(dt)
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(self.bg_color)
             self.scene.draw(self.screen)
             pygame.display.flip()
         pygame.quit()
