@@ -31,7 +31,7 @@ Entities in ABS Engine are defined by a dictionary of properties in the project 
 - `height` (int): The height of the entity in pixels. Default: 50
 - `color` (list of 3 ints): The RGB color of the entity as a list [r, g, b]. Default: [255, 255, 255] (white)
 - `scriptfile` (string): Path to the Python script file for the entity, relative to the project (directory where game.absp is saved) folder. Optional.
-- `image` (string): Path to the image file for the entity, relative to the data/ folder. If specified, the entity will display this image instead of a colored rectangle. The image will be scaled to fit the entity's width and height and will follow the entity's position. Optional.
+- `image` (string): Path to the image file for the entity, relative to the project folder (The folder containing the game.absp file). If specified, the entity will display this image instead of a colored rectangle. The image will be scaled to fit the entity's width and height and will follow the entity's position. Optional.
 
 Example entity data:
 
