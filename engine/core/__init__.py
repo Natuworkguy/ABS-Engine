@@ -101,8 +101,7 @@ class Entity:
 
     def draw(self, surface):
         if self.image is not None:
-            scaled_image = pygame.transform.scale(self.image.surface, (self.rect.width, self.rect.height))
-            surface.blit(scaled_image, (self.rect.x, self.rect.y))
+            self.image.draw(surface, self.rect)
         else:
             pygame.draw.rect(surface, self.color, self.rect)
 
