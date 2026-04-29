@@ -85,9 +85,6 @@ The `engine.core.Entity` class has the following properties:
 `id`          - Unique entity UUID                 - `str`
 `get_colliding_entities`                           - `Callable[[], list[Entity]]`
 
-> [!Note]
-> Entity.parent can only be used in update()
-
 ## Script Functions
 
 The `init()`, `update()`, and `event()` functions are callback functions that ABS Engine calls at specific times:

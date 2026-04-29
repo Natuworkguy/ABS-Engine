@@ -28,6 +28,7 @@ class Entity:
 
         self.scriptfile = scriptfile
         self.scriptfile_module = None
+        self.scriptfile_init_exists = False
         self.scriptfile_update_exists = False
         self.scriptfile_event_exists = False
 
@@ -60,7 +61,7 @@ class Entity:
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
                     if hasattr(self.scriptfile_module, 'init'):
-                        self.scriptfile_module.init(self)
+                        self.scriptfile_init_exists = True
 
                     if hasattr(self.scriptfile_module, 'update'):
                         self.scriptfile_update_exists = True
@@ -82,6 +83,11 @@ class Entity:
 
     def _setparent(self, parent):
         self.parent = parent
+
+    def init(self) -> None:
+        if self.scriptfile_module is not None:
+            if self.scriptfile_init_exists:
+                self.scriptfile_module.init(self)
 
     def update_rect(self):
         self.rect.x = self.x
@@ -138,6 +144,7 @@ class Scene:
     def add(self, obj: Entity):
         self.objects.append(obj)
         obj._setparent(self)
+        obj.init()
 
         if self.no_entities:
             self.no_entities = False
