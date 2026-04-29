@@ -84,6 +84,7 @@ The `engine.core.Entity` class has the following properties:
 `image`       - Loaded pygame image surface        - `pygame.Surface` or `None`
 `id`          - Unique entity UUID                 - `str`
 `get_colliding_entities`                           - `Callable[[], list[Entity]]`
+`destroy`     - Destroy the entity                 - `Callable[[], None]`
 
 ## Script Functions
 
