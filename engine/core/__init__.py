@@ -117,6 +117,10 @@ class Entity:
 
         return self.parent._get_colliding_entities(self)
 
+    def destroy(self) -> None:
+        if self.parent is not None:
+            self.parent.objects.remove(self)
+
 
 class Scene:
     def __init__(self, *, parent: "Game", IS_EDITOR: bool = False):
