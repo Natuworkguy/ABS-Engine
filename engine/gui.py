@@ -300,9 +300,14 @@ class Engine:
                     return
 
                 try:
-                    self.entities[selected_item] = json.loads(
+                    data = json.loads(
                         self.entity_data.get("1.0", tk.END + '-1c')
                     )
+
+                    if isinstance(data, list):
+                        messagebox.showerror("Error", "Failed to save entity data. Ensure that the data is a dictionary.")
+
+                    self.entities[selected_item] = data
                 except Exception as e:
                     messagebox.showerror("Error", f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.")
                     self.entity_data.focus_set()
