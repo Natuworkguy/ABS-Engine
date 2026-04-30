@@ -181,10 +181,12 @@ class Game:
         height=600,
         *,
         cursor_visible=True,
+        fullscreen=False,
         IS_EDITOR=False,
     ):
         pygame.init()
-        self.screen = pygame.display.set_mode((width, height))
+        display_flags = pygame.FULLSCREEN if fullscreen else 0
+        self.screen = pygame.display.set_mode((width, height), display_flags)
         self.wsize = (width, height)
         pygame.display.set_caption(title=title)
         pygame.mouse.set_visible(cursor_visible)

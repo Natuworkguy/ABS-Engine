@@ -36,12 +36,14 @@ with open(game_path(PROJECT_FILE), "r") as f:
 
 game_dimensions = data["game"]["dimensions"]
 cursor_visible = data["game"].get("cursor_visible", True)
+fullscreen = data["game"].get("fullscreen", False)
 
 core_game = CoreGame(
     data["name"],
     width=game_dimensions[0],
     height=game_dimensions[1],
-    cursor_visible=cursor_visible
+    cursor_visible=cursor_visible,
+    fullscreen=fullscreen
 )
 
 for entity_name, entity_data in data["entities"].items():

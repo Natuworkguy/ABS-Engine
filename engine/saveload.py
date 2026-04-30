@@ -29,7 +29,8 @@ def save_project(engine: Any) -> Optional[Any]:
                 "name": engine.project_name,
                 "game": {
                     "dimensions": engine.game_dimensions,
-                    "cursor_visible": engine.cursor_visible
+                    "cursor_visible": engine.cursor_visible,
+                    "fullscreen": engine.fullscreen
                 },
                 "entities": engine.entities,
             }, f)

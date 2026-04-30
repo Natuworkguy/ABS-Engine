@@ -49,6 +49,7 @@ class Engine:
         self.project_name = "Untitled Project"
         self.game_dimensions = [800, 600]
         self.cursor_visible = True
+        self.fullscreen = False
         self.entities = {}
 
         self.root = tk.Tk()
@@ -211,10 +212,19 @@ class Engine:
         )
         self.game_settings_cursor_visible_checkbox.pack(padx=5, pady=5)
 
+        self.game_settings_fullscreen = tk.BooleanVar(value=self.fullscreen)
+        self.game_settings_fullscreen_checkbox = ttk.Checkbutton(
+            self.game_settings_display_section,
+            text="Fullscreen",
+            variable=self.game_settings_fullscreen
+        )
+        self.game_settings_fullscreen_checkbox.pack(padx=5, pady=5)
+
         def game_settings_save() -> None:
             width = self.game_settings_width.get()
             height = self.game_settings_height.get()
             cursor_visible = self.game_settings_cursor_visible.get()
+            fullscreen = self.game_settings_fullscreen.get()
 
             if self.game_settings_popup is not None:
                 self.game_settings_popup.destroy()
@@ -224,6 +234,7 @@ class Engine:
                     self.game_dimensions[0] = int(width)
                     self.game_dimensions[1] = int(height)
                     self.cursor_visible = cursor_visible
+                    self.fullscreen = fullscreen
                 except ValueError:
                     messagebox.showerror("Error", "Width and height values must both be of type integer.")
                     return
@@ -350,6 +361,7 @@ class Engine:
         game = data.get("game", {})
         self.game_dimensions = game.get("dimensions", [800, 600])
         self.cursor_visible = game.get("cursor_visible", True)
+        self.fullscreen = game.get("fullscreen", False)
         self.project_name = data.get("name", "Untitled Project")
         self.project_name_input.delete(0, tk.END)
         self.project_name_input.insert(0, self.project_name)
@@ -382,6 +394,7 @@ class Engine:
             width=self.game_dimensions[0],
             height=self.game_dimensions[1],
             cursor_visible=self.cursor_visible,
+            fullscreen=self.fullscreen,
             IS_EDITOR=True
         )
 
