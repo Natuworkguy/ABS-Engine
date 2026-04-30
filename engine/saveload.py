@@ -17,7 +17,7 @@ def resource_path(relative: str) -> str:
 
 def save_project(engine: Any) -> Optional[Any]:
     file = filedialog.asksaveasfile(
-        defaultextension=".abs",
+        defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
         initialfile="game.absp"
