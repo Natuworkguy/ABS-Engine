@@ -284,7 +284,7 @@ class Engine:
         self.entity_list.insert(tk.END, new_name)
 
     def add_entity(self, name: str) -> None:
-        if name.strip() == '':
+        if not name.strip():
             messagebox.showerror("Error", "Entity name cannot be empty.")
             return
 
