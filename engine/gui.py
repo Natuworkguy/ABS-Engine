@@ -320,6 +320,7 @@ class Engine:
 
                     if isinstance(data, list):
                         messagebox.showerror("Error", "Failed to save entity data. Ensure that the data is a dictionary.")
+                        return
 
                     self.entities[selected_item] = data
                 except Exception as e:
