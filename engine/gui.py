@@ -287,6 +287,9 @@ class Engine:
         if not name.strip():
             messagebox.showerror("Error", "Entity name cannot be empty.")
             return
+        elif name in self.entities:
+            messagebox.showerror("Error", "Entity already exists.")
+            return
 
         self.add_entity_input.delete(0, tk.END)
 
