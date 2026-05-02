@@ -6,11 +6,12 @@ import sys
 
 import tkinter as tk
 
+from typing import Final
 from pathlib import Path
 
 from .logger import logger, Status
 
-TCL_DIR = Path(__file__).parent / "tcl"
+TCL_DIR: Final[Path] = Path(__file__).parent / "tcl"
 
 if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
     logger("Could not find engine/tcl/ directory.", status=Status.CRITICAL)
