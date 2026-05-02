@@ -20,12 +20,12 @@ Then, launch ABS Engine and follow these steps:
    {"scriptfile": "scripts/player.py"}
    ```
 
-   >[!Tip]
-   > Name your scripts after the entity they're attached to.
-   > This makes it easy to identify them later.
-
 6. Click "Save", then "Save Project"
 7. Verify that `game.absp` was saved in your project folder
+
+>[!Tip]
+> Name your scripts after the entity they're attached to.
+> This makes it easy to identify them later.
 
 In `scripts/player.py`, add the following.
 
