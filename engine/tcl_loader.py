@@ -18,10 +18,15 @@ if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
     sys.exit(1)
 
 
+def _no_root() -> None:
+    raise ValueError("Engine must provide root")
+
+
 def tcl_source(script_name: str, root: tk.Tk) -> str:
     """Run a Tcl script from engine/tcl/"""
 
-    assert root is not None, "Engine must provide root"
+    if root is None:
+        _no_root()
 
     script_path = str(TCL_DIR / script_name)
 
@@ -35,7 +40,8 @@ def tcl_source(script_name: str, root: tk.Tk) -> str:
 def tcl_eval(tcl: str, root: tk.Tk) -> str:
     """Evaluate a Tcl statement"""
 
-    assert root is not None, "Engine must provide root"
+    if root is None:
+        _no_root()
 
     return root.tk.eval(tcl)
 
@@ -48,7 +54,8 @@ def tcl_call_procedure(procedure_name: str, *args, root: tk.Tk) -> str:
         result = tcl_call_procedure("show_info", "Title", "Message", root=tk_root)
     """
 
-    assert root is not None, "Engine must provide root"
+    if root is None:
+        _no_root()
 
     escaped_args = ["{" + str(arg) + "}" for arg in args]
     tcl_command = f"{procedure_name} {' '.join(escaped_args)}"
