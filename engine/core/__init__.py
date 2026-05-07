@@ -32,7 +32,8 @@ class Entity:
         self.scriptfile_update_exists = False
         self.scriptfile_event_exists = False
 
-        self.image = None
+        self.image: Optional[EntityImage] = None
+
         if image is not None:
             try:
                 self.image = EntityImage(image)
