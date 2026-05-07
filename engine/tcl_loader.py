@@ -34,7 +34,7 @@ def tcl_source(script_name: str, root: tk.Tk) -> str:
         logger(f"Could not find Tcl file {script_path}.", status=Status.CRITICAL)
         sys.exit(1)
 
-    return root.tk.eval("source {" + script_path + "}")
+    return root.tk.call("source", script_path)
 
 
 def tcl_eval(tcl: str, root: tk.Tk) -> str:
@@ -57,7 +57,4 @@ def tcl_call_procedure(procedure_name: str, *args, root: tk.Tk) -> str:
     if root is None:
         _no_root()
 
-    escaped_args = ["{" + str(arg) + "}" for arg in args]
-    tcl_command = f"{procedure_name} {' '.join(escaped_args)}"
-
-    return root.tk.eval(tcl_command)
+    return root.tk.call(procedure_name, *args)
