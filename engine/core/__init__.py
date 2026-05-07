@@ -139,10 +139,13 @@ class Scene:
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
         """Return a list of all entities that are colliding with the given entity."""
+
         colliding = []
+
         for obj in self.objects:
             if obj != entity and entity._collides_with(obj):
                 colliding.append(obj)
+
         return colliding
 
     def set_bg_color(self, color: tuple[int, int, int]) -> None:
