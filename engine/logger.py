@@ -8,9 +8,9 @@ from colorama import Fore, Style
 
 
 class Status(Enum):
-    CRITICAL = "Critical"
-    WARNING = "Warning"
-    INFO = "Info"
+    CRITICAL = "CRITICAL"
+    WARNING = "WARNING"
+    INFO = "INFO"
 
 
 def _get_caller_module():
@@ -35,4 +35,4 @@ def logger(message: str, *, status: Status = Status.INFO) -> None:
     elif status == Status.WARNING:
         print(Fore.YELLOW, end="")
 
-    print(f"({status}) {source}: {message}{Style.RESET_ALL}")
+    print(f"({status.value}) {source}: {message}{Style.RESET_ALL}")

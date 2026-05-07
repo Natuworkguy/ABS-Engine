@@ -18,7 +18,7 @@ Let's break down this log message:
 Here are the main parts of the message:
 
 ```text
-(Status.INFO) ENGINE.CORE: Initialized game
+(INFO) ENGINE.CORE: Initialized game
    |          |            |
    |          |______      |_______
    |          |Source|     |Message|
