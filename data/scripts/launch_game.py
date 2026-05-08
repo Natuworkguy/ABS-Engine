@@ -11,6 +11,7 @@ from json import load
 from pathlib import Path
 
 PROJECT_FILE = "game.absp"
+GP_BASE_PATH = Path(__file__).parent
 
 
 def resource_path(relative: str) -> str:
@@ -23,8 +24,7 @@ def game_path(relative: str) -> str:
     if relative is None:
         return ''
 
-    directory = Path(__file__).parent
-    return resource_path(os.path.join(str(directory), relative))
+    return resource_path(os.path.join(str(GP_BASE_PATH), relative))
 
 
 if not os.path.exists(game_path(PROJECT_FILE)):
