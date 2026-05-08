@@ -3,14 +3,19 @@
 
 import pygame
 
+from typing import Optional
+
 
 class EntityImage:
     """Manage a pygame image surface for an entity."""
 
-    surface: pygame.Surface
+    surface: Optional[pygame.Surface]
 
     def __init__(self, image_path: str):
         """Create an entity image by loading ``image_path``."""
+
+        self.surface = None
+
         self.set_image(image_path)
 
     def set_image(self, image_path: str):
