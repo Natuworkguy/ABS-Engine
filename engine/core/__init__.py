@@ -14,7 +14,7 @@ from .image import EntityImage
 
 
 class Entity:
-    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None):
+    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None) -> None:
         self.x = x
         self.y = y
         self.width = width
@@ -24,7 +24,7 @@ class Entity:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.id = str(uuid.uuid4())
 
-        self.parent = None
+        self.parent: Optional["Scene"] = None
 
         self.scriptfile = scriptfile
         self.scriptfile_module = None
@@ -82,7 +82,7 @@ class Entity:
         """Check if this entity collides with another entity using AABB collision detection."""
         return self.rect.colliderect(other.rect)
 
-    def _setparent(self, parent):
+    def _setparent(self, parent: "Scene") -> None:
         self.parent = parent
 
     def init(self) -> None:
@@ -90,23 +90,23 @@ class Entity:
             if self.scriptfile_init_exists:
                 self.scriptfile_module.init(self)
 
-    def update_rect(self):
+    def update_rect(self) -> None:
         self.rect.x = self.x
         self.rect.y = self.y
         self.rect.width = self.width
         self.rect.height = self.height
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         if self.scriptfile_module is not None:
             if self.scriptfile_update_exists:
                 self.scriptfile_module.update(self, dt)
 
-    def event(self, event):
+    def event(self, event: pygame.event.Event) -> None:
         if self.scriptfile_module is not None:
             if self.scriptfile_event_exists:
                 self.scriptfile_module.event(self, event)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         if self.image is not None:
             self.image.draw(surface, self.rect)
         else:
@@ -127,7 +127,7 @@ class Entity:
 
 
 class Scene:
-    def __init__(self, *, parent: "Game", IS_EDITOR: bool = False):
+    def __init__(self, *, parent: "Game", IS_EDITOR: bool = False) -> None:
         # For use by entities
         self.IS_EDITOR: bool = IS_EDITOR
         self.scenedata: dict[Any, Any] = {}
@@ -152,7 +152,7 @@ class Scene:
     def set_bg_color(self, color: tuple[int, int, int]) -> None:
         self.game._set_bg_color(color)
 
-    def add(self, obj: Entity):
+    def add(self, obj: Entity) -> None:
         assert obj not in self.objects, "Entity is already in the scene"  # nosec B101
 
         self.objects.append(obj)
@@ -162,17 +162,17 @@ class Scene:
         if self.no_entities:
             self.no_entities = False
 
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         if not self.no_entities:
             for obj in self.objects:
                 obj.update(dt)
 
-    def event(self, event):
+    def event(self, event: pygame.event.Event) -> None:
         if not self.no_entities:
             for obj in self.objects:
                 obj.event(event)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
@@ -181,32 +181,32 @@ class Scene:
 class Game:
     def __init__(
         self,
-        title="Game",
+        title: str = "Game",
         /,
-        width=800,
-        height=600,
+        width: int = 800,
+        height: int = 600,
         *,
-        cursor_visible=True,
-        fullscreen=False,
-        IS_EDITOR=False,
-    ):
+        cursor_visible: bool = True,
+        fullscreen: bool = False,
+        IS_EDITOR: bool = False,
+    ) -> None:
         pygame.init()
-        display_flags = pygame.FULLSCREEN if fullscreen else 0
-        self.screen = pygame.display.set_mode((width, height), display_flags)
-        self.wsize = (width, height)
+        display_flags: int = pygame.FULLSCREEN if fullscreen else 0
+        self.screen: pygame.Surface = pygame.display.set_mode((width, height), display_flags)
+        self.wsize: tuple[int, int] = (width, height)
         pygame.display.set_caption(title=title)
         pygame.mouse.set_visible(cursor_visible)
-        self.clock = pygame.time.Clock()
-        self.running = False
-        self.scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
-        self._bg_color = (0, 0, 0)
+        self.clock: pygame.time.Clock = pygame.time.Clock()
+        self.running: bool = False
+        self.scene: Scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
+        self._bg_color: tuple[int, int, int] = (0, 0, 0)
 
         logger("Initialized game")
 
     def _set_bg_color(self, color: tuple[int, int, int]) -> None:
         self._bg_color = color
 
-    def run(self, fps=60):
+    def run(self, fps: int = 60) -> None:
         logger("Starting game loop")
         self.running = True
         while self.running:
