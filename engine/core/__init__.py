@@ -153,6 +153,8 @@ class Scene:
         self.game._set_bg_color(color)
 
     def add(self, obj: Entity):
+        assert obj not in self.objects, "Entity is already in the scene"  # nosec B101
+
         self.objects.append(obj)
         obj._setparent(self)
         obj.init()
@@ -206,7 +208,6 @@ class Game:
 
     def run(self, fps=60):
         logger("Starting game loop")
-
         self.running = True
         while self.running:
             dt = self.clock.tick(fps) / 1000.0
