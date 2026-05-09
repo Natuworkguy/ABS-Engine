@@ -206,18 +206,22 @@ class Game:
     def _set_bg_color(self, color: tuple[int, int, int]) -> None:
         self._bg_color = color
 
+    def step(self, dt: float) -> None:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            self.scene.event(event)
+
+        self.scene.update(dt)
+        self.screen.fill(self._bg_color)
+        self.scene.draw(self.screen)
+        pygame.display.flip()
+
     def run(self, fps: int = 60) -> None:
         logger("Starting game loop")
         self.running = True
         while self.running:
             dt = self.clock.tick(fps) / 1000.0
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                self.scene.event(event)
+            self.step(dt)
 
-            self.scene.update(dt)
-            self.screen.fill(self._bg_color)
-            self.scene.draw(self.screen)
-            pygame.display.flip()
         pygame.quit()
