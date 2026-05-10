@@ -214,6 +214,3 @@ __marimo__/
 
 # ABS cache files
 abs_cache/
-
-# Temporary scriptfiles for testing
-ts.py
