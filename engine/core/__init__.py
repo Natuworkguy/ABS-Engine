@@ -196,8 +196,8 @@ class Game:
     ) -> None:
         pygame.init()
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
-        self.screen: pygame.Surface = pygame.display.set_mode((width, height), display_flags)
         self.wsize: tuple[int, int] = (width, height)
+        self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title=title)
         pygame.mouse.set_visible(cursor_visible)
         self.clock: pygame.time.Clock = pygame.time.Clock()
