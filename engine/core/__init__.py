@@ -121,7 +121,7 @@ class Entity:
     def destroy(self) -> None:
         if self.parent is not None:
             try:
-                self.parent.objects.remove(self)
+                self.parent.remove(self)
             except ValueError:
                 logger("Invalid target for destruction", status=LoggerStatus.WARNING)
 
@@ -176,6 +176,10 @@ class Scene:
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
+
+    def remove(self, obj: Entity) -> None:
+        self.objects.remove(obj)
+        self.no_entities = len(self.objects) == 0
 
 
 class Game:
