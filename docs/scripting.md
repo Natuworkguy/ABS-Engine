@@ -111,10 +111,12 @@ held = {
     'd': False
 }
 
+
 def init(entity):
     entity.width = ENTITY_SIZE[0]
     entity.height = ENTITY_SIZE[1]
     entity.update_rect()
+
 
 def update(entity, dt):
     if held['w'] and not entity.y == 0:
@@ -126,6 +128,7 @@ def update(entity, dt):
     elif held['d'] and not entity.x == entity.parent.game.wsize[0] - ENTITY_SIZE[1]:
         entity.x += step_size
     entity.update_rect()
+
 
 def event(entity, event):
     if event.type == pygame.KEYDOWN:
