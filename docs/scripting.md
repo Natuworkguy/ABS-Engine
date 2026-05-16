@@ -81,7 +81,7 @@ The `engine.core.Entity` class has the following properties:
 `color`                   - RGB color value                      - `tuple[int, int, int]`
 `rect`                    - Pygame rect object on screen         - `pygame.Rect`
 `scriptfile`              - Path to the attached script          - `str`
-`image`                   - Loaded pygame image surface          - `pygame.Surface` or `None`
+`image`                   - Image attached to entity             - `EntityImage` or `None`
 `id`                      - Unique entity UUID                   - `str`
 `get_colliding_entities`  - Return a list of colliding entities  - `Callable[[], list[Entity]]`
 `destroy`                 - Destroy the entity                   - `Callable[[], None]`
