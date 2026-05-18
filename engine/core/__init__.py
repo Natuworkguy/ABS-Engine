@@ -114,7 +114,7 @@ class Entity:
 
     def get_colliding_entities(self) -> Optional[list["Entity"]]:
         if self.parent is None:
-            return
+            return None
 
         return self.parent._get_colliding_entities(self)
 
