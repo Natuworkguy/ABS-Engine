@@ -9,6 +9,7 @@ import sys
 
 from json import load
 from pathlib import Path
+from typing import Optional
 
 PROJECT_FILE = "game.absp"
 GP_BASE_PATH = Path(__file__).parent
@@ -47,15 +48,14 @@ core_game = CoreGame(
 )
 
 for entity_name, entity_data in data["entities"].items():
-    scriptfile = game_path(entity_data.get("scriptfile", None))
+    scriptfile: Optional[str] = game_path(entity_data.get("scriptfile", None))
     if scriptfile == '':
         scriptfile = None
 
     image_path = entity_data.get("image")
+    image: Optional[str] = None
     if image_path:
         image = game_path(image_path)
-    else:
-        image = None
 
     entity = Entity(
         x=entity_data.get("x", 0),
