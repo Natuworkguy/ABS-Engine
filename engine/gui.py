@@ -28,7 +28,7 @@ ENGINE_DATA_PATH = resource_path("data")
 
 def game_path(relative: Optional[str]) -> Optional[str]:
     if relative is None:
-        return
+        return None
 
     return os.path.join(str(GP_BASE_PATH), relative)
 
@@ -41,16 +41,16 @@ class Engine:
     entity_data: Optional[tk.Text]
 
     def __init__(self) -> None:
-        self.core_game = None
+        self.core_game: Optional[CoreGame] = None
         self.view_popup = None
-        self.game_settings_popup = None
+        self.game_settings_popup: Optional[tk.Toplevel] = None
         self.entity_data = None
 
         self.project_name = "Untitled Project"
         self.game_dimensions = [800, 600]
         self.cursor_visible = True
         self.fullscreen = False
-        self.entities = {}
+        self.entities: dict = {}
 
         self.root = tk.Tk()
         self.root.title("ABS Engine")
