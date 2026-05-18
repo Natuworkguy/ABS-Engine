@@ -38,6 +38,8 @@ def save_project(engine: Any) -> Optional[Any]:
 
         return file
 
+    return None
+
 
 def load_project() -> Optional[list]:
     file = filedialog.askopenfile(
@@ -51,3 +53,5 @@ def load_project() -> Optional[list]:
             data: dict = load(f)
 
         return [data, file]
+
+    return None
