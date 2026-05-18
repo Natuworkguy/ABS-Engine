@@ -192,13 +192,24 @@ class Game:
         *,
         cursor_visible: bool = True,
         fullscreen: bool = False,
+        icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
         pygame.init()
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
+
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
+
+        if icon_path is not None:
+            try:
+                image = pygame.image.load(icon_path)
+                image = image.convert_alpha()
+                pygame.display.set_icon(image)
+            except (pygame.error, FileNotFoundError) as e:
+                logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
+
         pygame.mouse.set_visible(cursor_visible)
         self.clock: pygame.time.Clock = pygame.time.Clock()
         self.running: bool = False
