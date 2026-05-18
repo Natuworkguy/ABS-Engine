@@ -275,7 +275,7 @@ class Engine:
         if new_name is None:
             return
 
-        if new_name.strip() == '':
+        if not new_name.strip():
             messagebox.showerror("Error", "Entity name cannot be empty.")
             return
 
