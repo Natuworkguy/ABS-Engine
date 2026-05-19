@@ -202,13 +202,7 @@ class Game:
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
 
-        if icon_path is not None:
-            try:
-                image = pygame.image.load(icon_path)
-                image = image.convert_alpha()
-                pygame.display.set_icon(image)
-            except (pygame.error, FileNotFoundError) as e:
-                logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
+        self.set_icon(icon_path)
 
         pygame.mouse.set_visible(cursor_visible)
         self.clock: pygame.time.Clock = pygame.time.Clock()
@@ -220,6 +214,15 @@ class Game:
 
     def _set_bg_color(self, color: tuple[int, int, int]) -> None:
         self._bg_color = color
+
+    def set_icon(self, icon_path: Optional[str]) -> None:
+        if icon_path is not None:
+            try:
+                image = pygame.image.load(icon_path)
+                image = image.convert_alpha()
+                pygame.display.set_icon(image)
+            except (pygame.error, FileNotFoundError) as e:
+                logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
 
     def step(self, dt: float) -> None:
         for event in pygame.event.get():
