@@ -30,5 +30,7 @@ def build(dir: Path, ENGINE_DATA_PATH):
         f.write(launch_game_script)
         f.close()
 
-    shutil.copytree(engine_path, os.path.join(dir, "engine"), dirs_exist_ok=True)
-    shutil.copytree(ENGINE_DATA_PATH, os.path.join(dir, "data"), dirs_exist_ok=True)
+    ignore = shutil.ignore_patterns("*.pyc", "__pycache__")
+
+    shutil.copytree(engine_path, os.path.join(dir, "engine"), dirs_exist_ok=True, ignore=ignore)
+    shutil.copytree(ENGINE_DATA_PATH, os.path.join(dir, "data"), dirs_exist_ok=True, ignore=ignore)
