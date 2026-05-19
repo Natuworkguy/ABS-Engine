@@ -11,10 +11,11 @@ from typing import Optional, Any
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .types import RGBType
 
 
 class Entity:
-    def __init__(self, x: int, y: int, width: int, height: int, color: tuple[int, int, int] = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None) -> None:
+    def __init__(self, x: int, y: int, width: int, height: int, color: RGBType = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None) -> None:
         self.x = x
         self.y = y
         self.width = width
@@ -149,7 +150,7 @@ class Scene:
 
         return colliding
 
-    def set_bg_color(self, color: tuple[int, int, int]) -> None:
+    def set_bg_color(self, color: RGBType) -> None:
         self.game._set_bg_color(color)
 
     def add(self, obj: Entity) -> None:
@@ -208,11 +209,11 @@ class Game:
         self.clock: pygame.time.Clock = pygame.time.Clock()
         self.running: bool = False
         self.scene: Scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
-        self._bg_color: tuple[int, int, int] = (0, 0, 0)
+        self._bg_color: RGBType = (0, 0, 0)
 
         logger("Initialized game")
 
-    def _set_bg_color(self, color: tuple[int, int, int]) -> None:
+    def _set_bg_color(self, color: RGBType) -> None:
         self._bg_color = color
 
     def set_icon(self, icon_path: Optional[str]) -> None:
