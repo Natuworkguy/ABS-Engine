@@ -1,4 +1,4 @@
-# Copyright (C) Above and Below Studios
+# Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
 import inspect
