@@ -203,6 +203,34 @@ jobs:
             --warn-return-any \
             --warn-unreachable
 
+  lint-pyright:
+    name: Lint with Pyright
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Pyright
+        shell: bash
+        run: |
+          pip install pyright
+
+      - name: Run Pyright Type Checking
+        shell: bash
+        run: |
+          echo "Running Pyright type checking..."
+
+          pyright --verbose
+
   pip-audit:
     name: Dependency Audit with pip-audit
     needs: prebuild
