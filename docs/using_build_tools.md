@@ -18,6 +18,7 @@ Add the following generated build outputs to your project's
 
 ```gitignore
 engine/
+launch_game.py
 run.py
 ```
 
