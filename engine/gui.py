@@ -250,7 +250,7 @@ class Engine:
 
     def delete_entity(self) -> None:
         try:
-            selected_item = self.entity_list.get(self.entity_list.curselection()[0])
+            selected_item = self.entity_list.get(self.entity_list.curselection()[0])  # type: ignore[no-untyped-call]
         except IndexError:
             messagebox.showerror("Error", "No entity selected.")
             return
@@ -261,11 +261,11 @@ class Engine:
             return
 
         del self.entities[selected_item]
-        self.entity_list.delete(self.entity_list.curselection()[0])
+        self.entity_list.delete(self.entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
     def rename_entity(self) -> None:
         try:
-            raw_selected_item = self.entity_list.curselection()[0]
+            raw_selected_item = self.entity_list.curselection()[0]  # type: ignore[no-untyped-call]
             selected_item = self.entity_list.get(raw_selected_item)
         except IndexError:
             messagebox.showerror("Error", "No entity selected.")
@@ -299,7 +299,7 @@ class Engine:
 
     def view_entity(self, entity_list: tk.Listbox) -> None:
         try:
-            selected_item = entity_list.get(entity_list.curselection()[0])
+            selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
             self.view_popup = tk.Toplevel(self.root)
             self.view_popup.wm_title("Entity Data | ABS Engine")
@@ -378,7 +378,7 @@ class Engine:
         messagebox.showinfo("Success", "Project loaded successfully.")
         self.build_game_button.config(state=NORMAL)
 
-    def save_project(self):
+    def save_project(self) -> None:
         global GP_BASE_PATH
 
         file = sl_save_project(self)
@@ -423,7 +423,7 @@ class Engine:
             )
             self.core_game.scenes[self.core_game.current_scene].add(entity)
 
-        def run_core_game():
+        def run_core_game() -> None:
             if self.core_game is None:
                 return
 

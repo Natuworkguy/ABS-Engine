@@ -4,6 +4,7 @@
 import inspect
 
 from enum import Enum
+from typing import Any
 from colorama import Fore, Style
 
 
@@ -13,7 +14,7 @@ class Status(Enum):
     INFO = "INFO"
 
 
-def _get_caller_module():
+def _get_caller_module() -> Any:
     frame = inspect.currentframe()
 
     while frame:

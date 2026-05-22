@@ -21,7 +21,7 @@ def resource_path(relative: str) -> str:
     return os.path.join(os.path.abspath("."), relative)
 
 
-def game_path(relative: str) -> str:
+def game_path(relative: Optional[str]) -> str:
     if relative is None:
         return ''
 

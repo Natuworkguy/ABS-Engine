@@ -6,7 +6,7 @@ import sys
 
 import tkinter as tk
 
-from typing import Final
+from typing import Final, Any
 from pathlib import Path
 
 from .logger import logger, Status
@@ -18,15 +18,8 @@ if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
     sys.exit(1)
 
 
-def _no_root() -> None:
-    raise ValueError("Engine must provide root")
-
-
-def tcl_source(script_name: str, root: tk.Tk) -> str:
+def tcl_source(script_name: str, root: tk.Tk) -> Any:
     """Run a Tcl script from engine/tcl/"""
-
-    if root is None:
-        _no_root()
 
     script_path = str(TCL_DIR / script_name)
 
@@ -37,24 +30,18 @@ def tcl_source(script_name: str, root: tk.Tk) -> str:
     return root.tk.call("source", script_path)
 
 
-def tcl_eval(tcl: str, root: tk.Tk) -> str:
+def tcl_eval(tcl: str, root: tk.Tk) -> Any:
     """Evaluate a Tcl statement"""
-
-    if root is None:
-        _no_root()
 
     return root.tk.eval(tcl)
 
 
-def tcl_call_procedure(procedure_name: str, *args, root: tk.Tk) -> str:
+def tcl_call_procedure(procedure_name: str, *args: Any, root: tk.Tk) -> Any:
     """
     Call a Tcl procedure with arguments and return result
 
     Example:
         result = tcl_call_procedure("show_info", "Title", "Message", root=tk_root)
     """
-
-    if root is None:
-        _no_root()
 
     return root.tk.call(procedure_name, *args)

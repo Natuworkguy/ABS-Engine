@@ -14,7 +14,7 @@ from .logger import logger, Status
 engine_path = Path(__file__).parent
 
 
-def build(dir: Path, ENGINE_DATA_PATH):
+def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
     launch_game_script = None
 
     if not os.path.exists(dir):
