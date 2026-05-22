@@ -8,9 +8,19 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prebuild:
+    name: Prebuild Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout code
@@ -19,14 +29,34 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
 
       - name: Prebuild Validation (compileall)
+        shell: bash
         run: |
+          echo "Running Python bytecode compilation..."
+
           python -m compileall . -q
 
-  lint:
+  lint-ruff:
+    name: Lint with Ruff
+    needs: prebuild
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout code
@@ -35,103 +65,160 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
       - name: Install Ruff
+        shell: bash
         run: |
           python -m pip install --upgrade pip
           pip install ruff
 
-      - name: Install Flake8
-        run: |
-          pip install flake8
-
       - name: Run Ruff Lint
+        shell: bash
         run: |
           echo "Running Ruff static analysis..."
 
-          # Run Ruff with GitHub Actions annotation output
-          if ruff check . > ruff_output.txt 2>&1; then
-            echo "PASSED" > ruff_status.txt
-          else
-            echo "FAILED" > ruff_status.txt
-            echo "::warning title=Ruff Lint Failed::Ruff detected issues. Check artifacts."
-          fi
+          ruff check .
+
+      - name: Run Ruff Format Check
+        shell: bash
+        run: |
+          echo "Checking formatting with Ruff..."
+
+          ruff format . --check
+
+  lint-flake8:
+    name: Lint with Flake8
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install Flake8
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
 
       - name: Run Flake8 Lint
+        shell: bash
         run: |
           echo "Running Flake8 static analysis..."
 
-          if flake8 --ignore E501 . > flake8_output.txt 2>&1; then
-            echo "PASSED" > flake8_status.txt
-          else
-            echo "FAILED" > flake8_status.txt
-            echo "::warning title=Flake8 Lint Failed::Flake8 detected issues. Check artifacts."
-          fi
+          flake8 --ignore=E501 .
 
-      - name: Upload Ruff Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: lint-report
-          path: |
-            ruff_output.txt
-            ruff_status.txt
-            flake8_output.txt
-            flake8_status.txt
-
-  ci:
+  lint-bandit:
+    name: Security Scan with Bandit
+    needs: prebuild
     runs-on: ubuntu-latest
-    needs: [prebuild, lint]
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
-      - name: Download Results
-        uses: actions/download-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          name: lint-report
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
-      - name: Display Ruff Results
+      - name: Install Bandit
+        shell: bash
         run: |
-          echo "Ruff Static Analysis Results:"
-          cat ruff_output.txt
+          python -m pip install --upgrade pip
+          pip install bandit
 
-      - name: Display Flake8 Results
+      - name: Run Bandit Security Analysis
+        shell: bash
         run: |
-          echo "Flake8 Static Analysis Results:"
-          cat flake8_output.txt
+          echo "Running Bandit security analysis..."
 
-      - name: CI Finalization (Summary)
+          bandit -r . -q
+
+  lint-mypy:
+    name: Type Check with MyPy
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install MyPy
+        shell: bash
         run: |
-          GREEN="\033[32m"
-          RED="\033[31m"
-          CYAN="\033[36m"
-          BOLD="\033[1m"
-          RESET="\033[0m"
+          python -m pip install --upgrade pip
+          pip install mypy
 
-          RUFF_STATUS=$(cat ruff_status.txt 2>/dev/null || echo "FAILED")
-          FLAKE8_STATUS=$(cat flake8_status.txt 2>/dev/null || echo "FAILED")
-
-          NO_ERRORS=true
-
-          echo -e "${BOLD}${CYAN}======================================${RESET}"
-          echo -e "${CYAN}[CI] Pipeline Summary${RESET}"
-
-          if [ "$RUFF_STATUS" = "PASSED" ]; then
-            echo -e "${GREEN}[CI] Ruff static analysis: PASSED${RESET}"
-          else
-            echo -e "${RED}[CI] Ruff static analysis: FAILED${RESET}"
-            NO_ERRORS=false
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
           fi
 
-          if [ "$FLAKE8_STATUS" = "PASSED" ]; then
-            echo -e "${GREEN}[CI] Flake8 static analysis: PASSED${RESET}"
-          else
-            echo -e "${RED}[CI] Flake8 static analysis: FAILED${RESET}"
-            NO_ERRORS=false
-          fi
+      - name: Run MyPy Type Checking
+        shell: bash
+        run: |
+          echo "Running MyPy type checking..."
 
-          if [ "$NO_ERRORS" = "true" ]; then
-            echo -e "${GREEN}[CI] All tests passed 🚀${RESET}"
-          else
-            echo -e "${RED}[CI] Lint issues detected ⚠️${RESET}"
-          fi
-          echo -e "${BOLD}${CYAN}======================================${RESET}"
+          mypy . \
+            --ignore-missing-imports \
+            --check-untyped-defs \
+            --disallow-untyped-defs \
+            --disallow-incomplete-defs \
+            --disallow-untyped-decorators \
+            --disallow-untyped-calls \
+            --disallow-subclassing-any \
+            --warn-unused-ignores \
+            --warn-unused-configs \
+            --warn-redundant-casts \
+            --warn-return-any \
+            --warn-unreachable
+
+  build:
+    name: Final Build Validation
+    needs:
+      - lint-ruff
+      - lint-flake8
+      - lint-bandit
+      - lint-mypy
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Final CI Status
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "All CI checks passed successfully."
+          echo "ABS Engine CI pipeline is healthy."
+          echo "========================================"
