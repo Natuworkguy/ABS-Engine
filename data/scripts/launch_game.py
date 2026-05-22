@@ -66,6 +66,6 @@ for entity_name, entity_data in data["entities"].items():
         scriptfile=scriptfile,
         image=image
     )
-    core_game.scene.add(entity)
+    core_game.scenes[core_game.current_scene].add(entity)
 
 core_game.run()
