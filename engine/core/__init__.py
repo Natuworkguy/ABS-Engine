@@ -269,6 +269,7 @@ class Game:
         IS_EDITOR: bool = False,
     ) -> None:
         self.IS_EDITOR: bool = IS_EDITOR
+        self.gamedata: dict = {}
 
         pygame.init()
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
