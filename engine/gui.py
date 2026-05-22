@@ -185,6 +185,7 @@ class Engine:
     def game_settings(self) -> None:
         self.game_settings_popup = tk.Toplevel(self.root, height=150)
         self.game_settings_popup.wm_title("Game Settings | ABS Engine")
+        self.game_settings_popup.resizable(False, False)
 
         self.game_settings_dimensions_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Dimensions")
         self.game_settings_dimensions_section.pack(padx=5, pady=5)
