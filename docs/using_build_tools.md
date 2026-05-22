@@ -17,6 +17,7 @@ Add the following generated build outputs to your project's
 `.gitignore` file:
 
 ```gitignore
+data/images/abs_*  # Remove if using ABS Engine's logo or other assets
 engine/
 launch_game.py
 run.py
