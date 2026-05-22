@@ -15,7 +15,16 @@ from .types import RGBType
 
 
 class Entity:
-    def __init__(self, x: int, y: int, width: int, height: int, color: RGBType = (255, 255, 255), scriptfile: Optional[str] = None, image: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        x: int = 0,
+        y: int = 0,
+        width: int = 50,
+        height: int = 50,
+        color: RGBType = (255, 255, 255),
+        scriptfile: Optional[str] = None,
+        image: Optional[str] = None
+    ) -> None:
         self.x = x
         self.y = y
         self.width = width
