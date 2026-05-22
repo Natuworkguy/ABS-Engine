@@ -2,7 +2,7 @@ try:
     from engine.core import Game as CoreGame, Entity  # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
     print(
-        "Info:\nCould not import engine.core.\nMake sure that the engine directory is in the same folder as this script.\nRe-raising error."
+        "Info:\nCould not import engine.core.\nMake sure that the engine directory is in the same folder as this script.\nRe-raising error."  # noqa: E501
     )
     raise
 
