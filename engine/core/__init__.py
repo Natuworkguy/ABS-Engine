@@ -232,6 +232,9 @@ class Game:
         logger(f"Added scene {len(self.scenes) - 1}")
 
     def switch_scene(self, scene_index: int) -> None:
+        if scene_index == self.current_scene:
+            return
+
         if scene_index < 0 or scene_index >= len(self.scenes):
             raise IndexError(f"Tried to switch to a scene that doesn't exist: {scene_index}")
 
