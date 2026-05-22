@@ -7,19 +7,31 @@ from typing import Optional
 
 
 class EntityImage:
-    """Manage a pygame image surface for an entity."""
+    """
+    Manage a pygame image surface for an entity.
+    """
 
     surface: Optional[pygame.Surface]
 
     def __init__(self, image_path: str):
-        """Create an entity image by loading ``image_path``."""
+        """
+        Initialize the EntityImage by loading the image at ``image_path``.
+
+        Args:
+            image_path (str): The path to the image file.
+        """
 
         self.surface = None
 
         self.set_image(image_path)
 
     def set_image(self, image_path: str):
-        """Load ``image_path`` and store it as an alpha-enabled pygame surface."""
+        """
+        Load ``image_path`` and store it as an alpha-enabled pygame surface.
+
+        Args:
+            image_path (str): The path to the image file.
+        """
 
         assert pygame.get_init(), (  # nosec B101
             "EntityImage: pygame must be initialized before loading images"
