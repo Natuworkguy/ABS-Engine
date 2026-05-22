@@ -281,6 +281,7 @@ jobs:
       - lint-flake8
       - lint-bandit
       - lint-mypy
+      - lint-pyright
       - pip-audit
 
     runs-on: ubuntu-latest
