@@ -231,6 +231,12 @@ class Game:
         self.scenes.append(Scene(parent=self))
         logger(f"Added scene {len(self.scenes) - 1}")
 
+    def switch_scene(self, scene_index: int) -> None:
+        if scene_index < 0 or scene_index >= len(self.scenes):
+            raise IndexError(f"Tried to switch to a scene that doesn't exist: {scene_index}")
+
+        self.current_scene = scene_index
+
     def set_icon(self, icon_path: Optional[str]) -> None:
         if icon_path is not None:
             try:
