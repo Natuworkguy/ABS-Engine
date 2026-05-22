@@ -42,6 +42,8 @@ class Entity:
         self.scriptfile_update_exists = False
         self.scriptfile_event_exists = False
 
+        self.did_init = False
+
         self.image: Optional[EntityImage] = None
 
         if image is not None:
@@ -98,6 +100,7 @@ class Entity:
     def init(self) -> None:
         if self.scriptfile_module is not None:
             if self.scriptfile_init_exists:
+                self.did_init = True
                 self.scriptfile_module.init(self)
 
     def update_rect(self) -> None:
@@ -166,7 +169,8 @@ class Scene:
 
         self.objects.append(obj)
         obj._setparent(self)
-        obj.init()
+        if not obj.did_init:
+            obj.init()
 
         if self.no_entities:
             self.no_entities = False
@@ -229,7 +233,6 @@ class Game:
 
     def add_scene(self) -> None:
         self.scenes.append(Scene(parent=self))
-        logger(f"Added scene {len(self.scenes) - 1}")
 
     def switch_scene(self, scene_index: int) -> None:
         if scene_index == self.current_scene:
@@ -239,6 +242,18 @@ class Game:
             raise IndexError(f"Tried to switch to a scene that doesn't exist: {scene_index}")
 
         self.current_scene = scene_index
+
+    def move_entity_to_scene(self, entity: Entity, target_scene_index: int) -> None:
+        if target_scene_index < 0 or target_scene_index >= len(self.scenes):
+            raise IndexError(f"Tried to move entity to a scene that doesn't exist: {target_scene_index}")
+
+        if entity.parent == self.scenes[target_scene_index]:
+            return
+
+        if entity.parent is not None:
+            entity.parent.remove(entity)
+
+        self.scenes[target_scene_index].add(entity)
 
     def set_icon(self, icon_path: Optional[str]) -> None:
         if icon_path is not None:
