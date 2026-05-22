@@ -18,15 +18,18 @@ def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
     launch_game_script = None
 
     if not os.path.exists(dir):
-        logger(f"Build directory \"{str(dir.resolve())}\" does not exist.", status=Status.WARNING)
-        messagebox.showerror("Build Error", f"Build directory \"{str(dir.resolve())}\" does not exist. Save the project to a valid location and try again.")
+        logger(f'Build directory "{str(dir.resolve())}" does not exist.', status=Status.WARNING)
+        messagebox.showerror(
+            "Build Error",
+            f'Build directory "{str(dir.resolve())}" does not exist. Save the project to a valid location and try again.',
+        )
         return
 
     with open(resource_path("data/scripts/launch_game.py")) as f:
         launch_game_script = f.read()
         f.close()
 
-    with open(os.path.join(dir, "run.py"), 'w') as f:
+    with open(os.path.join(dir, "run.py"), "w") as f:
         f.write(launch_game_script)
         f.close()
 

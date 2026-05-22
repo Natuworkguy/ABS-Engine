@@ -14,7 +14,11 @@ from _tkinter import TclError
 from typing import Optional
 from io import TextIOWrapper
 
-from .saveload import save_project as sl_save_project, load_project as sl_load_project, resource_path
+from .saveload import (
+    save_project as sl_save_project,
+    load_project as sl_load_project,
+    resource_path,
+)
 from .core import Game as CoreGame, Entity
 from .logger import logger, Status as LoggerStatus
 from .build_tools import build
@@ -57,12 +61,18 @@ class Engine:
         self.root.geometry("530x700")
         self.load_theme()
 
-        if '-noicon' not in sys.argv:
+        if "-noicon" not in sys.argv:
             try:
-                self.root.iconphoto(True, tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")))
+                self.root.iconphoto(
+                    True,
+                    tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")),
+                )
             except TclError as e:
                 logger("Could not load icon image.", status=LoggerStatus.CRITICAL)
-                logger("Try running with the -noicon flag if this persists.", status=LoggerStatus.CRITICAL)
+                logger(
+                    "Try running with the -noicon flag if this persists.",
+                    status=LoggerStatus.CRITICAL,
+                )
                 logger(f"Error: {e}", status=LoggerStatus.CRITICAL)
                 sys.exit(1)
 
@@ -81,24 +91,20 @@ class Engine:
         self.name_save_button = ttk.Button(
             self.project_section,
             text="Save Name",
-            command=lambda: self.save_name(self.project_name_input.get())
+            command=lambda: self.save_name(self.project_name_input.get()),
         )
         self.name_save_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.project_separator = ttk.Separator(self.project_section, orient='vertical')
-        self.project_separator.pack(side=tk.LEFT, fill='y', padx=5, pady=5)
+        self.project_separator = ttk.Separator(self.project_section, orient="vertical")
+        self.project_separator.pack(side=tk.LEFT, fill="y", padx=5, pady=5)
 
         self.project_save_button = ttk.Button(
-            self.project_section,
-            text="Save Project",
-            command=self.save_project
+            self.project_section, text="Save Project", command=self.save_project
         )
         self.project_save_button.pack(padx=5, pady=5)
 
         self.project_load_button = ttk.Button(
-            self.project_section,
-            text="Load Project",
-            command=self.load_project
+            self.project_section, text="Load Project", command=self.load_project
         )
         self.project_load_button.pack(padx=5, pady=5)
 
@@ -114,26 +120,22 @@ class Engine:
         self.view_entity_button = ttk.Button(
             self.entities_section,
             text="Edit Data",
-            command=lambda: self.view_entity(self.entity_list)
+            command=lambda: self.view_entity(self.entity_list),
         )
         self.view_entity_button.pack(padx=5, pady=5)
 
         self.delete_entity_button = ttk.Button(
-            self.entities_section,
-            text="Rename Entity",
-            command=self.rename_entity
+            self.entities_section, text="Rename Entity", command=self.rename_entity
         )
         self.delete_entity_button.pack(padx=5, pady=5)
 
         self.delete_entity_button = ttk.Button(
-            self.entities_section,
-            text="Delete Entity",
-            command=self.delete_entity
+            self.entities_section, text="Delete Entity", command=self.delete_entity
         )
         self.delete_entity_button.pack(padx=5, pady=5)
 
-        self.entity_separator = ttk.Separator(self.entities_section, orient='horizontal')
-        self.entity_separator.pack(fill='x', padx=5, pady=10)
+        self.entity_separator = ttk.Separator(self.entities_section, orient="horizontal")
+        self.entity_separator.pack(fill="x", padx=5, pady=10)
 
         self.add_entity_input = ttk.Entry(self.entities_section)
         self.add_entity_input.pack(padx=5, pady=5)
@@ -141,23 +143,33 @@ class Engine:
         self.add_entity_button = ttk.Button(
             self.entities_section,
             text="Add Entity",
-            command=lambda: self.add_entity(self.add_entity_input.get())
+            command=lambda: self.add_entity(self.add_entity_input.get()),
         )
         self.add_entity_button.pack(padx=5, pady=5)
 
         self.engine_section = tk.LabelFrame(self.root, width=200, height=200, text="Engine")
         self.engine_section.pack(fill="both", padx=5, pady=5)
 
-        self.run_game_button = ttk.Button(self.engine_section, text='Run Game', command=self.run_game, width=25)
+        self.run_game_button = ttk.Button(
+            self.engine_section, text="Run Game", command=self.run_game, width=25
+        )
         self.run_game_button.pack(padx=5, pady=5)
 
-        self.build_game_button = ttk.Button(self.engine_section, text='Build Game', command=self.build_game, width=25, state=DISABLED)
+        self.build_game_button = ttk.Button(
+            self.engine_section,
+            text="Build Game",
+            command=self.build_game,
+            width=25,
+            state=DISABLED,
+        )
         self.build_game_button.pack(padx=5, pady=5)
 
-        self.game_settings_button = ttk.Button(self.engine_section, text="Game Settings", command=self.game_settings, width=25)
+        self.game_settings_button = ttk.Button(
+            self.engine_section, text="Game Settings", command=self.game_settings, width=25
+        )
         self.game_settings_button.pack(padx=5, pady=5)
 
-        self.exit_button = ttk.Button(self.engine_section, text='Exit', command=self.quit, width=25)
+        self.exit_button = ttk.Button(self.engine_section, text="Exit", command=self.quit, width=25)
         self.exit_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
@@ -168,7 +180,10 @@ class Engine:
             logger(f"Error: {e}", status=LoggerStatus.WARNING)
 
     def build_game(self) -> None:
-        do_build = messagebox.askyesno("Build Tools | ABS Engine", "This will build to the folder containing the .absp project file. Do you want to continue?")
+        do_build = messagebox.askyesno(
+            "Build Tools | ABS Engine",
+            "This will build to the folder containing the .absp project file. Do you want to continue?",
+        )
 
         if not do_build:
             return
@@ -187,29 +202,37 @@ class Engine:
         self.game_settings_popup.wm_title("Game Settings | ABS Engine")
         self.game_settings_popup.resizable(False, False)
 
-        self.game_settings_dimensions_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Dimensions")
+        self.game_settings_dimensions_section = ttk.LabelFrame(
+            self.game_settings_popup, width=200, height=100, text="Dimensions"
+        )
         self.game_settings_dimensions_section.pack(padx=5, pady=5)
 
-        self.game_settings_width_label = ttk.Label(self.game_settings_dimensions_section, text="Width")
+        self.game_settings_width_label = ttk.Label(
+            self.game_settings_dimensions_section, text="Width"
+        )
         self.game_settings_width_label.pack(padx=5, pady=5)
         self.game_settings_width = ttk.Entry(self.game_settings_dimensions_section)
         self.game_settings_width.pack(padx=5, pady=5)
         self.game_settings_width.insert(tk.END, str(self.game_dimensions[0]))
 
-        self.game_settings_height_label = ttk.Label(self.game_settings_dimensions_section, text="Height")
+        self.game_settings_height_label = ttk.Label(
+            self.game_settings_dimensions_section, text="Height"
+        )
         self.game_settings_height_label.pack(padx=5, pady=5)
         self.game_settings_height = ttk.Entry(self.game_settings_dimensions_section)
         self.game_settings_height.pack(padx=5, pady=5)
         self.game_settings_height.insert(tk.END, str(self.game_dimensions[1]))
 
-        self.game_settings_display_section = ttk.LabelFrame(self.game_settings_popup, width=200, height=100, text="Display")
+        self.game_settings_display_section = ttk.LabelFrame(
+            self.game_settings_popup, width=200, height=100, text="Display"
+        )
         self.game_settings_display_section.pack(padx=5, pady=5, fill="x")
 
         self.game_settings_cursor_visible = tk.BooleanVar(value=self.cursor_visible)
         self.game_settings_cursor_visible_checkbox = ttk.Checkbutton(
             self.game_settings_display_section,
             text="Cursor Visible",
-            variable=self.game_settings_cursor_visible
+            variable=self.game_settings_cursor_visible,
         )
         self.game_settings_cursor_visible_checkbox.pack(padx=5, pady=5)
 
@@ -217,7 +240,7 @@ class Engine:
         self.game_settings_fullscreen_checkbox = ttk.Checkbutton(
             self.game_settings_display_section,
             text="Fullscreen",
-            variable=self.game_settings_fullscreen
+            variable=self.game_settings_fullscreen,
         )
         self.game_settings_fullscreen_checkbox.pack(padx=5, pady=5)
 
@@ -237,7 +260,9 @@ class Engine:
                     self.cursor_visible = cursor_visible
                     self.fullscreen = fullscreen
                 except ValueError:
-                    messagebox.showerror("Error", "Width and height values must both be of type integer.")
+                    messagebox.showerror(
+                        "Error", "Width and height values must both be of type integer."
+                    )
                     return
             else:
                 messagebox.showerror("Error", "Width and height values must be given.")
@@ -245,7 +270,9 @@ class Engine:
 
             messagebox.showinfo("Success", "Settings saved")
 
-        self.game_settings_save_button = ttk.Button(self.game_settings_popup, text="Save and Close", command=game_settings_save)
+        self.game_settings_save_button = ttk.Button(
+            self.game_settings_popup, text="Save and Close", command=game_settings_save
+        )
         self.game_settings_save_button.pack(padx=5, pady=5)
 
     def delete_entity(self) -> None:
@@ -255,7 +282,12 @@ class Engine:
             messagebox.showerror("Error", "No entity selected.")
             return
 
-        do_delete: bool = messagebox.askokcancel("Delete Entity", "Are you sure you want to delete the selected entity?", icon='warning', default='cancel')
+        do_delete: bool = messagebox.askokcancel(
+            "Delete Entity",
+            "Are you sure you want to delete the selected entity?",
+            icon="warning",
+            default="cancel",
+        )
 
         if not do_delete:
             return
@@ -271,7 +303,9 @@ class Engine:
             messagebox.showerror("Error", "No entity selected.")
             return
 
-        new_name = simpledialog.askstring("Rename Entity", "Enter new entity name:", initialvalue=selected_item)
+        new_name = simpledialog.askstring(
+            "Rename Entity", "Enter new entity name:", initialvalue=selected_item
+        )
 
         if new_name is None:
             return
@@ -315,17 +349,21 @@ class Engine:
                     return
 
                 try:
-                    data = json.loads(
-                        self.entity_data.get("1.0", tk.END + '-1c')
-                    )
+                    data = json.loads(self.entity_data.get("1.0", tk.END + "-1c"))
 
                     if isinstance(data, list):
-                        messagebox.showerror("Error", "Failed to save entity data. Ensure that the data is a dictionary.")
+                        messagebox.showerror(
+                            "Error",
+                            "Failed to save entity data. Ensure that the data is a dictionary.",
+                        )
                         return
 
                     self.entities[selected_item] = data
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.")
+                    messagebox.showerror(
+                        "Error",
+                        f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.",
+                    )
                     self.entity_data.focus_set()
 
                     return
@@ -333,16 +371,12 @@ class Engine:
                 self.view_popup.destroy()
 
             self.entity_data_close_button = ttk.Button(
-                self.view_popup,
-                text="Close",
-                command=self.view_popup.destroy
+                self.view_popup, text="Close", command=self.view_popup.destroy
             )
             self.entity_data_close_button.pack(padx=5, pady=10)
 
             self.entity_data_save_button = ttk.Button(
-                self.view_popup,
-                text="Save",
-                command=lambda: save_edits()
+                self.view_popup, text="Save", command=lambda: save_edits()
             )
             self.entity_data_save_button.pack(padx=5, pady=10)
 
@@ -400,7 +434,7 @@ class Engine:
             height=self.game_dimensions[1],
             cursor_visible=self.cursor_visible,
             fullscreen=self.fullscreen,
-            IS_EDITOR=True
+            IS_EDITOR=True,
         )
 
         for entity_name, entity_data in self.entities.items():
@@ -419,7 +453,7 @@ class Engine:
                 height=entity_data.get("height", 50),
                 color=tuple(entity_data.get("color", (255, 255, 255))),
                 scriptfile=scriptfile,
-                image=image
+                image=image,
             )
             self.core_game.scenes[self.core_game.current_scene].add(entity)
 

@@ -11,7 +11,7 @@ import os
 
 def resource_path(relative: str) -> str:
     if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, relative) # pyright: ignore[reportAttributeAccessIssue] # noqa
+        return os.path.join(sys._MEIPASS, relative)  # pyright: ignore[reportAttributeAccessIssue]
     return os.path.join(os.path.abspath("."), relative)
 
 
@@ -20,20 +20,23 @@ def save_project(engine: Any) -> Optional[Any]:
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
-        initialfile="game.absp"
+        initialfile="game.absp",
     )
 
     if file:
         with open(file.name, "w") as f:
-            dump({
-                "name": engine.project_name,
-                "game": {
-                    "dimensions": engine.game_dimensions,
-                    "cursor_visible": engine.cursor_visible,
-                    "fullscreen": engine.fullscreen
+            dump(
+                {
+                    "name": engine.project_name,
+                    "game": {
+                        "dimensions": engine.game_dimensions,
+                        "cursor_visible": engine.cursor_visible,
+                        "fullscreen": engine.fullscreen,
+                    },
+                    "entities": engine.entities,
                 },
-                "entities": engine.entities,
-            }, f)
+                f,
+            )
         messagebox.showinfo("Success", "Project saved successfully.")
 
         return file
@@ -45,7 +48,7 @@ def load_project() -> Optional[list]:
     file = filedialog.askopenfile(
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
-        title="Load ABS Project"
+        title="Load ABS Project",
     )
 
     if file:

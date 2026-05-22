@@ -1,7 +1,9 @@
 try:
     from engine.core import Game as CoreGame, Entity  # pyright: ignore[reportMissingImports]
 except ModuleNotFoundError:
-    print("Info:\nCould not import engine.core.\nMake sure that the engine directory is in the same folder as this script.\nRe-raising error.")
+    print(
+        "Info:\nCould not import engine.core.\nMake sure that the engine directory is in the same folder as this script.\nRe-raising error."
+    )
     raise
 
 import os.path
@@ -23,7 +25,7 @@ def resource_path(relative: str) -> str:
 
 def game_path(relative: Optional[str]) -> str:
     if relative is None:
-        return ''
+        return ""
 
     return resource_path(os.path.join(str(GP_BASE_PATH), relative))
 
@@ -44,12 +46,12 @@ core_game = CoreGame(
     width=game_dimensions[0],
     height=game_dimensions[1],
     cursor_visible=cursor_visible,
-    fullscreen=fullscreen
+    fullscreen=fullscreen,
 )
 
 for entity_name, entity_data in data["entities"].items():
     scriptfile: Optional[str] = game_path(entity_data.get("scriptfile", None))
-    if scriptfile == '':
+    if scriptfile == "":
         scriptfile = None
 
     image_path = entity_data.get("image")
@@ -64,7 +66,7 @@ for entity_name, entity_data in data["entities"].items():
         height=entity_data.get("height", 50),
         color=tuple(entity_data.get("color", (255, 255, 255))),
         scriptfile=scriptfile,
-        image=image
+        image=image,
     )
     core_game.scenes[core_game.current_scene].add(entity)
 

@@ -27,7 +27,7 @@ class Entity:
         height: int = 50,
         color: RGBType = (255, 255, 255),
         scriptfile: Optional[str] = None,
-        image: Optional[str] = None
+        image: Optional[str] = None,
     ) -> None:
         self.x = x
         self.y = y
@@ -71,22 +71,25 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        tkinter.messagebox.showerror("Error", f"Script file \"{scriptfile}\" not found. Please ensure the file exists and try again.")
+                        tkinter.messagebox.showerror(
+                            "Error",
+                            f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
+                        )
                     except ImportError as e:
                         tkinter.messagebox.showerror("Error", f"Error when loading script: {e}")
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
-                    if hasattr(self.scriptfile_module, 'init'):
+                    if hasattr(self.scriptfile_module, "init"):
                         self.scriptfile_init_exists = True
 
-                    if hasattr(self.scriptfile_module, 'update'):
+                    if hasattr(self.scriptfile_module, "update"):
                         self.scriptfile_update_exists = True
 
-                    if hasattr(self.scriptfile_module, 'event'):
+                    if hasattr(self.scriptfile_module, "event"):
                         self.scriptfile_event_exists = True
             else:
-                logger(f"Script file \"{scriptfile}\" not found.", status=LoggerStatus.WARNING)
+                logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
 
     def __str__(self) -> str:
         return f"<{self.__class__.__name__} with id {self.id}>"
@@ -330,7 +333,9 @@ class Game:
         """
 
         if target_scene_index < 0 or target_scene_index >= len(self.scenes):
-            raise IndexError(f"Tried to move entity to a scene that doesn't exist: {target_scene_index}")
+            raise IndexError(
+                f"Tried to move entity to a scene that doesn't exist: {target_scene_index}"
+            )
 
         if entity.parent == self.scenes[target_scene_index]:
             return
