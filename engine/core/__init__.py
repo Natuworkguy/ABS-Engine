@@ -231,8 +231,16 @@ class Game:
     def _set_bg_color(self, color: RGBType) -> None:
         self._bg_color = color
 
-    def add_scene(self) -> None:
+    def add_scene(self) -> int:
+        """
+        Add a new scene to the game and return its index.
+
+        Returns:
+            int: The index of the newly added scene
+        """
+
         self.scenes.append(Scene(parent=self))
+        return len(self.scenes) - 1
 
     def switch_scene(self, scene_index: int) -> None:
         if scene_index == self.current_scene:
