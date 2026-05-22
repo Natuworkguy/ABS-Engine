@@ -14,7 +14,7 @@ authors = [
   { name = "Nathan C." }
 ]
 dependencies = [
-  "pygame>=2.6,<3",
+  "pygame-ce>=2.6,<3",
   "colorama>=0.4.6,<1",
 ]
 
