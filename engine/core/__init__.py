@@ -137,9 +137,8 @@ class Entity:
 
 
 class Scene:
-    def __init__(self, *, parent: "Game", IS_EDITOR: bool = False) -> None:
+    def __init__(self, *, parent: "Game") -> None:
         # For use by entities
-        self.IS_EDITOR: bool = IS_EDITOR
         self.scenedata: dict[Any, Any] = {}
 
         self.game: "Game" = parent
@@ -205,6 +204,8 @@ class Game:
         icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
+        self.IS_EDITOR: bool = IS_EDITOR
+
         pygame.init()
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
@@ -217,13 +218,18 @@ class Game:
         pygame.mouse.set_visible(cursor_visible)
         self.clock: pygame.time.Clock = pygame.time.Clock()
         self.running: bool = False
-        self.scene: Scene = Scene(parent=self, IS_EDITOR=IS_EDITOR)
+        self.scenes: list[Scene] = [Scene(parent=self)]
+        self.current_scene: int = 0
         self._bg_color: RGBType = (0, 0, 0)
 
         logger("Initialized game")
 
     def _set_bg_color(self, color: RGBType) -> None:
         self._bg_color = color
+
+    def add_scene(self) -> None:
+        self.scenes.append(Scene(parent=self))
+        logger(f"Added scene {len(self.scenes) - 1}")
 
     def set_icon(self, icon_path: Optional[str]) -> None:
         if icon_path is not None:
@@ -238,11 +244,11 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            self.scene.event(event)
+            self.scenes[self.current_scene].event(event)
 
-        self.scene.update(dt)
+        self.scenes[self.current_scene].update(dt)
         self.screen.fill(self._bg_color)
-        self.scene.draw(self.screen)
+        self.scenes[self.current_scene].draw(self.screen)
         pygame.display.flip()
 
     def run(self, fps: int = 60) -> None:
