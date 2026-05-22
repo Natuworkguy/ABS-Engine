@@ -49,7 +49,7 @@ jobs:
           python -m compileall . -q
 
   lint-ruff:
-    name: Lint with Ruff
+    name: Lint and Format with Ruff
     needs: prebuild
     runs-on: ubuntu-latest
     timeout-minutes: 10
