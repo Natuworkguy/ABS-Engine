@@ -268,6 +268,7 @@ class Game:
         icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
+        # For use by entities
         self.IS_EDITOR: bool = IS_EDITOR
         self.gamedata: dict = {}
 
