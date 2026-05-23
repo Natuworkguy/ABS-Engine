@@ -104,8 +104,6 @@ that can move with W/A/S/D keys. The player cannot move outside the visible game
 ```python
 import pygame
 
-ENTITY_SIZE = (50, 50)
-
 step_size = 5
 held = {
     'w': False,
@@ -116,9 +114,7 @@ held = {
 
 
 def init(entity):
-    entity.width = ENTITY_SIZE[0]
-    entity.height = ENTITY_SIZE[1]
-    entity.update_rect()
+    pass
 
 
 def update(entity, dt):
