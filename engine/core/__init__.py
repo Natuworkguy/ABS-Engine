@@ -389,3 +389,6 @@ class Game:
             self.step(dt)
 
         pygame.quit()
+
+    def quit(self) -> None:
+        self.running = False
