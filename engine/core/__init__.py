@@ -363,16 +363,18 @@ class Game:
             except (pygame.error, FileNotFoundError) as e:
                 logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
 
-    def updateall(self, dt: float) -> None:
+    def updateall(self, dt: float, /, exclude: Optional[Scene] = None) -> None:
         """
         Update all scenes in the game, even inactive ones.
 
         Args:
             dt (float): The time elapsed since the last update.
+            exclude (Scene, optional): The scene to exclude from updating. Defaults to None.
         """
 
         for scene in self.scenes:
-            scene.update(dt)
+            if scene != exclude:
+                scene.update(dt)
 
     def step(self, dt: float) -> None:
         """
