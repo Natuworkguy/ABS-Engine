@@ -175,6 +175,8 @@ class Entity:
             except ValueError:
                 logger("Invalid target for destruction", status=LoggerStatus.WARNING)
 
+            self.parent = None
+
 
 class Scene:
     """
