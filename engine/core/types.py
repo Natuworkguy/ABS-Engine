@@ -3,6 +3,4 @@
 
 """Shared type aliases for ABS Engine."""
 
-from typing import TypeAlias
-
-RGBType: TypeAlias = tuple[int, int, int]
+RGBType = tuple[int, int, int]
