@@ -1,4 +1,12 @@
-# ABS Engine
+<h1 align=center>
+    ABS Engine
+</h1>
+
+<p align="center">
+  <a href="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml">
+    <img src="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
+</p>
 
 ABS Engine is a game engine developed by Natuworkguy, designed for public use. It provides tools and features to help you create games efficiently.
 
