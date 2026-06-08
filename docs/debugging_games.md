@@ -7,12 +7,33 @@ launch ABS Engine with the [console visible](accessing_the_console.md).
 Upon launching a game, ABS Engine prints out some messages.
 This action always happens, so it is a good way to test if you can see the log.
 
+## Logging from Game Scripts
+
+Games should use ABS Engine's built-in logger instead of `print()`.
+This keeps game messages formatted the same way as engine messages and
+includes the script module that emitted the log.
+
+```python
+from engine.core import Entity
+from engine.logger import Status, logger
+
+
+def init(entity: Entity) -> None:
+    logger("Player script initialized")
+    ...
+    logger("Save file was not found", status=Status.WARNING)
+```
+
+Use `Status.INFO` for normal messages, `Status.WARNING` for problems that the
+game can recover from, and `Status.CRITICAL` for errors that should be handled
+immediately.
+
 ## Understanding Engine Logs
 
 Let's break down this log message:
 
 ```text
-(Status.INFO) ENGINE.CORE: Initialized game
+(INFO) ENGINE.CORE: Initialized game
 ```
 
 Here are the main parts of the message:
@@ -33,7 +54,7 @@ Here are the main parts of the message:
 Example of a critical error message:
 
 ```text
-(Status.CRITICAL) ENGINE.GUI: Initialized game
+(CRITICAL) ENGINE.GUI: Initialized game
    |              |           |
    |              |______     |_______
    |              |Source|    |Message|
