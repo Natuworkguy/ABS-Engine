@@ -32,7 +32,7 @@ jobs:
 
           git add engine/version.py
 
-          git commit -m "release v${{ github.event.inputs.version }}" || echo "No changes"
+          git commit -m "Bump version to ${{ github.event.inputs.version }}" || echo "No changes"
 
           git push origin dev
 
