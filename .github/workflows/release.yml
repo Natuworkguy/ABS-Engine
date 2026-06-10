@@ -10,12 +10,16 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout dev branch
         uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
 
       - name: Update version.py
         run: |
@@ -25,9 +29,23 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add engine/version.py
-          git commit -m "bump version"
-          git push
+
+          git commit -m "release v${{ github.event.inputs.version }}" || echo "No changes"
+
+          git push origin dev
+
+      - name: Merge dev into main
+        run: |
+          git fetch origin
+
+          git checkout main
+          git pull origin main
+
+          git merge origin/dev --no-ff -m "Merge dev into main for v${{ github.event.inputs.version }}"
+
+          git push origin main
 
       - name: Create tag
         run: |
