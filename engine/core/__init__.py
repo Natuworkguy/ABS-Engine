@@ -12,6 +12,9 @@ from typing import Optional, Any
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
 from .types import RGBType
+from ..version import __version__ as engineversion
+
+print(f"ABS Engine v{engineversion} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})")
 
 
 class Entity:
