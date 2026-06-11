@@ -13,8 +13,8 @@ VSVersionInfo(
       StringTable(
         '040904B0',
         [
-          StringStruct('CompanyName', 'Above and Below Studios'),
-          StringStruct('FileDescription', '2D Game engine made by Above and Below Studios for public use.'),
+          StringStruct('CompanyName', 'Natuworkguy'),
+          StringStruct('FileDescription', '2D Game engine made by Natuworkguy for public use.'),
           StringStruct('ProductName', 'ABS Engine'),
         ]
       )
