@@ -43,7 +43,8 @@ ABS Engine is a game engine developed by Natuworkguy, designed for public use. I
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
 
 ## License
 
-This project is licensed under the GPLv3 license. See the LICENSE file for details.
+This project is licensed under the GPLv3 license. See the [LICENSE](LICENSE) file for details.
