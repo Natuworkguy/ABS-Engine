@@ -18,7 +18,10 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
     launch_game_script = None
 
     if not os.path.exists(directory):
-        logger(f'Build directory "{str(directory.resolve())}" does not exist.', status=Status.WARNING)
+        logger(
+            f'Build directory "{str(directory.resolve())}" does not exist.',
+            status=Status.WARNING
+        )
         messagebox.showerror(
             "Build Error",
             f'Build directory "{str(directory.resolve())}" does not exist. Save the project to a valid location and try again.',
@@ -35,5 +38,9 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
 
     ignore = shutil.ignore_patterns("*.pyc", "__pycache__")
 
-    shutil.copytree(engine_path, os.path.join(directory, "engine"), dirs_exist_ok=True, ignore=ignore)
-    shutil.copytree(ENGINE_DATA_PATH, os.path.join(directory, "data"), dirs_exist_ok=True, ignore=ignore)
+    shutil.copytree(
+        engine_path, os.path.join(directory, "engine"), dirs_exist_ok=True, ignore=ignore
+    )
+    shutil.copytree(
+        ENGINE_DATA_PATH, os.path.join(directory, "data"), dirs_exist_ok=True, ignore=ignore
+    )
