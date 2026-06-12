@@ -117,8 +117,8 @@ class Entity:
 
         if self.scriptfile_module is not None:
             if self.scriptfile_init_exists:
-                self.did_init = True
                 self.scriptfile_module.init(self)
+                self.did_init = True
 
     def update_rect(self) -> None:
         """
