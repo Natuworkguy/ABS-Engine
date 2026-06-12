@@ -124,10 +124,10 @@ class Engine:
         )
         self.view_entity_button.pack(padx=5, pady=5)
 
-        self.delete_entity_button = ttk.Button(
+        self.rename_entity_button = ttk.Button(
             self.entities_section, text="Rename Entity", command=self.rename_entity
         )
-        self.delete_entity_button.pack(padx=5, pady=5)
+        self.rename_entity_button.pack(padx=5, pady=5)
 
         self.delete_entity_button = ttk.Button(
             self.entities_section, text="Delete Entity", command=self.delete_entity
