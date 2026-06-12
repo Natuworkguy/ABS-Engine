@@ -394,7 +394,8 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            self.scenes[self.current_scene].event(event)
+            else:
+                self.scenes[self.current_scene].event(event)
 
         self.scenes[self.current_scene].update(dt)
         self.screen.fill(self._bg_color)
