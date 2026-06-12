@@ -30,9 +30,6 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["engine*"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-
 [tool.ruff]
 line-length = 100
 target-version = "py311"
