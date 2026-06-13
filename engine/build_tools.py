@@ -19,8 +19,7 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
 
     if not os.path.exists(directory):
         logger(
-            f'Build directory "{str(directory.resolve())}" does not exist.',
-            status=Status.WARNING
+            f'Build directory "{str(directory.resolve())}" does not exist.', status=Status.WARNING
         )
         messagebox.showerror(
             "Build Error",
