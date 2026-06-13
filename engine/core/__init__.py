@@ -11,7 +11,7 @@ from typing import Optional, Any
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
-from .types import RGBType
+from .types import RGBType, EntityImageType
 from ..version import __version__ as engineversion
 
 print(
@@ -53,7 +53,7 @@ class Entity:
 
         self.did_init = False
 
-        self.image: Optional[EntityImage] = None
+        self.image: Optional[EntityImageType] = None
 
         if image is not None:
             try:

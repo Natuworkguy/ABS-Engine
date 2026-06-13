@@ -3,4 +3,7 @@
 
 """Shared type aliases for ABS Engine."""
 
+from .image import EntityImage
+
 RGBType = tuple[int, int, int]
+EntityImageType = EntityImage
