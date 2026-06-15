@@ -4,7 +4,6 @@
 import pygame
 import importlib.util
 import sys
-import tkinter.messagebox
 import uuid
 
 from typing import Optional, Any
@@ -61,7 +60,7 @@ class Entity:
             except pygame.error as e:
                 logger(f"Failed to load image '{image}': {str(e)}", status=LoggerStatus.WARNING)
             except FileNotFoundError as e:
-                tkinter.messagebox.showerror("File not found", str(e))
+                logger(f"File not found: {str(e)}", status=LoggerStatus.CRITICAL)
 
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
@@ -76,21 +75,19 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        tkinter.messagebox.showerror(
-                            "Error",
+                        logger(
                             f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
+                            status=LoggerStatus.CRITICAL,
                         )
                     except ImportError as e:
-                        tkinter.messagebox.showerror("Error", f"Error when loading script: {e}")
+                        logger(f"Error when loading script: {e}", status=LoggerStatus.CRITICAL)
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
                     if hasattr(self.scriptfile_module, "init"):
                         self.scriptfile_init_exists = True
-
                     if hasattr(self.scriptfile_module, "update"):
                         self.scriptfile_update_exists = True
-
                     if hasattr(self.scriptfile_module, "event"):
                         self.scriptfile_event_exists = True
             else:
@@ -110,58 +107,28 @@ class Entity:
         self.parent = parent
 
     def init(self) -> None:
-        """
-        Call the init function in the script file if it exists.
-        This should only be called once per entity.
-        """
-
         if self.scriptfile_module is not None:
             if self.scriptfile_init_exists:
                 self.did_init = True
                 self.scriptfile_module.init(self)
 
     def update_rect(self) -> None:
-        """
-        Update the entity's rectangle position and size.
-        """
-
         self.rect.x = self.x
         self.rect.y = self.y
         self.rect.width = self.width
         self.rect.height = self.height
 
     def update(self, dt: float) -> None:
-        """
-        Update the entity.
-
-        Args:
-            dt (float): The time elapsed since the last update.
-        """
-
         if self.scriptfile_module is not None:
             if self.scriptfile_update_exists:
                 self.scriptfile_module.update(self, dt)
 
     def event(self, event: pygame.event.Event) -> None:
-        """
-        Handle an event.
-
-        Args:
-            event (pygame.event.Event): The event to handle.
-        """
-
         if self.scriptfile_module is not None:
             if self.scriptfile_event_exists:
                 self.scriptfile_module.event(self, event)
 
     def draw(self, surface: pygame.Surface) -> None:
-        """
-        Draw the entity onto the given surface.
-
-        Args:
-            surface (pygame.Surface): The surface to draw the entity on.
-        """
-
         if self.image is not None:
             self.image.draw(surface, self.rect)
         else:
@@ -184,14 +151,8 @@ class Entity:
 
 
 class Scene:
-    """
-    A scene in the game.
-    """
-
     def __init__(self, *, parent: "Game") -> None:
-        # For use by entities
         self.scenedata: dict[Any, Any] = {}
-
         self.game: "Game" = parent
         self.objects: list[Entity] = []
         self.no_entities: bool = True
@@ -208,24 +169,10 @@ class Scene:
         return colliding
 
     def set_bg_color(self, color: RGBType) -> None:
-        """
-        Set the background color for the scene.
-
-        Args:
-            color (RGBType): The color to set as the background color.
-        """
-
         self.game._set_bg_color(color)
 
     def add(self, obj: Entity) -> None:
-        """
-        Add an entity to the scene.
-
-        Args:
-            obj (Entity): The entity to add
-        """
-
-        assert obj not in self.objects, "Entity is already in the scene"  # nosec B101
+        assert obj not in self.objects, "Entity is already in the scene"
 
         self.objects.append(obj)
         obj._setparent(self)
@@ -251,13 +198,6 @@ class Scene:
                 obj.draw(surface)
 
     def remove(self, obj: Entity) -> None:
-        """
-        Remove an entity from the scene.
-
-        Args:
-            obj (Entity): The entity to remove
-        """
-
         self.objects.remove(obj)
         self.no_entities = len(self.objects) == 0
 
@@ -275,7 +215,6 @@ class Game:
         icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
-        # For use by entities
         self.IS_EDITOR: bool = IS_EDITOR
         self.gamedata: dict = {}
 
@@ -301,26 +240,10 @@ class Game:
         self._bg_color = color
 
     def add_scene(self) -> int:
-        """
-        Add a new scene to the game and return its index.
-
-        Returns:
-            int: The index of the newly added scene
-        """
-
         self.scenes.append(Scene(parent=self))
         return len(self.scenes) - 1
 
     def switch_scene(self, scene_index: int) -> None:
-        """
-        Switch to a different scene.
-
-        Args:
-            scene_index (int): The index of the scene to switch to
-
-        Raises:
-            IndexError: If the scene index is out of bounds
-        """
         if scene_index == self.current_scene:
             return
 
@@ -330,17 +253,6 @@ class Game:
         self.current_scene = scene_index
 
     def move_entity_to_scene(self, entity: Entity, target_scene_index: int) -> None:
-        """
-        Move an entity to a different scene.
-
-        Args:
-            entity (Entity): The entity to move
-            target_scene_index (int): The index of the scene to move the entity to
-
-        Raises:
-            IndexError: If the target scene index is out of bounds
-        """
-
         if target_scene_index < 0 or target_scene_index >= len(self.scenes):
             raise IndexError(
                 f"Tried to move entity to a scene that doesn't exist: {target_scene_index}"
@@ -355,13 +267,6 @@ class Game:
         self.scenes[target_scene_index].add(entity)
 
     def set_icon(self, icon_path: Optional[str]) -> None:
-        """
-        Set the icon for the game window.
-
-        Args:
-            icon_path (Optional[str]): The path to the icon file.
-        """
-
         if icon_path is not None:
             try:
                 image = pygame.image.load(icon_path)
@@ -371,26 +276,11 @@ class Game:
                 logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
 
     def updateall(self, dt: float, /, exclude: Optional[Scene] = None) -> None:
-        """
-        Update all scenes in the game, even inactive ones.
-
-        Args:
-            dt (float): The time elapsed since the last update.
-            exclude (Scene, optional): The scene to exclude from updating. Defaults to None.
-        """
-
         for scene in self.scenes:
             if scene != exclude:
                 scene.update(dt)
 
     def step(self, dt: float) -> None:
-        """
-        Perform a single game step.
-
-        Args:
-            dt (float): The time elapsed since the last step.
-        """
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False

@@ -1,30 +1,30 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
-from tkinter import messagebox as messagebox
-from tkinter import filedialog as filedialog
 from json import dump, load
 from typing import Optional, Any
 import sys
 import os
 
+from PySide6.QtWidgets import QFileDialog, QMessageBox
+
 
 def resource_path(relative: str) -> str:
     if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, relative)  # pyright: ignore[reportAttributeAccessIssue]
+        return os.path.join(sys._MEIPASS, relative)
     return os.path.join(os.path.abspath("."), relative)
 
 
-def save_project(engine: Any) -> Optional[Any]:
-    file = filedialog.asksaveasfile(
-        defaultextension=".absp",
-        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
-        title="Save ABS Project",
-        initialfile="game.absp",
+def save_project(engine: Any, parent: Optional[Any] = None) -> Optional[Any]:
+    file_path, _ = QFileDialog.getSaveFileName(
+        parent,
+        "Save ABS Project",
+        "game.absp",
+        "ABS Project Files (*.absp);;JSON Files (*.json)",
     )
 
-    if file:
-        with open(file.name, "w") as f:
+    if file_path:
+        with open(file_path, "w") as f:
             dump(
                 {
                     "name": engine.project_name,
@@ -37,24 +37,24 @@ def save_project(engine: Any) -> Optional[Any]:
                 },
                 f,
             )
-        messagebox.showinfo("Success", "Project saved successfully.")
+        QMessageBox.information(parent, "Success", "Project saved successfully.")
 
-        return file
+        return open(file_path, "r")
 
     return None
 
 
-def load_project() -> Optional[list]:
-    file = filedialog.askopenfile(
-        defaultextension=".absp",
-        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
-        title="Load ABS Project",
+def load_project(parent: Optional[Any] = None) -> Optional[list]:
+    file_path, _ = QFileDialog.getOpenFileName(
+        parent,
+        "Load ABS Project",
+        "",
+        "ABS Project Files (*.absp);;JSON Files (*.json)",
     )
 
-    if file:
-        with open(file.name, "r") as f:
+    if file_path:
+        with open(file_path, "r") as f:
             data: dict = load(f)
-
-        return [data, file]
+        return [data, open(file_path, "r")]
 
     return None

@@ -1,2 +1,3 @@
 pygame-ce
 colorama
+PySide6

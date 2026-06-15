@@ -5,8 +5,9 @@ import os
 
 import shutil
 
-from tkinter import messagebox
 from pathlib import Path
+
+from PySide6.QtWidgets import QMessageBox, QApplication
 
 from .saveload import resource_path
 from .logger import logger, Status
@@ -19,7 +20,9 @@ def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
 
     if not os.path.exists(dir):
         logger(f'Build directory "{str(dir.resolve())}" does not exist.', status=Status.WARNING)
-        messagebox.showerror(
+        parent = QApplication.activeWindow()
+        QMessageBox.critical(
+            parent,
             "Build Error",
             f'Build directory "{str(dir.resolve())}" does not exist. Save the project to a valid location and try again.',
         )
@@ -27,11 +30,9 @@ def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
 
     with open(resource_path("data/scripts/launch_game.py")) as f:
         launch_game_script = f.read()
-        f.close()
 
     with open(os.path.join(dir, "run.py"), "w") as f:
         f.write(launch_game_script)
-        f.close()
 
     ignore = shutil.ignore_patterns("*.pyc", "__pycache__")
 
