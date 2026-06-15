@@ -14,6 +14,9 @@ Contributions of all types are welcome, including:
 
 Please read this document before submitting changes.
 
+> [!Note]
+> All contributions should target the `dev` branch. Changes are reviewed and tested there before being merged into `main` for releases.
+
 ---
 
 ## Development Setup
