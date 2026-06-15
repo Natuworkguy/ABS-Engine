@@ -10,8 +10,9 @@ from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 
 def resource_path(relative: str) -> str:
-    if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, relative)
+    _meipass: str | None = getattr(sys, "_MEIPASS", None)
+    if _meipass is not None:
+        return os.path.join(_meipass, relative)
     return os.path.join(os.path.abspath("."), relative)
 
 

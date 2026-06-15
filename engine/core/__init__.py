@@ -209,7 +209,7 @@ class Scene:
         Args:
             obj (Entity): The entity to add
         """
-        assert obj not in self.objects, "Entity is already in the scene"
+        assert obj not in self.objects, "Entity is already in the scene"  # nosec B101
 
         self.objects.append(obj)
         obj._setparent(self)

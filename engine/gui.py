@@ -4,7 +4,7 @@
 import sys
 import os
 import json
-import subprocess
+import subprocess  # nosec B404
 import tempfile
 import shutil
 import threading
@@ -528,7 +528,7 @@ class Engine(QMainWindow):
                 "fullscreen": self.fullscreen,
             },
             "entities": self.entities,
-            "base_path": engine_root,
+            "base_path": GP_BASE_PATH,
         }
 
         data_file = os.path.join(self._game_tmpdir, "game_data.json")
@@ -544,7 +544,7 @@ class Engine(QMainWindow):
             )
 
         try:
-            self._game_process = subprocess.Popen(
+            self._game_process = subprocess.Popen(  # nosec B603
                 [sys.executable, launcher],
                 cwd=self._game_tmpdir,
                 stdout=subprocess.PIPE,
@@ -593,7 +593,9 @@ class Engine(QMainWindow):
         self.show()
 
     def quit_application(self) -> None:
-        QApplication.instance().quit()
+        app = QApplication.instance()
+        if app is not None:
+            app.quit()
 
 
 def run() -> None:

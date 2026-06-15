@@ -5,7 +5,7 @@ import inspect
 
 from enum import Enum
 from typing import Any
-from colorama import Fore, Style
+from colorama import Fore, Style  # type: ignore[import-untyped]
 
 
 class Status(Enum):
