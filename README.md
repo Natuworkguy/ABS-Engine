@@ -6,9 +6,12 @@
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-  <a href="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml">
-    <img src="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml/badge.svg" alt="CI">
-  </a>
+<a href="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml">
+<img
+  src="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml/badge.svg"
+  alt="CI"
+>
+</a>
 </p>
 <!-- markdownlint-enable MD033 -->
 
