@@ -15,7 +15,8 @@
 </p>
 <!-- markdownlint-enable MD033 -->
 
-ABS Engine is a game engine developed by Natuworkguy, designed for public use. It provides tools and features to help you create games efficiently.
+ABS Engine is a game engine developed by Natuworkguy, designed for public use.
+It provides tools and features to help you create games efficiently.
 
 ## Features
 
