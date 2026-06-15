@@ -290,6 +290,7 @@ jobs:
       - lint-mypy
       - lint-pyright
       - pip-audit
+      - markdownlint
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
