@@ -15,9 +15,7 @@ from .image import EntityImage
 from .types import RGBType
 
 print(
-    f"ABS Engine v{engineversion} "
-    f"(Python {sys.version_info.major}.{sys.version_info.minor}."
-    f"{sys.version_info.micro}, pygame {pygame.ver})"
+    f"ABS Engine v{engineversion} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
 )
 
 
@@ -79,8 +77,7 @@ class Entity:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
                         logger(
-                            f'Script file "{scriptfile}" not found. '
-                            "Please ensure the file exists and try again.",
+                            f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
                             status=LoggerStatus.CRITICAL,
                         )
                     except ImportError as e:
@@ -104,7 +101,7 @@ class Entity:
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
     def _collides_with(self, other: "Entity") -> bool:
-        """Check if this entity collides with another entity using AABB."""
+        """Check if this entity collides with another entity using AABB collision detection."""
         return self.rect.colliderect(other.rect)
 
     def _setparent(self, parent: "Scene") -> None:
@@ -212,9 +209,7 @@ class Scene:
         Args:
             obj (Entity): The entity to add
         """
-        assert obj not in self.objects, (  # nosec B101
-            "Entity is already in the scene"
-        )
+        assert obj not in self.objects, "Entity is already in the scene"  # nosec B101
 
         self.objects.append(obj)
         obj._setparent(self)
@@ -311,16 +306,12 @@ class Game:
 
         self.current_scene = scene_index
 
-    def move_entity_to_scene(
-        self,
-        entity: Entity,
-        target_scene_index: int,
-    ) -> None:
+    def move_entity_to_scene(self, entity: Entity, target_scene_index: int) -> None:
         """
         Move an entity to a different scene.
         Args:
             entity (Entity): The entity to move
-            target_scene_index (int): The index of the target scene
+            target_scene_index (int): The index of the scene to move the entity to
         Raises:
             IndexError: If the target scene index is out of bounds
         """
@@ -356,8 +347,7 @@ class Game:
         Update all scenes in the game, even inactive ones.
         Args:
             dt (float): The time elapsed since the last update.
-            exclude (Scene, optional): The scene to exclude from updating.
-                Defaults to None.
+            exclude (Scene, optional): The scene to exclude from updating. Defaults to None.
         """
         for scene in self.scenes:
             if scene != exclude:

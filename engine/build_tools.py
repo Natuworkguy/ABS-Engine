@@ -24,8 +24,7 @@ def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
         QMessageBox.critical(
             parent,
             "Build Error",
-            f'Build directory "{str(dir.resolve())}" does not exist. '
-            "Save the project to a valid location and try again.",
+            f'Build directory "{str(dir.resolve())}" does not exist. Save the project to a valid location and try again.',
         )
         return
 

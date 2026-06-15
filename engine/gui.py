@@ -93,11 +93,7 @@ for entity_name, entity_data in data["entities"].items():
         scriptfile=scriptfile,
         image=image,
     )
-    print("[ABS] Entity '" + str(entity_name) + "': script="
-          + repr(scriptfile) + " exists="
-          + str(scriptfile is not None and os.path.exists(scriptfile))
-          + " init=" + str(entity.scriptfile_init_exists)
-          + " update=" + str(entity.scriptfile_update_exists))
+    print("[ABS] Entity '" + str(entity_name) + "': script=" + repr(scriptfile) + " exists=" + str(scriptfile is not None and os.path.exists(scriptfile)) + " init=" + str(entity.scriptfile_init_exists) + " update=" + str(entity.scriptfile_update_exists))
     core_game.scenes[core_game.current_scene].add(entity)
 
 core_game.run()
@@ -105,12 +101,7 @@ core_game.run()
 
 
 class EntityDataDialog(QDialog):
-    def __init__(
-        self,
-        entity_name: str,
-        entity_data: dict,
-        parent: Optional[QWidget] = None,
-    ) -> None:
+    def __init__(self, entity_name: str, entity_data: dict, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
         self.entity_name = entity_name
         self.result_data = entity_data.copy()
@@ -142,9 +133,7 @@ class EntityDataDialog(QDialog):
             data = json.loads(self.text_edit.toPlainText())
             if isinstance(data, list):
                 QMessageBox.critical(
-                    self,
-                    "Error",
-                    "Failed to save entity data. Ensure that the data is a dictionary.",
+                    self, "Error", "Failed to save entity data. Ensure that the data is a dictionary."
                 )
                 return
             self.result_data = data
@@ -354,12 +343,8 @@ class Engine(QMainWindow):
         layout = QVBoxLayout(group)
 
         self.run_game_button = QPushButton("Run Game")
-        self.run_game_button.clicked.connect(lambda: self.run_game(show_logs=False))
+        self.run_game_button.clicked.connect(self.run_game)
         layout.addWidget(self.run_game_button)
-
-        self.run_game_logs_button = QPushButton("Run Game With Logs")
-        self.run_game_logs_button.clicked.connect(lambda: self.run_game(show_logs=True))
-        layout.addWidget(self.run_game_logs_button)
 
         self.build_game_button = QPushButton("Build Game")
         self.build_game_button.clicked.connect(self.build_game)
@@ -380,8 +365,7 @@ class Engine(QMainWindow):
         do_build = QMessageBox.question(
             self,
             "Build Tools | ABS Engine",
-            "This will build to the folder containing the .absp project file. "
-            "Do you want to continue?",
+            "This will build to the folder containing the .absp project file. Do you want to continue?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
 
@@ -528,7 +512,7 @@ class Engine(QMainWindow):
         self.project_name = name
         QMessageBox.information(self, "Info", f"Project name set to: {self.project_name}")
 
-    def run_game(self, show_logs: bool = False) -> None:
+    def run_game(self) -> None:
         logger("Launching game in subprocess")
         logger(f"Entity count: {len(self.entities)}")
         for name, data in self.entities.items():
@@ -578,10 +562,9 @@ class Engine(QMainWindow):
             stdout, stderr = self._game_process.communicate()
             stdout_str = stdout.decode() if stdout else ""
             stderr_str = stderr.decode() if stderr else ""
-            if show_logs:
-                for line in stdout_str.splitlines():
-                    if "[ABS]" in line:
-                        logger(f"[GAME] {line.strip()}")
+            for line in stdout_str.splitlines():
+                if "[ABS]" in line:
+                    logger(f"[GAME] {line.strip()}")
             if self._game_process.returncode != 0:
                 error_msg = stderr_str if stderr_str else "Unknown error"
                 logger(f"Game subprocess failed: {error_msg}", status=LoggerStatus.CRITICAL)
