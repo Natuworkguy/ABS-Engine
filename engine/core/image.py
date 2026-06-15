@@ -42,7 +42,9 @@ class EntityImage:
     def draw(self, surface: pygame.Surface, rect: pygame.Rect) -> None:
         """Draw the image scaled to ``rect`` onto ``surface``."""
 
-        assert self.surface is not None, "EntityImage.surface was not initialized"  # nosec B101
+        assert self.surface is not None, (  # nosec B101
+            "EntityImage.surface was not initialized"
+        )
 
         scaled_image = pygame.transform.scale(self.surface, (rect.width, rect.height))
         surface.blit(scaled_image, (rect.x, rect.y))
