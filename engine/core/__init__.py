@@ -310,6 +310,13 @@ class Scene:
             self.no_entities = False
 
     def update(self, dt: float) -> None:
+        """
+        Update all entities in the scene.
+
+        Args:
+            dt (float): Time elapsed since last update
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.update(dt)
