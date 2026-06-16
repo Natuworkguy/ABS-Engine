@@ -55,4 +55,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
 
 ## License
 
-This project is licensed under the GPLv3 license. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPLv3 license.
+See the [LICENSE](LICENSE) file for details.
