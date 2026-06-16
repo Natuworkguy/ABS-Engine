@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Build and development utilities for the engine.
+"""
+
 import os
 
 import shutil
