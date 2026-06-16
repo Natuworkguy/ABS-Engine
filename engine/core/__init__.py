@@ -101,6 +101,13 @@ class Entity:
                 logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
 
     def __str__(self) -> str:
+        """
+        Return a user-friendly string representation of the entity.
+
+        Returns:
+            str: Human-readable entity description.
+        """
+
         return f"<{self.__class__.__name__} with id {self.id}>"
 
     def __repr__(self) -> str:
