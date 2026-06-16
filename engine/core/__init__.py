@@ -263,6 +263,16 @@ class Scene:
         logger("Initialized scene")
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
+        """
+        Internal collision query used by Entity.get_colliding_entities().
+
+        Args:
+            entity (Entity): Entity to evaluate collisions for.
+
+        Returns:
+            list[Entity]: Entities currently colliding with the given entity.
+        """
+
         colliding = []
 
         for obj in self.objects:
