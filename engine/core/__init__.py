@@ -322,6 +322,13 @@ class Scene:
                 obj.update(dt)
 
     def event(self, event: pygame.event.Event) -> None:
+        """
+        Dispatch a pygame event to all entities in the scene.
+
+        Args:
+            event (pygame.event.Event): Event passed to each entity.
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.event(event)
