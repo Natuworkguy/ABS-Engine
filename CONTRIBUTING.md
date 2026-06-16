@@ -21,7 +21,7 @@ Please read this document before submitting changes.
 
 ## Development Setup
 
-## 1. Fork and Clone the Repository
+### 1. Fork and Clone the Repository
 
 ```bash
 git clone https://github.com/Natuworkguy/ABS-Engine.git
@@ -30,16 +30,16 @@ cd ABS-Engine
 
 ---
 
-## 2. Create a Virtual Environment
+### 2. Create a Virtual Environment
 
-### Windows
+#### Windows
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-### Linux/macOS
+#### Linux/macOS
 
 ```bash
 python3 -m venv .venv
@@ -48,7 +48,7 @@ source .venv/bin/activate
 
 ---
 
-## 3. Install Dependencies
+### 3. Install Dependencies
 
 Install both runtime and development dependencies:
 
