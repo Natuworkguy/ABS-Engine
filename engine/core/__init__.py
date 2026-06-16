@@ -358,6 +358,10 @@ class Scene:
 
 
 class Game:
+    """
+    Main game class
+    """
+
     def __init__(
         self,
         title: str = "Game",
