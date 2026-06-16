@@ -24,7 +24,7 @@ ABS Engine is a game engine developed by Natuworkguy, designed for public use. I
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Above-and-Below/ABS-Engine.git
+    git clone https://github.com/Natuworkguy/ABS-Engine.git
     cd ABS-Engine
     ```
 
