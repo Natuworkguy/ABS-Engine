@@ -334,6 +334,13 @@ class Scene:
                 obj.event(event)
 
     def draw(self, surface: pygame.Surface) -> None:
+        """
+        Render all entities in the scene onto a surface.
+
+        Args:
+            surface (pygame.Surface): Surface to draw entities onto.
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
