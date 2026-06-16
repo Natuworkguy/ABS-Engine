@@ -16,6 +16,16 @@ def resource_path(relative: str) -> str:
 
 
 def save_project(engine: Any) -> Optional[Any]:
+    """
+    Save the project as an absp file
+
+    Args:
+        engine (Any): engine instance to extract the project information from
+
+    Returns:
+        Optional[Any]: IO object of the file or None
+    """
+
     file = filedialog.asksaveasfile(
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
