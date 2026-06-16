@@ -214,6 +214,13 @@ class Entity:
             pygame.draw.rect(surface, self.color, self.rect)
 
     def get_colliding_entities(self) -> Optional[list["Entity"]]:
+        """
+        Get all entities currently colliding with this entity.
+
+        Returns:
+            Optional[list["Entity"]]: List of colliding entities, or None if no collisions exist.
+        """
+
         if self.parent is None:
             return None
 
