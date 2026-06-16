@@ -9,6 +9,10 @@ from colorama import Fore, Style
 
 
 class Status(Enum):
+    """
+    Log severity levels used by the logger.
+    """
+
     CRITICAL = "CRITICAL"
     WARNING = "WARNING"
     INFO = "INFO"
