@@ -406,6 +406,13 @@ class Game:
         logger("Initialized game")
 
     def _set_bg_color(self, color: RGBType) -> None:
+        """
+        Set the background color of the game
+
+        Args:
+            color (RGBType): Color to set the background to
+        """
+
         self._bg_color = color
 
     def add_scene(self) -> int:
