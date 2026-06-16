@@ -55,6 +55,7 @@ Install both runtime and development dependencies:
 ```bash
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+npm install -g markdownlint-cli2 
 ```
 
 ---
