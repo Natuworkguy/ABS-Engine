@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Handles saving and loading of engine projects and data.
+"""
+
 from tkinter import messagebox as messagebox
 from tkinter import filedialog as filedialog
 from json import dump, load
