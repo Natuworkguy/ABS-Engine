@@ -15,6 +15,14 @@ engine_path = Path(__file__).parent
 
 
 def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
+    """
+    Build the game
+
+    Args:
+        directory (Path): Path to build the game to
+        ENGINE_DATA_PATH (str): Path of the data directory
+    """
+
     launch_game_script = None
 
     if not os.path.exists(directory):
