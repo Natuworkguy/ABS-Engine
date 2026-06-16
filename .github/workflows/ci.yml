@@ -312,6 +312,7 @@ jobs:
       - lint-pyright
       - pip-audit
       - markdownlint
+      - lint-darglint
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
