@@ -428,4 +428,8 @@ class Game:
         pygame.quit()
 
     def quit(self) -> None:
+        """
+        Stop the game and terminate execution.
+        """
+
         self.running = False
