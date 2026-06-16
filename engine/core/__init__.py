@@ -227,6 +227,10 @@ class Entity:
         return self.parent._get_colliding_entities(self)
 
     def destroy(self) -> None:
+        """
+        Destroy this entity
+        """
+
         if self.parent is not None:
             try:
                 self.parent.remove(self)
