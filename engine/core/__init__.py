@@ -147,6 +147,12 @@ class Entity:
         return self.rect.colliderect(other.rect)
 
     def _setparent(self, parent: "Scene") -> None:
+        """
+        Set the parent scene for this entity.
+
+        Args:
+            parent (Scene): Scene to assign this entity to.
+        """
         self.parent = parent
 
     def init(self) -> None:
