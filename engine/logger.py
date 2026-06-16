@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Logging utilities for the engine.
+"""
+
 import inspect
 
 from enum import Enum
