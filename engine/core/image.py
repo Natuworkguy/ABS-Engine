@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Image handling utilities for engine entities.
+"""
+
 import pygame
 
 from typing import Optional

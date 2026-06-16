@@ -284,6 +284,19 @@ class Game:
         icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
+        """
+        Initialize the game.
+
+        Args:
+            title (str): Window title. Defaults to "Game".
+            width (int): Window width in pixels. Defaults to 800.
+            height (int): Window height in pixels. Defaults to 600.
+            cursor_visible (bool): Whether the mouse cursor is visible. Defaults to True.
+            fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
+            icon_path (Optional[str]): Path to window icon image. Defaults to None.
+            IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
+        """
+
         # For use by entities
         self.IS_EDITOR: bool = IS_EDITOR
         self.gamedata: dict = {}
