@@ -40,7 +40,13 @@ class EntityImage:
         self.surface = pygame.image.load(image_path).convert_alpha()
 
     def draw(self, surface: pygame.Surface, rect: pygame.Rect) -> None:
-        """Draw the image scaled to ``rect`` onto ``surface``."""
+        """
+        Draw the image scaled to ``rect`` onto ``surface``.
+
+        Args:
+            surface (pygame.Surface): surface to draw onto
+            rect (pygame.Rect): rect to scale image to
+        """
 
         assert self.surface is not None, "EntityImage.surface was not initialized"  # nosec B101
 
