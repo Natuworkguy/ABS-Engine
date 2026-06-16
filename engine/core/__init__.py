@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Core engine systems and base components.
+"""
+
 import pygame
 import importlib.util
 import sys
