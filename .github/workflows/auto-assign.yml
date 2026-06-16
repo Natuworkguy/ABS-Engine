@@ -11,4 +11,5 @@ jobs:
     steps:
       - uses: kentaro-m/auto-assign-action@v2.0.1
         with:
-          reviewers: Natuworkguy
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
