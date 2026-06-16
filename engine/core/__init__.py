@@ -111,6 +111,13 @@ class Entity:
         return f"<{self.__class__.__name__} with id {self.id}>"
 
     def __repr__(self) -> str:
+        """
+        Return a developer-friendly representation of the entity.
+
+        Returns:
+            str: Debug representation of the entity.
+        """
+
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
     def _collides_with(self, other: "Entity") -> bool:
