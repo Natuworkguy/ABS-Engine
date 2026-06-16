@@ -19,6 +19,12 @@ class Status(Enum):
 
 
 def _get_caller_module() -> Any:
+    """
+    Get the name of the module of the function that called the logger.
+
+    Returns:
+        Any: The name of the module
+    """
     frame = inspect.currentframe()
 
     while frame:
