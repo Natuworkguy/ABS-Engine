@@ -218,7 +218,7 @@ class Entity:
         Get all entities currently colliding with this entity.
 
         Returns:
-            Optional[list["Entity"]]: List of colliding entities, or None if no collisions exist.
+            Optional[list["Entity"]]: List of colliding entities or None.
         """
 
         if self.parent is None:
