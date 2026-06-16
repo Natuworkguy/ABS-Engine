@@ -57,6 +57,13 @@ def save_project(engine: Any) -> Optional[Any]:
 
 
 def load_project() -> Optional[list]:
+    """
+    Ask the user to open an absp file, then return the contents
+
+    Returns:
+        Optional[list]: file content
+    """
+
     file = filedialog.askopenfile(
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
