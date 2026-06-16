@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Core engine systems and base components.
+"""
+
 import pygame
 import importlib.util
 import sys
@@ -11,7 +15,7 @@ from typing import Optional, Any
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
-from .types import RGBType
+from .types import RGBType, EntityImageType
 from ..version import __version__ as engineversion
 
 print(
@@ -34,6 +38,19 @@ class Entity:
         scriptfile: Optional[str] = None,
         image: Optional[str] = None,
     ) -> None:
+        """
+        Initialize an entity
+
+        Args:
+            x (int):  X position. Defaults to 0.
+            y (int):  Y position. Defaults to 0.
+            width (int): Width of the entity. Defaults to 50.
+            height (int): Height of the entity. Defaults to 50.
+            color (RGBType): RGB color value. Defaults to (255, 255, 255).
+            scriptfile (Optional[str]): Path to optional script file. Defaults to None.
+            image (Optional[str]): Path to optional image file. Defaults to None.
+        """
+
         self.x = x
         self.y = y
         self.width = width
@@ -53,7 +70,7 @@ class Entity:
 
         self.did_init = False
 
-        self.image: Optional[EntityImage] = None
+        self.image: Optional[EntityImageType] = None
 
         if image is not None:
             try:
@@ -97,16 +114,45 @@ class Entity:
                 logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
 
     def __str__(self) -> str:
+        """
+        Return a user-friendly string representation of the entity.
+
+        Returns:
+            str: Human-readable entity description.
+        """
+
         return f"<{self.__class__.__name__} with id {self.id}>"
 
     def __repr__(self) -> str:
+        """
+        Return a developer-friendly representation of the entity.
+
+        Returns:
+            str: Debug representation of the entity.
+        """
+
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
     def _collides_with(self, other: "Entity") -> bool:
-        """Check if this entity collides with another entity using AABB collision detection."""
+        """
+        Check if this entity collides with another entity using AABB collision detection.
+
+        Args:
+            other (Entity): Entity to check collision with
+
+        Returns:
+            bool: Whether this entity intersects the other entity.
+        """
+
         return self.rect.colliderect(other.rect)
 
     def _setparent(self, parent: "Scene") -> None:
+        """
+        Set the parent scene for this entity.
+
+        Args:
+            parent (Scene): Scene to assign this entity to.
+        """
         self.parent = parent
 
     def init(self) -> None:
@@ -117,8 +163,8 @@ class Entity:
 
         if self.scriptfile_module is not None:
             if self.scriptfile_init_exists:
-                self.did_init = True
                 self.scriptfile_module.init(self)
+                self.did_init = True
 
     def update_rect(self) -> None:
         """
@@ -168,12 +214,23 @@ class Entity:
             pygame.draw.rect(surface, self.color, self.rect)
 
     def get_colliding_entities(self) -> Optional[list["Entity"]]:
+        """
+        Get all entities currently colliding with this entity.
+
+        Returns:
+            Optional[list["Entity"]]: List of colliding entities or None.
+        """
+
         if self.parent is None:
             return None
 
         return self.parent._get_colliding_entities(self)
 
     def destroy(self) -> None:
+        """
+        Destroy this entity
+        """
+
         if self.parent is not None:
             try:
                 self.parent.remove(self)
@@ -189,6 +246,13 @@ class Scene:
     """
 
     def __init__(self, *, parent: "Game") -> None:
+        """
+        Initialize a scene.
+
+        Args:
+            parent (Game): Game instance this scene is assigned to.
+        """
+
         # For use by entities
         self.scenedata: dict[Any, Any] = {}
 
@@ -199,6 +263,16 @@ class Scene:
         logger("Initialized scene")
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
+        """
+        Internal collision query used by Entity.get_colliding_entities().
+
+        Args:
+            entity (Entity): Entity to evaluate collisions for.
+
+        Returns:
+            list[Entity]: Entities currently colliding with the given entity.
+        """
+
         colliding = []
 
         for obj in self.objects:
@@ -236,16 +310,37 @@ class Scene:
             self.no_entities = False
 
     def update(self, dt: float) -> None:
+        """
+        Update all entities in the scene.
+
+        Args:
+            dt (float): Time elapsed since last update
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.update(dt)
 
     def event(self, event: pygame.event.Event) -> None:
+        """
+        Dispatch a pygame event to all entities in the scene.
+
+        Args:
+            event (pygame.event.Event): Event passed to each entity.
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.event(event)
 
     def draw(self, surface: pygame.Surface) -> None:
+        """
+        Render all entities in the scene onto a surface.
+
+        Args:
+            surface (pygame.Surface): Surface to draw entities onto.
+        """
+
         if not self.no_entities:
             for obj in self.objects:
                 obj.draw(surface)
@@ -263,6 +358,10 @@ class Scene:
 
 
 class Game:
+    """
+    Main game class
+    """
+
     def __init__(
         self,
         title: str = "Game",
@@ -275,6 +374,19 @@ class Game:
         icon_path: Optional[str] = None,
         IS_EDITOR: bool = False,
     ) -> None:
+        """
+        Initialize the game.
+
+        Args:
+            title (str): Window title. Defaults to "Game".
+            width (int): Window width in pixels. Defaults to 800.
+            height (int): Window height in pixels. Defaults to 600.
+            cursor_visible (bool): Whether the mouse cursor is visible. Defaults to True.
+            fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
+            icon_path (Optional[str]): Path to window icon image. Defaults to None.
+            IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
+        """
+
         # For use by entities
         self.IS_EDITOR: bool = IS_EDITOR
         self.gamedata: dict = {}
@@ -298,6 +410,13 @@ class Game:
         logger("Initialized game")
 
     def _set_bg_color(self, color: RGBType) -> None:
+        """
+        Set the background color of the game
+
+        Args:
+            color (RGBType): Color to set the background to
+        """
+
         self._bg_color = color
 
     def add_scene(self) -> int:
@@ -394,7 +513,8 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            self.scenes[self.current_scene].event(event)
+            else:
+                self.scenes[self.current_scene].event(event)
 
         self.scenes[self.current_scene].update(dt)
         self.screen.fill(self._bg_color)
@@ -402,6 +522,13 @@ class Game:
         pygame.display.flip()
 
     def run(self, fps: int = 60) -> None:
+        """
+        Run the main game loop.
+
+        Args:
+            fps (int): Target frames per second for the game loop. Defaults to 60.
+        """
+
         logger("Starting game loop")
         self.running = True
         while self.running:
@@ -411,4 +538,8 @@ class Game:
         pygame.quit()
 
     def quit(self) -> None:
+        """
+        Stop the game and terminate execution.
+        """
+
         self.running = False

@@ -1,14 +1,22 @@
+<!-- markdownlint-disable MD033 -->
 <h1 align=center>
     ABS Engine
 </h1>
+<!-- markdownlint-enable MD033 -->
 
+<!-- markdownlint-disable MD033 -->
 <p align="center">
-  <a href="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml">
-    <img src="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml/badge.svg" alt="CI">
-  </a>
+<a href="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml">
+<img
+  src="https://github.com/Natuworkguy/ABS-Engine/actions/workflows/ci.yml/badge.svg"
+  alt="CI"
+>
+</a>
 </p>
+<!-- markdownlint-enable MD033 -->
 
-ABS Engine is a game engine developed by Natuworkguy, designed for public use. It provides tools and features to help you create games efficiently.
+ABS Engine is a game engine developed by Natuworkguy, designed for public use.
+It provides tools and features to help you create games efficiently.
 
 ## Features
 

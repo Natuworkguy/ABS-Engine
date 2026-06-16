@@ -13,6 +13,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  markdownlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v23
+
   prebuild:
     name: Prebuild Validation
     runs-on: ubuntu-latest
@@ -238,6 +245,27 @@ jobs:
 
           pyright --verbose
 
+  lint-darglint:
+    name: Docstring Validation with Darglint
+    needs: prebuild
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+  
+      - name: Install Darglint
+        run: |
+          python -m pip install --upgrade pip
+          pip install darglint
+
+      - name: Run Darglint
+        run: |
+          darglint .
+
   pip-audit:
     name: Dependency Audit with pip-audit
     needs: prebuild
@@ -283,6 +311,8 @@ jobs:
       - lint-mypy
       - lint-pyright
       - pip-audit
+      - markdownlint
+      - lint-darglint
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

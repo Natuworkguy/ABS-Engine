@@ -255,4 +255,5 @@ Professional collaboration helps maintain a productive development environment.
 
 ## License
 
-By contributing to ABS Engine, you agree that your contributions will be licensed under the GNU General Public License v3.0 (GPLv3).
+By contributing to ABS Engine, you agree that your contributions
+will be licensed under the GNU General Public License v3.0 (GPLv3).

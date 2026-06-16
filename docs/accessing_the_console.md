@@ -17,7 +17,7 @@ Make sure you run it with the `python3` or `py` command. Directly using the file
 Bad Example:
 
 ```powershell
-"C:/Users/User/ABS-Engine/run.pyw"
+& "C:/Users/User/ABS-Engine/run.pyw"
 ```
 
 *Good* Example:

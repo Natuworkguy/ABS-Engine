@@ -1,6 +1,10 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
+"""
+Build and development utilities for the engine.
+"""
+
 import os
 
 import shutil
@@ -14,14 +18,24 @@ from .logger import logger, Status
 engine_path = Path(__file__).parent
 
 
-def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
+def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
+    """
+    Build the game
+
+    Args:
+        directory (Path): Path to build the game to
+        ENGINE_DATA_PATH (str): Path of the data directory
+    """
+
     launch_game_script = None
 
-    if not os.path.exists(dir):
-        logger(f'Build directory "{str(dir.resolve())}" does not exist.', status=Status.WARNING)
+    if not os.path.exists(directory):
+        logger(
+            f'Build directory "{str(directory.resolve())}" does not exist.', status=Status.WARNING
+        )
         messagebox.showerror(
             "Build Error",
-            f'Build directory "{str(dir.resolve())}" does not exist. Save the project to a valid location and try again.',
+            f'Build directory "{str(directory.resolve())}" does not exist. Save the project to a valid location and try again.',
         )
         return
 
@@ -29,11 +43,15 @@ def build(dir: Path, ENGINE_DATA_PATH: str) -> None:
         launch_game_script = f.read()
         f.close()
 
-    with open(os.path.join(dir, "run.py"), "w") as f:
+    with open(os.path.join(directory, "run.py"), "w") as f:
         f.write(launch_game_script)
         f.close()
 
     ignore = shutil.ignore_patterns("*.pyc", "__pycache__")
 
-    shutil.copytree(engine_path, os.path.join(dir, "engine"), dirs_exist_ok=True, ignore=ignore)
-    shutil.copytree(ENGINE_DATA_PATH, os.path.join(dir, "data"), dirs_exist_ok=True, ignore=ignore)
+    shutil.copytree(
+        engine_path, os.path.join(directory, "engine"), dirs_exist_ok=True, ignore=ignore
+    )
+    shutil.copytree(
+        ENGINE_DATA_PATH, os.path.join(directory, "data"), dirs_exist_ok=True, ignore=ignore
+    )
