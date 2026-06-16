@@ -29,6 +29,14 @@ def _get_caller_module() -> Any:
 
 
 def logger(message: str, *, status: Status = Status.INFO) -> None:
+    """
+    Log a message to the console
+
+    Args:
+        message (str): Message to log.
+        status (Status): Log severity level. Defaults to Status.INFO.
+    """
+
     source = _get_caller_module().upper()
 
     if status == Status.CRITICAL:
