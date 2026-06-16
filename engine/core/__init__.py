@@ -38,6 +38,19 @@ class Entity:
         scriptfile: Optional[str] = None,
         image: Optional[str] = None,
     ) -> None:
+        """
+        Initialize an entity
+
+        Args:
+            x (int):  X position. Defaults to 0.
+            y (int):  Y position. Defaults to 0.
+            width (int): Width of the entity. Defaults to 50.
+            height (int): Height of the entity. Defaults to 50.
+            color (RGBType): RGB color value. Defaults to (255, 255, 255).
+            scriptfile (Optional[str]): Path to optional script file. Defaults to None.
+            image (Optional[str]): Path to optional image file. Defaults to None.
+        """
+
         self.x = x
         self.y = y
         self.width = width
