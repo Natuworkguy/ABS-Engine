@@ -103,7 +103,16 @@ class Entity:
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
     def _collides_with(self, other: "Entity") -> bool:
-        """Check if this entity collides with another entity using AABB collision detection."""
+        """
+        Check if this entity collides with another entity using AABB collision detection.
+
+        Args:
+            other (Entity): Entity to check collision with
+
+        Returns:
+            bool: Whether this entity intersects the other entity.
+        """
+
         return self.rect.colliderect(other.rect)
 
     def _setparent(self, parent: "Scene") -> None:
