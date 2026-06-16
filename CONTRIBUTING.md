@@ -109,6 +109,18 @@ flake8 .
 bandit -r .
 ```
 
+## MarkdownLint
+
+```bash
+markdownlint-cli2 .
+```
+
+## Darglint
+
+```bash
+darglint .
+```
+
 All checks must pass before a pull request will be reviewed.
 
 ---
