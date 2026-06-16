@@ -246,6 +246,13 @@ class Scene:
     """
 
     def __init__(self, *, parent: "Game") -> None:
+        """
+        Initialize a scene.
+
+        Args:
+            parent (Game): Game instance this scene is assigned to.
+        """
+
         # For use by entities
         self.scenedata: dict[Any, Any] = {}
 
