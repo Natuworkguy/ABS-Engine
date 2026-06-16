@@ -412,6 +412,13 @@ class Game:
         pygame.display.flip()
 
     def run(self, fps: int = 60) -> None:
+        """
+        Run the main game loop.
+
+        Args:
+            fps (int): Target frames per second for the game loop. Defaults to 60.
+        """
+
         logger("Starting game loop")
         self.running = True
         while self.running:
