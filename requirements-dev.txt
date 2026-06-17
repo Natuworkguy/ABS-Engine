@@ -4,3 +4,4 @@ pyright
 flake8
 bandit
 darglint
+interrogate
