@@ -90,10 +90,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -101,7 +97,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
           cache: "pip"
 
       - name: Install Ruff
@@ -130,10 +126,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -141,7 +133,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
           cache: "pip"
 
       - name: Install Flake8
@@ -163,10 +155,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -174,7 +162,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
           cache: "pip"
 
       - name: Install Bandit
@@ -196,10 +184,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -207,7 +191,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.12
           cache: "pip"
 
       - name: Install MyPy
@@ -308,7 +292,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: 3.12
           cache: "pip"
 
       - name: Install pip-audit
