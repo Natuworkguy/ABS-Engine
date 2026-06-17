@@ -334,13 +334,14 @@ jobs:
     name: Final Build Validation
     needs:
       - lint-ruff
+      - lint-interrogate
       - lint-flake8
       - lint-bandit
       - lint-mypy
       - lint-pyright
       - pip-audit
-      - markdownlint
       - lint-darglint
+      - markdownlint
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
