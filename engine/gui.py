@@ -12,7 +12,6 @@ import tkinter.simpledialog as simpledialog
 from _tkinter import TclError
 
 from typing import Optional
-from io import TextIOWrapper
 
 from .saveload import (
     save_project as sl_save_project,
@@ -392,9 +391,9 @@ class Engine:
             return
 
         data: dict = packed_data[0]
-        file: TextIOWrapper = packed_data[1]
+        file: str = packed_data[1]
 
-        GP_BASE_PATH = str(Path(str(file.name)).parent)
+        GP_BASE_PATH = str(Path(file).parent)
 
         self.entities = data.get("entities", {})
         game = data.get("game", {})
@@ -420,7 +419,7 @@ class Engine:
         if file is None:
             return
 
-        GP_BASE_PATH = str(Path(str(file.name)).parent)
+        GP_BASE_PATH = str(Path(file).parent)
         self.build_game_button.config(state=NORMAL)
 
     def save_name(self, name: str) -> None:

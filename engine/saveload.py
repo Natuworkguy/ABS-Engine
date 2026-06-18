@@ -9,6 +9,8 @@ from tkinter import messagebox as messagebox
 from tkinter import filedialog as filedialog
 from json import dump, load
 from typing import Optional, Any
+from pathlib import Path
+
 import sys
 import os
 
@@ -29,7 +31,7 @@ def resource_path(relative: str) -> str:
     return os.path.join(os.path.abspath("."), relative)
 
 
-def save_project(engine: Any) -> Optional[Any]:
+def save_project(engine: Any) -> Optional[str]:
     """
     Save the project as an absp file
 
@@ -40,15 +42,17 @@ def save_project(engine: Any) -> Optional[Any]:
         Optional[Any]: IO object of the file or None
     """
 
-    file = filedialog.asksaveasfile(
-        defaultextension=".absp",
-        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
-        title="Save ABS Project",
-        initialfile="game.absp",
-    )
+    dir = filedialog.askdirectory()
 
-    if file:
-        with open(file.name, "w") as f:
+    if dir and os.path.exists(dir):
+        gamefile = str(
+            Path(dir) / "game.absp",
+        )
+
+        with open(
+            gamefile,
+            "w"
+        ) as f:
             dump(
                 {
                     "name": engine.project_name,
@@ -65,7 +69,7 @@ def save_project(engine: Any) -> Optional[Any]:
 
         messagebox.showinfo("Success", "Project saved successfully.")
 
-        return file
+        return gamefile
 
     return None
 
@@ -78,17 +82,17 @@ def load_project() -> Optional[list]:
         Optional[list]: file content
     """
 
-    file = filedialog.askopenfile(
-        defaultextension=".absp",
-        filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
-        title="Load ABS Project",
-    )
+    dir = filedialog.askdirectory()
 
-    if file:
-        with open(file.name, "r") as f:
+    if dir and os.path.exists(dir):
+        gamefile = str(
+            Path(dir) / "game.absp"
+        )
+
+        with open(gamefile, "r") as f:
             data: dict = load(f)
             f.close()
 
-        return [data, file]
+        return [data, gamefile]
 
     return None
