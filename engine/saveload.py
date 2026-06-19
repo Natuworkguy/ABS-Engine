@@ -100,6 +100,10 @@ def load_project() -> Optional[list]:
 
             return [{}, gamefile]
 
+        if os.path.isdir(gamefile):
+            messagebox.showerror("Error", "game.absp project file is a directory.")
+            return None
+
         with open(gamefile, "r") as f:
             data: dict = load(f)
             f.close()
