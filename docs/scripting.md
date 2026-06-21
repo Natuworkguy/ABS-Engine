@@ -124,7 +124,7 @@ def update(entity, dt):
         entity.x -= step_size
     elif held['s'] and not entity.y == entity.parent.game.wsize[1] - entity.width:
         entity.y += step_size
-    elif held['d'] and not entity.x == entity.parent.game.wsize[0] - entity.height:
+    elif held['d'] and not entity.x == entity.parent.game.wsize[0] - entity.width:
         entity.x += step_size
     entity.update_rect()
 
