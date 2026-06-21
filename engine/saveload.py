@@ -51,7 +51,7 @@ def save_project(engine: Any) -> Optional[str]:
             Path(dir) / "game.absp",
         )
 
-        with open(gamefile, "w") as f:
+        with open(gamefile, "w", encoding="utf-8") as f:
             dump(
                 {
                     "name": engine.project_name,
@@ -91,7 +91,7 @@ def load_project() -> Optional[list]:
                 status=LoggerStatus.WARNING,
             )
 
-            with open(gamefile, "w") as f:
+            with open(gamefile, "w", encoding="utf-8") as f:
                 f.write("{}")
 
             return [{}, gamefile]
