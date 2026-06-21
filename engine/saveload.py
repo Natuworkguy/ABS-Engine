@@ -8,7 +8,7 @@ Handles saving and loading of engine projects and data.
 from tkinter import messagebox as messagebox
 from tkinter import filedialog as filedialog
 from json import dump, load
-from typing import Optional, Any
+from typing import Optional, Any, Tuple
 import sys
 import os
 
@@ -44,6 +44,8 @@ def save_project(engine: Any) -> Optional[Any]:
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Save ABS Project",
         initialfile="game.absp",
+        mode="w",
+        encoding="utf-8",
     )
 
     if not file:
@@ -68,7 +70,7 @@ def save_project(engine: Any) -> Optional[Any]:
     return file
 
 
-def load_project() -> Optional[list]:
+def load_project() -> Optional[Tuple[dict, Any]]:
     """
     Ask the user to open an absp file, then return the contents
 
@@ -80,6 +82,8 @@ def load_project() -> Optional[list]:
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Load ABS Project",
+        mode="r",
+        encoding="utf-8",
     )
 
     if not file:
