@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "abs-engine"
-version = "1.0.0"
+dynamic = ["version"]
 description = "2D Game engine made by Natuworkguy for public use."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -24,6 +24,9 @@ dev = [
 
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "engine.version.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["engine*"]
