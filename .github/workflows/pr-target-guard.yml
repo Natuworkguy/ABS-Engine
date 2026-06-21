@@ -6,6 +6,7 @@ on:
 
 jobs:
   check-target-branch:
+    name: Check Target Branch
     runs-on: ubuntu-latest
 
     steps:
