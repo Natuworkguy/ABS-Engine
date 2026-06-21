@@ -5,12 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "abs-engine"
 version = "1.0.0"
-description = "2D Game engine made by Above and Below Studios for public use."
+description = "2D Game engine made by Natuworkguy for public use."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-only" }
 authors = [
-  { name = "Above and Below Studios" },
   { name = "Nathan C." }
 ]
 dependencies = [
