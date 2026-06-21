@@ -39,7 +39,6 @@ def save_project(engine: Any) -> Optional[Any]:
     Returns:
         Optional[Any]: IO object of the file or None
     """
-
     file = filedialog.asksaveasfile(
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
@@ -47,27 +46,26 @@ def save_project(engine: Any) -> Optional[Any]:
         initialfile="game.absp",
     )
 
-    if file:
-        with open(file.name, "w") as f:
-            dump(
-                {
-                    "name": engine.project_name,
-                    "game": {
-                        "dimensions": engine.game_dimensions,
-                        "cursor_visible": engine.cursor_visible,
-                        "fullscreen": engine.fullscreen,
-                    },
-                    "entities": engine.entities,
+    if not file:
+        return None
+
+    with file:
+        dump(
+            {
+                "name": engine.project_name,
+                "game": {
+                    "dimensions": engine.game_dimensions,
+                    "cursor_visible": engine.cursor_visible,
+                    "fullscreen": engine.fullscreen,
                 },
-                f,
-            )
-            f.close()
+                "entities": engine.entities,
+            },
+            file,
+            indent=4,  # Optional: Makes the saved JSON human-readable
+        )
 
-        messagebox.showinfo("Success", "Project saved successfully.")
-
-        return file
-
-    return None
+    messagebox.showinfo("Success", "Project saved successfully.")
+    return file
 
 
 def load_project() -> Optional[list]:
@@ -77,18 +75,17 @@ def load_project() -> Optional[list]:
     Returns:
         Optional[list]: file content
     """
-
+    
     file = filedialog.askopenfile(
         defaultextension=".absp",
         filetypes=[("ABS Project Files", "*.absp"), ("JSON Files", "*.json")],
         title="Load ABS Project",
     )
 
-    if file:
-        with open(file.name, "r") as f:
-            data: dict = load(f)
-            f.close()
+    if not file:
+        return None
 
-        return [data, file]
+    with file:
+        data: dict = load(file)
 
-    return None
+    return data, file
