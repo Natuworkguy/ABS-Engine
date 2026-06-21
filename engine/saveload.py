@@ -64,7 +64,6 @@ def save_project(engine: Any) -> Optional[str]:
                 },
                 f,
             )
-            f.close()
 
         messagebox.showinfo("Success", "Project saved successfully.")
 
@@ -94,7 +93,6 @@ def load_project() -> Optional[list]:
 
             with open(gamefile, "w") as f:
                 f.write("{}")
-                f.close()
 
             return [{}, gamefile]
 
@@ -104,7 +102,6 @@ def load_project() -> Optional[list]:
 
         with open(gamefile, "r") as f:
             data: dict = load(f)
-            f.close()
 
         return [data, gamefile]
 
