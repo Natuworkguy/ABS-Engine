@@ -51,10 +51,7 @@ def save_project(engine: Any) -> Optional[str]:
             Path(dir) / "game.absp",
         )
 
-        with open(
-            gamefile,
-            "w"
-        ) as f:
+        with open(gamefile, "w") as f:
             dump(
                 {
                     "name": engine.project_name,
@@ -87,12 +84,13 @@ def load_project() -> Optional[list]:
     dir = filedialog.askdirectory()
 
     if dir and os.path.exists(dir):
-        gamefile = str(
-            Path(dir) / "game.absp"
-        )
+        gamefile = str(Path(dir) / "game.absp")
 
         if not os.path.exists(gamefile):
-            logger("game.absp file not found in seleted directory. Creating.", status=LoggerStatus.WARNING)
+            logger(
+                "game.absp file not found in seleted directory. Creating.",
+                status=LoggerStatus.WARNING,
+            )
 
             with open(gamefile, "w") as f:
                 f.write("{}")
