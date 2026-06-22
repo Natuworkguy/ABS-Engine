@@ -16,10 +16,10 @@ from typing import Optional, Any
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
 from .types import RGBType, EntityImageType
-from ..version import __version__ as engineversion
+from ..version import __version__ as version
 
 print(
-    f"ABS Engine v{engineversion} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
+    f"ABS Engine v{version} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
 )
 
 
