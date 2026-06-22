@@ -151,7 +151,7 @@ jobs:
         run: |
           echo "Running Flake8 static analysis..."
 
-          flake8 --ignore=E501 .
+          flake8 .
 
   lint-bandit:
     name: Security Scan with Bandit

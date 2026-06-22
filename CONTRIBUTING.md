@@ -102,7 +102,7 @@ pyright
 ## Flake8
 
 ```bash
-flake8 . --ignore=E501
+flake8 .
 ```
 
 ## Bandit
