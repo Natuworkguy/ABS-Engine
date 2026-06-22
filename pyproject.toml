@@ -34,3 +34,10 @@ include = ["engine*"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.interrogate]
+exclude = [
+  "engine/gui.py",
+  "engine/version.py",
+  "data/scripts/launch_game.py",
+]

@@ -126,7 +126,7 @@ darglint .
 ## Interrogate
 
 ```bash
-interrogate --exclude engine/gui.py --exclude engine/version.py --exclude data/scripts/launch_game.py
+interrogate
 ```
 
 All checks must pass before a pull request will be reviewed.
