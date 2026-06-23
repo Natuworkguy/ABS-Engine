@@ -80,50 +80,50 @@ All contributions should prioritize:
 
 Before opening a pull request, run all checks locally.
 
-## Ruff
+### Ruff
 
 ```bash
 ruff check .
 ruff format .
 ```
 
-## MyPy
+### MyPy
 
 ```bash
 mypy .
 ```
 
-## Pyright
+### Pyright
 
 ```bash
 pyright
 ```
 
-## Flake8
+### Flake8
 
 ```bash
 flake8 .
 ```
 
-## Bandit
+### Bandit
 
 ```bash
 bandit -r .
 ```
 
-## MarkdownLint
+### MarkdownLint
 
 ```bash
 markdownlint-cli2 .
 ```
 
-## Darglint
+### Darglint
 
 ```bash
 darglint .
 ```
 
-## Interrogate
+### Interrogate
 
 ```bash
 interrogate
