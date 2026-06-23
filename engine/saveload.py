@@ -87,7 +87,7 @@ def load_project() -> Optional[list]:
 
         if not os.path.exists(gamefile):
             logger(
-                "game.absp file not found in seleted directory. Creating.",
+                "game.absp file not found in selected directory. Creating.",
                 status=LoggerStatus.WARNING,
             )
 
