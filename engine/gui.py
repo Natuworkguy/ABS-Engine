@@ -439,6 +439,7 @@ class Engine:
             cursor_visible=self.cursor_visible,
             fullscreen=self.fullscreen,
             IS_EDITOR=True,
+            GP_BASE_PATH=GP_BASE_PATH
         )
 
         for entity_name, entity_data in self.entities.items():

@@ -10,6 +10,7 @@ import importlib.util
 import sys
 import tkinter.messagebox
 import uuid
+import os
 
 from typing import Optional, Any
 
@@ -369,6 +370,7 @@ class Game:
         width: int = 800,
         height: int = 600,
         *,
+        GP_BASE_PATH: str,
         cursor_visible: bool = True,
         fullscreen: bool = False,
         icon_path: Optional[str] = None,
@@ -385,6 +387,7 @@ class Game:
             fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
             icon_path (Optional[str]): Path to window icon image. Defaults to None.
             IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
+            GP_BASE_PATH (str): Base path for game assets
         """
 
         # For use by entities
@@ -392,6 +395,7 @@ class Game:
         self.gamedata: dict = {}
 
         pygame.init()
+        self.GP_BASE_PATH = GP_BASE_PATH
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
 
@@ -483,7 +487,7 @@ class Game:
 
         if icon_path is not None:
             try:
-                image = pygame.image.load(icon_path)
+                image = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
                 image = image.convert_alpha()
                 pygame.display.set_icon(image)
             except (pygame.error, FileNotFoundError) as e:
