@@ -47,7 +47,7 @@ core_game = CoreGame(
     height=game_dimensions[1],
     cursor_visible=cursor_visible,
     fullscreen=fullscreen,
-    GP_BASE_PATH=str(GP_BASE_PATH)
+    GP_BASE_PATH=str(GP_BASE_PATH),
 )
 
 for entity_name, entity_data in data["entities"].items():
