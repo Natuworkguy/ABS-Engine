@@ -17,7 +17,6 @@ from typing import Optional
 from .saveload import (
     save_project as sl_save_project,
     load_project as sl_load_project,
-    resource_path,
 )
 from .core import Game as CoreGame, Entity
 from .logger import logger, Status as LoggerStatus
@@ -27,7 +26,7 @@ from .tcl_loader import tcl_source
 from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
-ENGINE_DATA_PATH = resource_path("data")
+ENGINE_DATA_PATH = str(Path(__file__).parent.parent / "data")
 APP_ID: str = "ABSEngine"
 
 
