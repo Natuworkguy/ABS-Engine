@@ -4,6 +4,7 @@
 import sys
 import os
 import json
+import ctypes
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
@@ -27,6 +28,7 @@ from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
 ENGINE_DATA_PATH = resource_path("data")
+APP_ID: str = "ABSEngine"
 
 
 def game_path(relative: Optional[str]) -> Optional[str]:
@@ -61,6 +63,9 @@ class Engine:
         self.load_theme()
 
         if "-noicon" not in sys.argv:
+            if sys.platform == "win32":
+                ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_ID)
+
             try:
                 self.root.iconphoto(
                     True,
