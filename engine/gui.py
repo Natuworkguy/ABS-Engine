@@ -429,14 +429,14 @@ class Engine:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
-    def run_game(self) -> None:
+    def run_game(self, is_editor: bool = True) -> None:
         self.core_game = CoreGame(
             self.project_name,
             width=self.game_dimensions[0],
             height=self.game_dimensions[1],
             cursor_visible=self.cursor_visible,
             fullscreen=self.fullscreen,
-            IS_EDITOR=True,
+            IS_EDITOR=is_editor,
             GP_BASE_PATH=GP_BASE_PATH,
         )
 
