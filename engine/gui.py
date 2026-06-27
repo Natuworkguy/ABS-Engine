@@ -61,6 +61,15 @@ class Engine:
         self.root.geometry("530x700")
         self.load_theme()
 
+        self.menu = tk.Menu(self.root)
+
+        self.file_menu = tk.Menu(self.menu, tearoff=0)
+        self.file_menu.add_command(label="Open", command=self.load_project)
+        self.file_menu.add_command(label="Save As", command=self.save_project)
+
+        self.menu.add_cascade(label="File", menu=self.file_menu)
+        self.root.config(menu=self.menu)
+
         if "-noicon" not in sys.argv:
             if sys.platform == "win32":
                 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_ID)
@@ -97,19 +106,6 @@ class Engine:
             command=lambda: self.save_name(self.project_name_input.get()),
         )
         self.name_save_button.pack(side=tk.LEFT, padx=5, pady=5)
-
-        self.project_separator = ttk.Separator(self.project_section, orient="vertical")
-        self.project_separator.pack(side=tk.LEFT, fill="y", padx=5, pady=5)
-
-        self.project_save_button = ttk.Button(
-            self.project_section, text="Save Project", command=self.save_project
-        )
-        self.project_save_button.pack(padx=5, pady=5)
-
-        self.project_load_button = ttk.Button(
-            self.project_section, text="Load Project", command=self.load_project
-        )
-        self.project_load_button.pack(padx=5, pady=5)
 
         self.entities_section = tk.LabelFrame(self.root, width=200, height=200, text="Entities")
         self.entities_section.pack(fill="both", padx=5, pady=5)
