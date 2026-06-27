@@ -68,7 +68,9 @@ class Engine:
 
         self.file_menu = tk.Menu(self.menu, tearoff=0)
         self.file_menu.add_command(label="Open", command=self.load_project, accelerator="Ctrl+O")
-        self.file_menu.add_command(label="Save As", command=self.save_project, accelerator="Ctrl+Shift+S")
+        self.file_menu.add_command(
+            label="Save As", command=self.save_project, accelerator="Ctrl+Shift+S"
+        )
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
         self.root.config(menu=self.menu)
