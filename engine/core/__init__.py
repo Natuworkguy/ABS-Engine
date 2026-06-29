@@ -476,7 +476,7 @@ class Game:
             entity.parent.remove(entity)
 
         self.scenes[target_scene_index].add(entity)
-    
+
     def add_to_current_scene(self, entity: Entity) -> None:
         """
         Add an entity to the current scene
