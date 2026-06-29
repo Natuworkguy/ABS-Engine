@@ -71,6 +71,8 @@ class Engine:
         self.file_menu.add_command(
             label="Save As", command=self.save_project, accelerator="Ctrl+Shift+S"
         )
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Exit", command=self.quit)
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
         self.root.config(menu=self.menu)
@@ -172,9 +174,6 @@ class Engine:
             self.engine_section, text="Game Settings", command=self.game_settings, width=25
         )
         self.game_settings_button.pack(padx=5, pady=5)
-
-        self.exit_button = ttk.Button(self.engine_section, text="Exit", command=self.quit, width=25)
-        self.exit_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
         try:
