@@ -459,7 +459,7 @@ class Engine:
                 scriptfile=scriptfile,
                 image=image,
             )
-            self.core_game.scenes[self.core_game.current_scene].add(entity)
+            self.core_game.add_to_current_scene(entity)
 
         def run_core_game() -> None:
             if self.core_game is None:
