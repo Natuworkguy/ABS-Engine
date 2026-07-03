@@ -23,7 +23,7 @@ Please read this document before submitting changes.
 ## GitHub Codespaces Users
 
 If you're developing ABS Engine in a GitHub Codespaces environment,
-you'll need a GUI to test your features. Use the
+you'll need a GUI to test your features. Use this
 [start-gui.sh script](https://gist.github.com/Natuworkguy/4e21c781fef805c96479b84ac0d177f6)
 to set up a web-based interface.
 
