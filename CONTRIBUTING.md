@@ -76,6 +76,12 @@ All contributions should prioritize:
 
 ---
 
+## No AI-generated Code Policy
+
+ABS Engine does not accept AI-generated code contributions. All submitted code, documentation, and scripts must be written by the contributor or derived from existing project source with appropriate attribution. This ensures the codebase remains maintainable, auditable, and aligned with the project's standards.
+
+---
+
 ## Formatting, Linting, and Type Checking
 
 Before opening a pull request, run all checks locally.
