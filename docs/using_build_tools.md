@@ -28,7 +28,7 @@ They should stay out of source control and only be included in
 compiled production executables.
 
 To package the game into a single executable file,
-use a tool like Pyinstaller. The command should look like this:
+use a tool like **Pyinstaller**. The command should look like this:
 
 ```bash
 pyinstaller --onefile --noconsole --name MyGame --add-data "game.absp:." --add-data "scripts:scripts" --add-data "data:data" run.py
@@ -41,4 +41,4 @@ Use `--icon <file>` to add an icon.
 >[!IMPORTANT]
 > Make sure your project file is named "game.absp".
 > If you want to change the name, modify the "PROJECT_FILE"
-> variable in run.py.
+> variable in `run.py`.
