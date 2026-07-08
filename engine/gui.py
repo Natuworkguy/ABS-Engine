@@ -37,7 +37,7 @@ def game_path(relative: Optional[str]) -> Optional[str]:
     return os.path.join(str(GP_BASE_PATH), relative)
 
 
-class Engine:
+class Editor:
     root: tk.Tk
     abs_section: tk.LabelFrame
     exit_button: ttk.Button
@@ -478,5 +478,5 @@ class Engine:
 
 
 def run() -> None:
-    engine = Engine()
-    engine.run()
+    editor = Editor()
+    editor.run()
