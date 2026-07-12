@@ -26,6 +26,7 @@ from .tcl_loader import tcl_source
 from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
+LAST_SAVE_DIR: Optional[str] = None
 ENGINE_DATA_PATH = str(Path(__file__).parent.parent / "data")
 APP_ID: str = "ABSEngine"
 
@@ -61,7 +62,8 @@ class Editor:
         self.root.geometry("530x700")
         self.load_theme()
 
-        self.root.bind("<Control-Shift-S>", lambda *args: self.save_project())
+        self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
+        self.root.bind("<Control-s>", lambda *args: self.save_project())
         self.root.bind("<Control-o>", lambda *args: self.load_project())
 
         self.menu = tk.Menu(self.root)
@@ -69,8 +71,9 @@ class Editor:
         self.file_menu = tk.Menu(self.menu, tearoff=0)
         self.file_menu.add_command(label="Open", command=self.load_project, accelerator="Ctrl+O")
         self.file_menu.add_command(
-            label="Save As", command=self.save_project, accelerator="Ctrl+Shift+S"
+            label="Save As", command=self.save_project_as, accelerator="Ctrl+Shift+S"
         )
+        self.file_menu.add_command(label="Save", command=self.save_project, accelerator="Ctrl+S")
         self.file_menu.add_separator()
         self.file_menu.add_command(label="Exit", command=self.quit)
 
@@ -387,7 +390,7 @@ class Editor:
             messagebox.showerror("Error", "No entity selected.")
 
     def load_project(self) -> None:
-        global GP_BASE_PATH
+        global GP_BASE_PATH, LAST_SAVE_DIR
 
         packed_data = sl_load_project()
 
@@ -398,6 +401,7 @@ class Editor:
         file: str = packed_data[1]
 
         GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
 
         self.entities = data.get("entities", {})
         game = data.get("game", {})
@@ -416,7 +420,22 @@ class Editor:
         self.build_game_button.config(state=NORMAL)
 
     def save_project(self) -> None:
-        global GP_BASE_PATH
+        global GP_BASE_PATH, LAST_SAVE_DIR
+
+        if LAST_SAVE_DIR is None:
+            self.save_project_as()
+            return
+
+        file = sl_save_project(self, dir=LAST_SAVE_DIR)
+
+        if file is None:
+            return
+
+        GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
+
+    def save_project_as(self) -> None:
+        global GP_BASE_PATH, LAST_SAVE_DIR
 
         file = sl_save_project(self)
 
@@ -424,6 +443,7 @@ class Editor:
             return
 
         GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
         self.build_game_button.config(state=NORMAL)
 
     def save_name(self, name: str) -> None:

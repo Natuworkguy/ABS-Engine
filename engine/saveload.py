@@ -33,18 +33,20 @@ def resource_path(relative: str) -> str:
     return os.path.join(os.path.abspath("."), relative)
 
 
-def save_project(engine: Any) -> Optional[str]:
+def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
     """
     Save the project as an absp file
 
     Args:
         engine (Any): engine instance to extract the project information from
+        dir (Optional[str]): Directory to save the project in
 
     Returns:
         Optional[Any]: IO object of the file or None
     """
 
-    dir = filedialog.askdirectory()
+    if dir is None:
+        dir = filedialog.askdirectory()
 
     if dir and os.path.exists(dir):
         gamefile = str(
