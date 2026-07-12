@@ -42,7 +42,7 @@ def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
         dir (Optional[str]): Directory to save the project in
 
     Returns:
-        Optional[Any]: IO object of the file or None
+        Optional[str]: Path to the saved file or None
     """
 
     if dir is None:
