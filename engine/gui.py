@@ -461,7 +461,7 @@ class Editor:
             GP_BASE_PATH=GP_BASE_PATH,
         )
 
-        for entity_name, entity_data in self.entities.items():
+        for _entity_name, entity_data in self.entities.items():
             scriptfile = game_path(entity_data.get("scriptfile", None))
             image_path = entity_data.get("image")
 
