@@ -282,16 +282,6 @@ class Scene:
 
         return colliding
 
-    def set_bg_color(self, color: RGBType) -> None:
-        """
-        Set the background color for the scene.
-
-        Args:
-            color (RGBType): The color to set as the background color.
-        """
-
-        self.game._set_bg_color(color)
-
     def add(self, obj: Entity) -> None:
         """
         Add an entity to the scene.
@@ -413,7 +403,7 @@ class Game:
 
         logger("Initialized game")
 
-    def _set_bg_color(self, color: RGBType) -> None:
+    def set_bg_color(self, color: RGBType) -> None:
         """
         Set the background color of the game
 
