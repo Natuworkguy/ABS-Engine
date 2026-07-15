@@ -214,7 +214,6 @@ jobs:
           echo "Running MyPy type checking..."
 
           mypy . \
-            --ignore-missing-imports \
             --check-untyped-defs \
             --disallow-untyped-defs \
             --disallow-incomplete-defs \
