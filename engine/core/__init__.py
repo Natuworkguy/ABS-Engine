@@ -4,6 +4,7 @@
 """
 Core engine systems and base components.
 """
+
 from importlib.machinery import ModuleSpec
 from types import ModuleType
 
@@ -489,7 +490,9 @@ class Game:
 
         if icon_path is not None:
             try:
-                image: pygame.Surface = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
+                image: pygame.Surface = pygame.image.load(
+                    os.path.join(self.GP_BASE_PATH, icon_path)
+                )
                 image = image.convert_alpha()
                 pygame.display.set_icon(image)
             except (pygame.error, FileNotFoundError) as e:
