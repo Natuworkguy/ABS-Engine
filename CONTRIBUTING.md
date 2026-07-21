@@ -150,6 +150,12 @@ darglint .
 interrogate
 ```
 
+### Ty
+
+```bash
+ty check .
+```
+
 All checks must pass before a pull request will be reviewed.
 
 ---

@@ -286,6 +286,27 @@ jobs:
         run: |
           darglint .
 
+  lint-ty:
+    name: Type Checking with Ty
+    needs: prebuild
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Ty
+        run: |
+          python -m pip install --upgrade pip
+          pip install ty
+
+      - name: Run Ty Type Checking
+        run: |
+          ty check .
+
   pip-audit:
     name: Dependency Audit with pip-audit
     needs: prebuild
