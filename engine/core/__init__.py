@@ -89,7 +89,7 @@ class Entity:
             spec: Optional[ModuleSpec] = importlib.util.spec_from_file_location(esfid, scriptfile)
 
             if spec:
-                self.scriptfile_module: Optional[ModuleType] = importlib.util.module_from_spec(spec)
+                self.scriptfile_module = importlib.util.module_from_spec(spec)
                 sys.modules[esfid] = self.scriptfile_module
 
                 if spec.loader:
@@ -490,7 +490,7 @@ class Game:
         if icon_path is not None:
             try:
                 image: pygame.Surface = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
-                image: pygame.Surface = image.convert_alpha()
+                image = image.convert_alpha()
                 pygame.display.set_icon(image)
             except (pygame.error, FileNotFoundError) as e:
                 logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
