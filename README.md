@@ -53,7 +53,7 @@ It provides tools and features to help you create games efficiently.
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
+See [the ABS Engine contributing guidelines](CONTRIBUTING.md) for more info.
 
 ## License
 
