@@ -28,6 +28,12 @@ Use `Status.INFO` for normal messages, `Status.WARNING` for problems that the
 game can recover from, and `Status.CRITICAL` for errors that should be handled
 immediately.
 
+Logs triggered by scripts will show as from a name that starts with `ESF-` (Entity Script File) followed by a UUID:
+
+```text
+(INFO) ESF-ABCDEFGH-IJKL-MNOP-QRST-UVWXYZ123456: Log content
+```
+
 ## Understanding Engine Logs
 
 Let's break down this log message:
