@@ -68,9 +68,11 @@ class Entity:
 
         self.scriptfile: Optional[str] = scriptfile
         self.scriptfile_module: Optional[ModuleType] = None
-        self.scriptfile_init_exists: bool = False
-        self.scriptfile_update_exists: bool = False
-        self.scriptfile_event_exists: bool = False
+        self.scriptfile_funcs: dict[str, bool] = {
+            "init": False,
+            "update": False,
+            "event": False,
+        }
 
         self.did_init: bool = False
 
@@ -107,13 +109,13 @@ class Entity:
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
                     if hasattr(self.scriptfile_module, "init"):
-                        self.scriptfile_init_exists = True
+                        self.scriptfile_funcs["init"] = True
 
                     if hasattr(self.scriptfile_module, "update"):
-                        self.scriptfile_update_exists = True
+                        self.scriptfile_funcs["update"] = True
 
                     if hasattr(self.scriptfile_module, "event"):
-                        self.scriptfile_event_exists = True
+                        self.scriptfile_funcs["event"] = True
             else:
                 logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
 
@@ -166,7 +168,7 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_init_exists:
+            if self.scriptfile_funcs["init"]:
                 self.scriptfile_module.init(self)
                 self.did_init = True
 
@@ -189,7 +191,7 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_update_exists:
+            if self.scriptfile_funcs["update"]:
                 self.scriptfile_module.update(self, dt)
 
     def event(self, event: pygame.event.Event) -> None:
@@ -201,7 +203,7 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_event_exists:
+            if self.scriptfile_funcs["event"]:
                 self.scriptfile_module.event(self, event)
 
     def draw(self, surface: pygame.Surface) -> None:
