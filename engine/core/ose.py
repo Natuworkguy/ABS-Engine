@@ -26,4 +26,4 @@ class ObjectScriptEntity(Entity):
 
         return entity
 
-    def __init__(self, *args, scriptobj, **kwargs) -> None: ...  # noqa: E704
+    def __init__(self, *args: Any, scriptobj: EntityScriptType, **kwargs: Any) -> None: ...  # noqa: E704
