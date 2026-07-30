@@ -172,7 +172,7 @@ class Entity:
                 self.scriptfile_module.init(self)
                 self.did_init = True
 
-    def update_rect(self) -> None:
+    def _update_rect(self) -> None:
         """
         Update the entity's rectangle position and size.
         """
@@ -193,6 +193,7 @@ class Entity:
         if self.scriptfile_module is not None:
             if self.scriptfile_funcs["update"]:
                 self.scriptfile_module.update(self, dt)
+                self._update_rect()
 
     def event(self, event: pygame.event.Event) -> None:
         """

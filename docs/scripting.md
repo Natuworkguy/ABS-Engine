@@ -36,7 +36,6 @@ def init(entity):
 
 def update(entity, dt):
     entity.x += 1
-    entity.update_rect()
 ```
 
 Go back to ABS Engine and click "Run".
@@ -70,8 +69,8 @@ event(entity: Entity, event: pygame.event.Event) -> None
 ## Entity Properties
 
 The `entity` parameter refers to the entity object itself.
-In this code, we add one to the entity's `x` value (`entity.x += 1`),
-and then update its visual position (`entity.update_rect()`).
+In this code, we add one to the entity's `x` value (`entity.x += 1`)
+every tick.
 
 The `engine.core.Entity` class has the following properties:
 
@@ -122,7 +121,6 @@ def update(entity, dt):
         entity.y += step_size
     elif held["d"] and not entity.x == entity.parent.game.wsize[0] - entity.width:
         entity.x += step_size
-    entity.update_rect()
 
 
 def event(entity, event):
@@ -145,10 +143,6 @@ def event(entity, event):
         elif event.key == pygame.K_d:
             held["d"] = False
 ```
-
->[!NOTE]
-> The `pygame.draw.rect()` function that renders the entity on screen automatically uses the entity's color.
-> Since it runs every tick, you do _not_ need to call `entity.update_rect()` when only changing the entity's color.
 
 ---
 
