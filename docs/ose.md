@@ -51,14 +51,6 @@ inside your OSE class's methods: `self` *is* the entity.
 
 See [Script Functions](scripting.md#script-functions).
 
->[!IMPORTANT]
-> Always define all three methods on your OSE class, even if some just
-> `pass`. Because the class inherits from `Entity` (needed so type checkers
-> and editors understand `self.x`, `self.update_rect()`, etc.), omitting a
-> method means it resolves to `Entity`'s own `init`/`update`/`event`
-> instead &mdash; which re-triggers the same script dispatch and can cause
-> infinite recursion.
-
 ---
 
 > [!NOTE]
