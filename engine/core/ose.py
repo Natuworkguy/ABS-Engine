@@ -8,7 +8,7 @@ Object Script Entities (OSE) module for the engine.
 from . import Entity
 from .types import EntityScriptType
 
-from typing import Any
+from typing import Any, Optional, Callable
 
 
 def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
@@ -28,7 +28,7 @@ def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
         bool: True if scriptobj defines `name`, False otherwise.
     """
 
-    func = getattr(scriptobj, name, None)
+    func: Optional[Callable] = getattr(scriptobj, name, None)
     return func is not None and func is not getattr(Entity, name, None)
 
 
