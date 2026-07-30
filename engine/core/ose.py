@@ -18,6 +18,14 @@ def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
     (for typing convenience), a plain hasattr() check would also match
     Entity's own init/update/event, causing infinite recursion when they
     are dispatched.
+
+
+    Args:
+        scriptobj (EntityScriptType): The script object to check.
+        name (str): The name of the method to check for.
+
+    Returns:
+        bool: True if scriptobj defines `name`, False otherwise.
     """
 
     func = getattr(scriptobj, name, None)
