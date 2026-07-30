@@ -127,7 +127,7 @@ scenes to keep running, call `game.updateall(dt)`.
 def update(entity, dt: float) -> None:
     entity.parent.game.updateall(
         dt,
-        exclude=entity.parent  # Exclude the current scene to avoid an infinite loop
+        exclude=entity.parent,  # Exclude the current scene to avoid an infinite loop
     )
 ```
 
