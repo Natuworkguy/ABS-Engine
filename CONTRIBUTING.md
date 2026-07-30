@@ -174,8 +174,7 @@ Contributors should:
 Example:
 
 ```python
-def load_project(path: Path) -> dict[str, Any]:
-    ...
+def load_project(path: Path) -> dict[str, Any]: ...
 ```
 
 ---
