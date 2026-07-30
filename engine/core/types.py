@@ -16,14 +16,11 @@ EntityImageType = EntityImage
 class EntityScript(Protocol):
     """Protocol for entity script objects."""
 
-    def init(self) -> None:
-        ...
+    def init(self) -> None: ...  # noqa: E704
 
-    def update(self, dt: float) -> None:
-        ...
+    def update(self, dt: float) -> None: ...  # noqa: E704
 
-    def event(self, event: pygame.event.Event) -> None:
-        ...
+    def event(self, event: pygame.event.Event) -> None: ...  # noqa: E704
 
 
 EntityScriptType = type[EntityScript]

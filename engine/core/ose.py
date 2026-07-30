@@ -19,12 +19,11 @@ class ObjectScriptEntity(Entity):
         entity.scriptfile_funcs = {
             "init": hasattr(scriptobj, "init"),
             "update": hasattr(scriptobj, "update"),
-            "event": hasattr(scriptobj, "event")
+            "event": hasattr(scriptobj, "event"),
         }
 
         setattr(entity, "scriptfile_module", scriptobj)  # noqa: B010
 
         return entity
 
-    def __init__(self, *args, scriptobj, **kwargs) -> None:
-        ...
+    def __init__(self, *args, scriptobj, **kwargs) -> None: ...  # noqa: E704
