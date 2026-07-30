@@ -12,7 +12,7 @@ from typing import Any
 
 
 class ObjectScriptEntity(Entity):
-    def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any):
+    def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any) -> Any:
         kwargs["scriptfile"] = None
         entity = Entity(*args, **kwargs)
 
@@ -26,5 +26,5 @@ class ObjectScriptEntity(Entity):
 
         return entity
 
-    def __init__(self, *args, scriptobj, **kwargs):
+    def __init__(self, *args, scriptobj, **kwargs) -> None:
         ...
