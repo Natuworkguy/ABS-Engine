@@ -8,9 +8,11 @@ Object Script Entities (OSE) module for the engine.
 from . import Entity
 from .types import EntityScriptType
 
+from typing import Any
+
 
 class ObjectScriptEntity(Entity):
-    def __new__(cls, *args, scriptobj: EntityScriptType, **kwargs):
+    def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any):
         kwargs["scriptfile"] = None
         entity = Entity(*args, **kwargs)
 
