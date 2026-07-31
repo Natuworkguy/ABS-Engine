@@ -5,6 +5,7 @@
 Build and development utilities for the engine.
 """
 
+
 import shutil
 
 from tkinter import messagebox
@@ -34,7 +35,9 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
         )
         return
 
-    launch_game_script = Path(resource_path("data/scripts/launch_game.py")).read_text(encoding="utf-8")
+    launch_game_script = Path(resource_path("data/scripts/launch_game.py")).read_text(
+        encoding="utf-8"
+    )
     (directory / "run.py").write_text(launch_game_script, encoding="utf-8")
 
     ignore = shutil.ignore_patterns("*.pyc", "__pycache__")

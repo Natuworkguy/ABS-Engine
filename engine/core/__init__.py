@@ -265,6 +265,7 @@ class Scene:
 
         self.game: "Game" = parent
         self.objects: list[Entity] = []
+        self.no_entities: bool = True
 
         logger("Initialized scene")
 

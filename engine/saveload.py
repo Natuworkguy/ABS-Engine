@@ -23,7 +23,7 @@ def resource_path(relative: str) -> str:
         The absolute file path as a string.
     """
     if hasattr(sys, "_MEIPASS"):
-        meipass_path: str = sys._MEIPASS  # type: ignore[attr-defined]
+        meipass_path: str = sys._MEIPASS  # type: ignore[unused-ignore]
         return os.path.join(meipass_path, relative)
     return str(Path.cwd() / relative)
 
