@@ -1,36 +1,49 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
-"""
-Handles saving and loading of engine projects and data.
-"""
+"""Handles saving and loading of engine projects and data."""
 
-from tkinter import messagebox as messagebox
-from tkinter import filedialog as filedialog
 from json import dump, load
-from typing import Optional, Any
+import os
 from pathlib import Path
+import sys
+from tkinter import filedialog, messagebox
+from typing import Any, Optional, Tuple, Dict
 
 from .logger import logger, Status as LoggerStatus
 
-import sys
-import os
-
 
 def resource_path(relative: str) -> str:
-    """Convert a relative resource path into an absolute path."""
+    """Convert a relative resource path into an absolute path.
 
+    Args:
+        relative: The relative path to the resource file.
+
+    Returns:
+        The absolute file path as a string.
+    """
     if hasattr(sys, "_MEIPASS"):
-        return os.path.join(sys._MEIPASS, relative)  # pyright: ignore[reportAttributeAccessIssue]
+        # Use getattr to safely read PyInstaller runtime attributes without mypy errors
+        meipass_path: str = getattr(sys, "_MEIPASS")
+        return os.path.join(meipass_path, relative)
     return str(Path.cwd() / relative)
 
 
 def save_project(engine: Any) -> Optional[str]:
-    """Save the engine project to a .absp file."""
+    """Save the engine project to a .absp file.
 
-    directory = filedialog.askdirectory()
+    Args:
+        engine: The engine instance containing project data and properties
+            (e.g., project_name, game_dimensions, cursor_visible,
+            fullscreen, and entities).
 
-    if directory is None:
+    Returns:
+        The path to the saved project file as a string if saved, or None
+        if the user cancelled the file dialog.
+    """
+    directory: str = filedialog.askdirectory()
+
+    if not directory:
         return None
 
     project_path = Path(directory) / "game.absp"
@@ -55,12 +68,15 @@ def save_project(engine: Any) -> Optional[str]:
     return str(project_path)
 
 
-def load_project() -> Optional[list]:
-    """Ask the user for a project directory and return the loaded game data."""
+def load_project() -> Optional[Tuple[Dict[str, Any], str]]:
+    """Ask the user for a project directory and return the loaded game data.
 
-    directory = filedialog.askdirectory()
+    Returns:
+        A tuple of `(data_dict, file_path_str)`, or None if cancelled/failed.
+    """
+    directory: str = filedialog.askdirectory()
 
-    if directory is None:
+    if not directory:
         return None
 
     project_path = Path(directory) / "game.absp"
@@ -71,13 +87,13 @@ def load_project() -> Optional[list]:
             status=LoggerStatus.WARNING,
         )
         project_path.write_text("{}", encoding="utf-8")
-        return [{}, str(project_path)]
+        return {}, str(project_path)
 
     if project_path.is_dir():
         messagebox.showerror("Error", "game.absp project file is a directory.")
         return None
 
     with project_path.open("r", encoding="utf-8") as f:
-        data: dict = load(f)
+        data: Dict[str, Any] = load(f)
 
-    return [data, str(project_path)]
+    return data, str(project_path)
