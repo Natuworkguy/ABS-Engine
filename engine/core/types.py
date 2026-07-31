@@ -1,7 +1,9 @@
 # Copyright (C) Natuworkguy
 # See the LICENSE file for GPLv3
 
-"""Shared type aliases for ABS Engine."""
+"""
+Shared type aliases for ABS Engine.
+"""
 
 import pygame
 
