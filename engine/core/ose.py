@@ -33,7 +33,22 @@ def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
 
 
 class ObjectScriptEntity(Entity):
+    """
+    Factory-like entity wrapper that attaches a Python object script.
+    """
+
     def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any) -> Any:
+        """
+        Create an Entity configured to dispatch lifecycle calls to ``scriptobj``.
+
+        Args:
+            scriptobj (EntityScriptType): Object script providing optional
+                init, update, and event methods.
+
+        Returns:
+            Any: Entity instance with object-script dispatch metadata attached.
+        """
+
         kwargs["scriptfile"] = None
         entity = Entity(*args, **kwargs)
 
