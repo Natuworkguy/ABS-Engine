@@ -47,6 +47,10 @@ named `self` since the class inherits from `Entity`. This is why
 `self.x`, `self.update_rect()`, and other `Entity` properties are available
 inside your OSE class's methods: `self` *is* the entity.
 
+> [!NOTE]
+> Passing `scriptfile` to `ObjectScriptEntity` has no effect; it's always
+> overridden to `None`.
+
 ## Script Methods
 
 See [Script Functions](scripting.md#script-functions).
