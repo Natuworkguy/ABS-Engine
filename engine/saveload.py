@@ -29,24 +29,22 @@ def resource_path(relative: str) -> str:
     return str(Path.cwd() / relative)
 
 
-def save_project(engine: Any) -> Optional[str]:
-    """Save the engine project to a .absp file.
+def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
+    """
+    Save the project as an absp file
 
     Args:
-        engine: The engine instance containing project data and properties
-            (e.g., project_name, game_dimensions, cursor_visible,
-            fullscreen, and entities).
+        engine (Any): engine instance to extract the project information from
+        dir (Optional[str]): Directory to save the project in
 
     Returns:
-        The path to the saved project file as a string if saved, or None
-        if the user cancelled the file dialog.
+        Optional[str]: Path to the saved file or None
     """
-    directory: str = filedialog.askdirectory()
 
-    if not directory:
-        return None
+    if dir is None:
+        dir = filedialog.askdirectory()
 
-    project_path = Path(directory) / "game.absp"
+    project_path = Path(dir) / "game.absp"
     project_path.parent.mkdir(parents=True, exist_ok=True)
 
     with project_path.open("w", encoding="utf-8") as f:

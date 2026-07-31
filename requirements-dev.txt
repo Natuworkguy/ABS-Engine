@@ -5,3 +5,7 @@ flake8
 bandit
 darglint
 interrogate
+ty
+
+# Typeshed packages
+types-colorama

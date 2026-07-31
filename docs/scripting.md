@@ -32,10 +32,10 @@ In `scripts/player.py`, add the following.
 ```python
 def init(entity):
     pass
-    
+
+
 def update(entity, dt):
     entity.x += 1
-    entity.update_rect()
 ```
 
 Go back to ABS Engine and click "Run".
@@ -69,8 +69,8 @@ event(entity: Entity, event: pygame.event.Event) -> None
 ## Entity Properties
 
 The `entity` parameter refers to the entity object itself.
-In this code, we add one to the entity's `x` value (`entity.x += 1`),
-and then update its visual position (`entity.update_rect()`).
+In this code, we add one to the entity's `x` value (`entity.x += 1`)
+every tick.
 
 The `engine.core.Entity` class has the following properties:
 
@@ -105,12 +105,7 @@ that can move with W/A/S/D keys. The player cannot move outside the visible game
 import pygame
 
 step_size = 5
-held = {
-    'w': False,
-    'a': False,
-    's': False,
-    'd': False
-}
+held = {"w": False, "a": False, "s": False, "d": False}
 
 
 def init(entity):
@@ -118,41 +113,36 @@ def init(entity):
 
 
 def update(entity, dt):
-    if held['w'] and not entity.y == 0:
+    if held["w"] and not entity.y == 0:
         entity.y -= step_size
-    elif held['a'] and not entity.x == 0:
+    elif held["a"] and not entity.x == 0:
         entity.x -= step_size
-    elif held['s'] and not entity.y == entity.parent.game.wsize[1] - entity.width:
+    elif held["s"] and not entity.y == entity.parent.game.wsize[1] - entity.width:
         entity.y += step_size
-    elif held['d'] and not entity.x == entity.parent.game.wsize[0] - entity.width:
+    elif held["d"] and not entity.x == entity.parent.game.wsize[0] - entity.width:
         entity.x += step_size
-    entity.update_rect()
 
 
 def event(entity, event):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_w:
-            held['w'] = True
+            held["w"] = True
         elif event.key == pygame.K_a:
-            held['a'] = True
+            held["a"] = True
         elif event.key == pygame.K_s:
-            held['s'] = True
+            held["s"] = True
         elif event.key == pygame.K_d:
-            held['d'] = True
+            held["d"] = True
     elif event.type == pygame.KEYUP:
         if event.key == pygame.K_w:
-            held['w'] = False
+            held["w"] = False
         elif event.key == pygame.K_a:
-            held['a'] = False
+            held["a"] = False
         elif event.key == pygame.K_s:
-            held['s'] = False
+            held["s"] = False
         elif event.key == pygame.K_d:
-            held['d'] = False
+            held["d"] = False
 ```
-
->[!NOTE]
-> The `pygame.draw.rect()` function that renders the entity on screen automatically uses the entity's color.
-> Since it runs every tick, you do _not_ need to call `entity.update_rect()` when only changing the entity's color.
 
 ---
 

@@ -29,6 +29,8 @@ It provides tools and features to help you create games efficiently.
 
 ## Getting Started
 
+[GitHub Codespaces Users](https://github.com/Natuworkguy/ABS-Engine/tree/main/CONTRIBUTING.md#github-codespaces-users)
+
 1. Clone the repository:
 
     ```bash
@@ -51,7 +53,7 @@ It provides tools and features to help you create games efficiently.
 ## Contributing
 
 Contributions are welcome! Please open issues or submit pull requests.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
+See [the ABS Engine contributing guidelines](CONTRIBUTING.md) for more info.
 
 ## License
 

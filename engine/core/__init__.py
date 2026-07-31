@@ -5,6 +5,9 @@
 Core engine systems and base components.
 """
 
+from importlib.machinery import ModuleSpec
+from types import ModuleType
+
 import pygame
 import importlib.util
 import sys
@@ -12,7 +15,7 @@ import tkinter.messagebox
 import uuid
 import os
 
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
@@ -52,24 +55,26 @@ class Entity:
             image (Optional[str]): Path to optional image file. Defaults to None.
         """
 
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.color = color
+        self.x: int = x
+        self.y: int = y
+        self.width: int = width
+        self.height: int = height
+        self.color: RGBType = color
 
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.id = str(uuid.uuid4())
+        self.rect: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.id: str = str(uuid.uuid4())
 
         self.parent: Optional["Scene"] = None
 
-        self.scriptfile = scriptfile
-        self.scriptfile_module = None
-        self.scriptfile_init_exists = False
-        self.scriptfile_update_exists = False
-        self.scriptfile_event_exists = False
+        self.scriptfile: Optional[str] = scriptfile
+        self.scriptfile_module: Optional[ModuleType] = None
+        self.scriptfile_funcs: dict[str, bool] = {
+            "init": False,
+            "update": False,
+            "event": False,
+        }
 
-        self.did_init = False
+        self.did_init: bool = False
 
         self.image: Optional[EntityImageType] = None
 
@@ -84,7 +89,7 @@ class Entity:
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
 
-            spec = importlib.util.spec_from_file_location(esfid, scriptfile)
+            spec: Optional[ModuleSpec] = importlib.util.spec_from_file_location(esfid, scriptfile)
 
             if spec:
                 self.scriptfile_module = importlib.util.module_from_spec(spec)
@@ -104,13 +109,13 @@ class Entity:
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
                     if hasattr(self.scriptfile_module, "init"):
-                        self.scriptfile_init_exists = True
+                        self.scriptfile_funcs["init"] = True
 
                     if hasattr(self.scriptfile_module, "update"):
-                        self.scriptfile_update_exists = True
+                        self.scriptfile_funcs["update"] = True
 
                     if hasattr(self.scriptfile_module, "event"):
-                        self.scriptfile_event_exists = True
+                        self.scriptfile_funcs["event"] = True
             else:
                 logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
 
@@ -163,11 +168,11 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_init_exists:
+            if self.scriptfile_funcs["init"]:
                 self.scriptfile_module.init(self)
                 self.did_init = True
 
-    def update_rect(self) -> None:
+    def _update_rect(self) -> None:
         """
         Update the entity's rectangle position and size.
         """
@@ -186,8 +191,9 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_update_exists:
+            if self.scriptfile_funcs["update"]:
                 self.scriptfile_module.update(self, dt)
+                self._update_rect()
 
     def event(self, event: pygame.event.Event) -> None:
         """
@@ -198,7 +204,7 @@ class Entity:
         """
 
         if self.scriptfile_module is not None:
-            if self.scriptfile_event_exists:
+            if self.scriptfile_funcs["event"]:
                 self.scriptfile_module.event(self, event)
 
     def draw(self, surface: pygame.Surface) -> None:
@@ -273,23 +279,13 @@ class Scene:
             list[Entity]: Entities currently colliding with the given entity.
         """
 
-        colliding = []
+        colliding: list[Entity] = []
 
         for obj in self.objects:
             if obj != entity and entity._collides_with(obj):
                 colliding.append(obj)
 
         return colliding
-
-    def set_bg_color(self, color: RGBType) -> None:
-        """
-        Set the background color for the scene.
-
-        Args:
-            color (RGBType): The color to set as the background color.
-        """
-
-        self.game._set_bg_color(color)
 
     def add(self, obj: Entity) -> None:
         """
@@ -387,7 +383,7 @@ class Game:
         self.gamedata: dict = {}
 
         pygame.init()
-        self.GP_BASE_PATH = GP_BASE_PATH
+        self.GP_BASE_PATH: str = GP_BASE_PATH
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
 
@@ -405,7 +401,7 @@ class Game:
 
         logger("Initialized game")
 
-    def _set_bg_color(self, color: RGBType) -> None:
+    def set_bg_color(self, color: RGBType) -> None:
         """
         Set the background color of the game
 
@@ -469,6 +465,16 @@ class Game:
 
         self.scenes[target_scene_index].add(entity)
 
+    def add_to_current_scene(self, entity: Entity) -> None:
+        """
+        Add an entity to the current scene
+
+        Args:
+            entity (Entity): The entity to add
+        """
+
+        self.scenes[self.current_scene].add(entity)
+
     def set_icon(self, icon_path: Optional[str]) -> None:
         """
         Set the icon for the game window.
@@ -479,7 +485,9 @@ class Game:
 
         if icon_path is not None:
             try:
-                image = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
+                image: pygame.Surface = pygame.image.load(
+                    os.path.join(self.GP_BASE_PATH, icon_path)
+                )
                 image = image.convert_alpha()
                 pygame.display.set_icon(image)
             except (pygame.error, FileNotFoundError) as e:
@@ -530,7 +538,7 @@ class Game:
         logger("Starting game loop")
         self.running = True
         while self.running:
-            dt = self.clock.tick(fps) / 1000.0
+            dt: Union[int, float] = self.clock.tick(fps) / 1000.0
             self.step(dt)
 
         pygame.quit()

@@ -26,6 +26,7 @@ from .tcl_loader import tcl_source
 from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
+LAST_SAVE_DIR: Optional[str] = None
 ENGINE_DATA_PATH = str(Path(__file__).parent.parent / "data")
 APP_ID: str = "ABSEngine"
 
@@ -37,7 +38,7 @@ def game_path(relative: Optional[str]) -> Optional[str]:
     return os.path.join(str(GP_BASE_PATH), relative)
 
 
-class Engine:
+class Editor:
     root: tk.Tk
     abs_section: tk.LabelFrame
     exit_button: ttk.Button
@@ -61,11 +62,20 @@ class Engine:
         self.root.geometry("530x700")
         self.load_theme()
 
+        self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
+        self.root.bind("<Control-s>", lambda *args: self.save_project())
+        self.root.bind("<Control-o>", lambda *args: self.load_project())
+
         self.menu = tk.Menu(self.root)
 
         self.file_menu = tk.Menu(self.menu, tearoff=0)
-        self.file_menu.add_command(label="Open", command=self.load_project)
-        self.file_menu.add_command(label="Save As", command=self.save_project)
+        self.file_menu.add_command(label="Open", command=self.load_project, accelerator="Ctrl+O")
+        self.file_menu.add_command(
+            label="Save As", command=self.save_project_as, accelerator="Ctrl+Shift+S"
+        )
+        self.file_menu.add_command(label="Save", command=self.save_project, accelerator="Ctrl+S")
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Exit", command=self.quit)
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
         self.root.config(menu=self.menu)
@@ -167,9 +177,6 @@ class Engine:
             self.engine_section, text="Game Settings", command=self.game_settings, width=25
         )
         self.game_settings_button.pack(padx=5, pady=5)
-
-        self.exit_button = ttk.Button(self.engine_section, text="Exit", command=self.quit, width=25)
-        self.exit_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
         try:
@@ -383,7 +390,7 @@ class Engine:
             messagebox.showerror("Error", "No entity selected.")
 
     def load_project(self) -> None:
-        global GP_BASE_PATH
+        global GP_BASE_PATH, LAST_SAVE_DIR
 
         packed_data = sl_load_project()
 
@@ -394,6 +401,7 @@ class Engine:
         file: str = packed_data[1]
 
         GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
 
         self.entities = data.get("entities", {})
         game = data.get("game", {})
@@ -412,7 +420,22 @@ class Engine:
         self.build_game_button.config(state=NORMAL)
 
     def save_project(self) -> None:
-        global GP_BASE_PATH
+        global GP_BASE_PATH, LAST_SAVE_DIR
+
+        if LAST_SAVE_DIR is None:
+            self.save_project_as()
+            return
+
+        file = sl_save_project(self, dir=LAST_SAVE_DIR)
+
+        if file is None:
+            return
+
+        GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
+
+    def save_project_as(self) -> None:
+        global GP_BASE_PATH, LAST_SAVE_DIR
 
         file = sl_save_project(self)
 
@@ -420,24 +443,25 @@ class Engine:
             return
 
         GP_BASE_PATH = str(Path(file).parent)
+        LAST_SAVE_DIR = str(Path(file).parent)
         self.build_game_button.config(state=NORMAL)
 
     def save_name(self, name: str) -> None:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
-    def run_game(self) -> None:
+    def run_game(self, is_editor: bool = True) -> None:
         self.core_game = CoreGame(
             self.project_name,
             width=self.game_dimensions[0],
             height=self.game_dimensions[1],
             cursor_visible=self.cursor_visible,
             fullscreen=self.fullscreen,
-            IS_EDITOR=True,
+            IS_EDITOR=is_editor,
             GP_BASE_PATH=GP_BASE_PATH,
         )
 
-        for entity_name, entity_data in self.entities.items():
+        for _entity_name, entity_data in self.entities.items():
             scriptfile = game_path(entity_data.get("scriptfile", None))
             image_path = entity_data.get("image")
 
@@ -455,7 +479,7 @@ class Engine:
                 scriptfile=scriptfile,
                 image=image,
             )
-            self.core_game.scenes[self.core_game.current_scene].add(entity)
+            self.core_game.add_to_current_scene(entity)
 
         def run_core_game() -> None:
             if self.core_game is None:
@@ -474,5 +498,5 @@ class Engine:
 
 
 def run() -> None:
-    engine = Engine()
-    engine.run()
+    editor = Editor()
+    editor.run()
