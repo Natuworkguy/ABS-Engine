@@ -42,8 +42,10 @@ class ObjectScriptEntity(Entity):
         Create an Entity configured to dispatch lifecycle calls to ``scriptobj``.
 
         Args:
+            *args (Any): Positional arguments forwarded to Entity.
             scriptobj (EntityScriptType): Object script providing optional
                 init, update, and event methods.
+            **kwargs (Any): Keyword arguments forwarded to Entity.
 
         Returns:
             Any: Entity instance with object-script dispatch metadata attached.
