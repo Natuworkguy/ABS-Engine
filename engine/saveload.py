@@ -8,9 +8,9 @@ import os
 from pathlib import Path
 import sys
 from tkinter import filedialog, messagebox
-from typing import Any, Optional, Tuple, Dict
+from typing import Any, Dict, Optional, Tuple
 
-from .logger import logger, Status as LoggerStatus
+from .logger import Status as LoggerStatus, logger
 
 
 def resource_path(relative: str) -> str:
@@ -23,27 +23,30 @@ def resource_path(relative: str) -> str:
         The absolute file path as a string.
     """
     if hasattr(sys, "_MEIPASS"):
-        # Accessing PyInstaller runtime attribute; type ignore prevents mypy error while satisfying ruff B009
         meipass_path: str = sys._MEIPASS  # type: ignore[attr-defined]
         return os.path.join(meipass_path, relative)
     return str(Path.cwd() / relative)
 
+
 def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
-    """
-    Save the project as an absp file
+    """Save the engine project to a .absp file.
 
     Args:
-        engine (Any): engine instance to extract the project information from
-        dir (Optional[str]): Directory to save the project in
+        engine: The engine instance containing project data and properties
+            (e.g., project_name, game_dimensions, cursor_visible,
+            fullscreen, and entities).
+        dir: An optional explicit directory path to save into.
 
     Returns:
-        Optional[str]: Path to the saved file or None
+        The path to the saved project file as a string if saved, or None
+        if the user cancelled the file dialog.
     """
+    directory: str = dir if dir else filedialog.askdirectory()
 
-    if dir is None:
-        dir = filedialog.askdirectory()
+    if not directory:
+        return None
 
-    project_path = Path(dir) / "game.absp"
+    project_path = Path(directory) / "game.absp"
     project_path.parent.mkdir(parents=True, exist_ok=True)
 
     with project_path.open("w", encoding="utf-8") as f:
