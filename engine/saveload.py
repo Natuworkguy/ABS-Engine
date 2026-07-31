@@ -18,91 +18,66 @@ import os
 
 
 def resource_path(relative: str) -> str:
-    """
-    Convert a relative resource path into an absolute path.
-
-    Args:
-        relative (str): Relative path to a resource.
-
-    Returns:
-        str: Absolute path to the resource.
-    """
+    """Convert a relative resource path into an absolute path."""
 
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative)  # pyright: ignore[reportAttributeAccessIssue]
-    return os.path.join(os.path.abspath("."), relative)
+    return str(Path.cwd() / relative)
 
 
 def save_project(engine: Any) -> Optional[str]:
-    """
-    Save the project as an absp file
+    """Save the engine project to a .absp file."""
 
-    Args:
-        engine (Any): engine instance to extract the project information from
+    directory = filedialog.askdirectory()
 
-    Returns:
-        Optional[Any]: IO object of the file or None
-    """
+    if directory is None:
+        return None
 
-    dir = filedialog.askdirectory()
+    project_path = Path(directory) / "game.absp"
+    project_path.parent.mkdir(parents=True, exist_ok=True)
 
-    if dir and os.path.exists(dir):
-        gamefile = str(
-            Path(dir) / "game.absp",
+    with project_path.open("w", encoding="utf-8") as f:
+        dump(
+            {
+                "name": engine.project_name,
+                "game": {
+                    "dimensions": engine.game_dimensions,
+                    "cursor_visible": engine.cursor_visible,
+                    "fullscreen": engine.fullscreen,
+                },
+                "entities": engine.entities,
+            },
+            f,
+            indent=2,
         )
 
-        with open(gamefile, "w", encoding="utf-8") as f:
-            dump(
-                {
-                    "name": engine.project_name,
-                    "game": {
-                        "dimensions": engine.game_dimensions,
-                        "cursor_visible": engine.cursor_visible,
-                        "fullscreen": engine.fullscreen,
-                    },
-                    "entities": engine.entities,
-                },
-                f,
-            )
-
-        messagebox.showinfo("Success", "Project saved successfully.")
-
-        return gamefile
-
-    return None
+    messagebox.showinfo("Success", "Project saved successfully.")
+    return str(project_path)
 
 
 def load_project() -> Optional[list]:
-    """
-    Ask the user to open an absp file, then return the contents
+    """Ask the user for a project directory and return the loaded game data."""
 
-    Returns:
-        Optional[list]: file content
-    """
+    directory = filedialog.askdirectory()
 
-    dir = filedialog.askdirectory()
+    if directory is None:
+        return None
 
-    if dir and os.path.exists(dir):
-        gamefile = str(Path(dir) / "game.absp")
+    project_path = Path(directory) / "game.absp"
 
-        if not os.path.exists(gamefile):
-            logger(
-                "game.absp file not found in selected directory. Creating.",
-                status=LoggerStatus.WARNING,
-            )
+    if not project_path.exists():
+        logger(
+            "game.absp file not found in selected directory. Creating.",
+            status=LoggerStatus.WARNING,
+        )
+        project_path.write_text("{}", encoding="utf-8")
+        return [{}, str(project_path)]
 
-            with open(gamefile, "w", encoding="utf-8") as f:
-                f.write("{}")
+    if project_path.is_dir():
+        messagebox.showerror("Error", "game.absp project file is a directory.")
+        return None
 
-            return [{}, gamefile]
+    with project_path.open("r", encoding="utf-8") as f:
+        data: dict = load(f)
 
-        if os.path.isdir(gamefile):
-            messagebox.showerror("Error", "game.absp project file is a directory.")
-            return None
-
-        with open(gamefile, "r") as f:
-            data: dict = load(f)
-
-        return [data, gamefile]
-
-    return None
+    return [data, str(project_path)]

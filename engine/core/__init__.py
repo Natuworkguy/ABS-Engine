@@ -259,7 +259,6 @@ class Scene:
 
         self.game: "Game" = parent
         self.objects: list[Entity] = []
-        self.no_entities: bool = True
 
         logger("Initialized scene")
 
@@ -307,9 +306,6 @@ class Scene:
         if not obj.did_init:
             obj.init()
 
-        if self.no_entities:
-            self.no_entities = False
-
     def update(self, dt: float) -> None:
         """
         Update all entities in the scene.
@@ -318,9 +314,8 @@ class Scene:
             dt (float): Time elapsed since last update
         """
 
-        if not self.no_entities:
-            for obj in self.objects:
-                obj.update(dt)
+        for obj in self.objects:
+            obj.update(dt)
 
     def event(self, event: pygame.event.Event) -> None:
         """
@@ -330,9 +325,8 @@ class Scene:
             event (pygame.event.Event): Event passed to each entity.
         """
 
-        if not self.no_entities:
-            for obj in self.objects:
-                obj.event(event)
+        for obj in self.objects:
+            obj.event(event)
 
     def draw(self, surface: pygame.Surface) -> None:
         """
@@ -342,9 +336,8 @@ class Scene:
             surface (pygame.Surface): Surface to draw entities onto.
         """
 
-        if not self.no_entities:
-            for obj in self.objects:
-                obj.draw(surface)
+        for obj in self.objects:
+            obj.draw(surface)
 
     def remove(self, obj: Entity) -> None:
         """
@@ -355,7 +348,6 @@ class Scene:
         """
 
         self.objects.remove(obj)
-        self.no_entities = len(self.objects) == 0
 
 
 class Game:
@@ -514,15 +506,17 @@ class Game:
             dt (float): The time elapsed since the last step.
         """
 
+        active_scene = self.scenes[self.current_scene]
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
             else:
-                self.scenes[self.current_scene].event(event)
+                active_scene.event(event)
 
-        self.scenes[self.current_scene].update(dt)
+        active_scene.update(dt)
         self.screen.fill(self._bg_color)
-        self.scenes[self.current_scene].draw(self.screen)
+        active_scene.draw(self.screen)
         pygame.display.flip()
 
     def run(self, fps: int = 60) -> None:
