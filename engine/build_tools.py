@@ -5,8 +5,6 @@
 Build and development utilities for the engine.
 """
 
-import os
-
 import shutil
 
 from tkinter import messagebox
@@ -27,9 +25,7 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
         ENGINE_DATA_PATH (str): Path of the data directory
     """
 
-    launch_game_script = None
-
-    if not os.path.exists(directory):
+    if not directory.exists():
         logger(
             f'Build directory "{str(directory.resolve())}" does not exist.', status=Status.WARNING
         )
@@ -39,19 +35,12 @@ def build(directory: Path, ENGINE_DATA_PATH: str) -> None:
         )
         return
 
-    with open(resource_path("data/scripts/launch_game.py")) as f:
-        launch_game_script = f.read()
-        f.close()
-
-    with open(os.path.join(directory, "run.py"), "w") as f:
-        f.write(launch_game_script)
-        f.close()
+    launch_game_script = Path(resource_path("data/scripts/launch_game.py")).read_text(
+        encoding="utf-8"
+    )
+    (directory / "run.py").write_text(launch_game_script, encoding="utf-8")
 
     ignore = shutil.ignore_patterns("*.pyc", "__pycache__")
 
-    shutil.copytree(
-        engine_path, os.path.join(directory, "engine"), dirs_exist_ok=True, ignore=ignore
-    )
-    shutil.copytree(
-        ENGINE_DATA_PATH, os.path.join(directory, "data"), dirs_exist_ok=True, ignore=ignore
-    )
+    shutil.copytree(engine_path, directory / "engine", dirs_exist_ok=True, ignore=ignore)
+    shutil.copytree(Path(ENGINE_DATA_PATH), directory / "data", dirs_exist_ok=True, ignore=ignore)
