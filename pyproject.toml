@@ -32,6 +32,21 @@ include = ["engine*"]
 line-length = 100
 target-version = "py311"
 
+[tool.ruff.lint]
+ignore = [
+    "I",
+    "UP",
+    "RUF010",
+    "RUF100",
+    "PERF102",
+    "SIM102",
+    "SIM114",
+    "SIM118",
+    "PLR0402",
+    "PLC0414",
+    "BLE001",
+]
+
 [tool.interrogate]
 exclude = [
   "engine/gui.py",

@@ -50,7 +50,7 @@ core_game = CoreGame(
     GP_BASE_PATH=str(GP_BASE_PATH),
 )
 
-for entity_name, entity_data in data["entities"].items():
+for _entity_name, entity_data in data["entities"].items():
     scriptfile: Optional[str] = game_path(entity_data.get("scriptfile", None))
     if scriptfile == "":
         scriptfile = None

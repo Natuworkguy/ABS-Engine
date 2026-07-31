@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from engine.gui import run
 
 if __name__ == "__main__":
