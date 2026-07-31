@@ -522,15 +522,17 @@ class Game:
             dt (float): The time elapsed since the last step.
         """
 
+        active_scene: Scene = self.scenes[self.current_scene]
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
             else:
-                self.scenes[self.current_scene].event(event)
+                active_scene.event(event)
 
-        self.scenes[self.current_scene].update(dt)
+        active_scene.update(dt)
         self.screen.fill(self._bg_color)
-        self.scenes[self.current_scene].draw(self.screen)
+        active_scene.draw(self.screen)
         pygame.display.flip()
 
     def run(self, fps: int = 60) -> None:
