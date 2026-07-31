@@ -23,11 +23,10 @@ def resource_path(relative: str) -> str:
         The absolute file path as a string.
     """
     if hasattr(sys, "_MEIPASS"):
-        # Use getattr to safely read PyInstaller runtime attributes without mypy errors
-        meipass_path: str = getattr(sys, "_MEIPASS")
+        # Accessing PyInstaller runtime attribute; type ignore prevents mypy error while satisfying ruff B009
+        meipass_path: str = sys._MEIPASS  # type: ignore[attr-defined]
         return os.path.join(meipass_path, relative)
     return str(Path.cwd() / relative)
-
 
 def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
     """
