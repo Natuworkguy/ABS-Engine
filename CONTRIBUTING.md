@@ -93,8 +93,10 @@ All contributions should prioritize:
 
 - **Human Oversight Required:** You may use AI tools to assist with coding.
 - **AI Review:** You may use AI to review your code.
-- **Mandatory Testing:** Every line of AI-generated code must be thoroughly tested by a human.
-- **Mitigate Risks:** Review all code carefully to prevent AI hallucinations and errors.
+- **Mandatory Testing:** Every line of AI-generated code must be thoroughly test
+  ed by a human.
+- **Mitigate Risks:** Review all code carefully to prevent AI hallucinations and
+  errors.
 
 ### Community & Communication
 
@@ -103,7 +105,8 @@ All contributions should prioritize:
 
 ### Documentation & Issues
 
-- **Full Transparency:** If you use AI to help write documentation or issue descriptions, you must disclose it.
+- **Full Transparency:** If you use AI to help write documentation or issue
+  descriptions, you must disclose it.
 - **Clear Attribution:** Specify exactly which parts were generated or assisted by AI.
 
 <!-- markdownlint-disable MD033 -->
