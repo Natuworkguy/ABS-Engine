@@ -100,14 +100,17 @@ All contributions should prioritize:
 
 ### Community & Communication
 
-- **No Automated Replies:** Do not use AI to respond to users in Pull Requests or issues.
-- **Human Connection:** All interactions within the community must come from genuine human input.
+- **No Automated Replies:** Do not use AI to respond to users in Pull Requests
+  or issues.
+- **Human Connection:** All interactions within the community must come from
+  genuine human input.
 
 ### Documentation & Issues
 
 - **Full Transparency:** If you use AI to help write documentation or issue
   descriptions, you must disclose it.
-- **Clear Attribution:** Specify exactly which parts were generated or assisted by AI.
+- **Clear Attribution:** Specify exactly which parts were generated or assisted
+  by AI.
 
 <!-- markdownlint-disable MD033 -->
 <small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>
