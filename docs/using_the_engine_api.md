@@ -96,6 +96,22 @@ enemy = ObjectScriptEntity(scriptobj=EnemyScript, x=300, y=150)
 game.add_to_current_scene(enemy)
 ```
 
+## Rendering Text
+
+Use [`Text`](text.md) instead of a plain `Entity` to render a string
+instead of a colored rectangle:
+
+```python
+from engine.core.text import Text
+
+
+score_label = Text(x=10, y=10, text="Score: 0", color=(255, 255, 255))
+game.add_to_current_scene(score_label)
+```
+
+See [Text](text.md) for the full list of constructor arguments, including
+`dynamic`, which controls whether the text surface is rebuilt every frame.
+
 ## Scenes
 
 Use `game.add_scene()` and `game.switch_scene(scene_index)` to work with
