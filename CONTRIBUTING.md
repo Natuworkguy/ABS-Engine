@@ -87,13 +87,28 @@ All contributions should prioritize:
 
 ---
 
-## No AI-generated Code Policy
+## AI Policy
 
-ABS Engine does not accept AI-generated code contributions.
-All submitted code, documentation, and scripts must be written by the contributor
-or derived from existing project source with appropriate attribution.
-This ensures the codebase remains maintainable, auditable, and aligned with the
-project's standards.
+### Code Contributions
+
+- **Human Oversight Required:** You may use AI tools to assist with coding.
+- **AI Review:** You may use AI to review your code.
+- **Mandatory Testing:** Every line of AI-generated code must be thoroughly tested by a human.
+- **Mitigate Risks:** Review all code carefully to prevent AI hallucinations and errors.
+
+### Community & Communication
+
+- **No Automated Replies:** Do not use AI to respond to users in Pull Requests or issues.
+- **Human Connection:** All interactions within the community must come from genuine human input.
+
+### Documentation & Issues
+
+- **Full Transparency:** If you use AI to help write documentation or issue descriptions, you must disclose it.
+- **Clear Attribution:** Specify exactly which parts were generated or assisted by AI.
+
+<!-- markdownlint-disable MD033 -->
+<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>
+<!-- markdownlint-enable MD033 -->
 
 ---
 
