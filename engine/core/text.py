@@ -47,6 +47,9 @@ class Text(Entity):
             dynamic (bool): Whether to rebuild the text surface every frame so it
                 tracks changes to text/color/position. Set to False for static text
                 to avoid the per-frame re-render cost. Defaults to True.
+
+        Raises:
+            ValueError: If the specified font cannot be found.
         """
 
         self.x: int = x
@@ -57,7 +60,10 @@ class Text(Entity):
         self.antialias: bool = antialias
         self.dynamic: bool = dynamic
 
-        self.font = pygame.font.Font(font, size)
+        try:
+            self.font = pygame.font.Font(font, size)
+        except FileNotFoundError:
+            self.font = pygame.font.SysFont(font, size)
 
         self._update_text_surface()
 
