@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           echo "Running Interrogate..."
-          interrogate --exclude engine/gui.py --exclude engine/version.py --exclude data/scripts/launch_game.py
+          interrogate --exclude engine/gui.py --exclude engine/version.py --exclude data/scripts/launch_game.py -vv
 
   lint-ruff:
     name: Lint and Format with Ruff
@@ -208,13 +208,16 @@ jobs:
             pip install -r requirements.txt
           fi
 
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          fi
+
       - name: Run MyPy Type Checking
         shell: bash
         run: |
           echo "Running MyPy type checking..."
 
           mypy . \
-            --ignore-missing-imports \
             --check-untyped-defs \
             --disallow-untyped-defs \
             --disallow-incomplete-defs \
@@ -266,14 +269,14 @@ jobs:
     name: Docstring Validation with Darglint
     needs: prebuild
     runs-on: ubuntu-latest
-  
+
     steps:
       - uses: actions/checkout@v5
-  
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-  
+
       - name: Install Darglint
         run: |
           python -m pip install --upgrade pip
@@ -282,6 +285,29 @@ jobs:
       - name: Run Darglint
         run: |
           darglint .
+
+  lint-ty:
+    name: Type Checking with Ty
+    needs: prebuild
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Ty
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install ty
+
+      - name: Run Ty Type Checking
+        run: |
+          ty check .
 
   pip-audit:
     name: Dependency Audit with pip-audit
@@ -331,6 +357,7 @@ jobs:
       - pip-audit
       - lint-darglint
       - markdownlint
+      - lint-ty
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

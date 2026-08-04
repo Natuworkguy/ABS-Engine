@@ -20,6 +20,17 @@ Please read this document before submitting changes.
 
 ---
 
+## GitHub Codespaces Users
+
+> [!IMPORTANT]
+> If you're developing ABS Engine in a GitHub Codespaces environment,
+> you'll need a GUI to test your features. Use this
+> [start-gui.sh script](https://gist.github.com/Natuworkguy/4e21c781fef805c96479b84ac0d177f6)
+> to set up a web-based interface.
+> Run it from your terminal to launch the GUI and start testing.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Natuworkguy/ABS-Engine/tree/dev)
+
 ## Development Setup
 
 ### 1. Fork and Clone the Repository
@@ -76,6 +87,37 @@ All contributions should prioritize:
 
 ---
 
+## AI Policy
+
+### Code Contributions
+
+- **Human Oversight Required:** You may use AI tools to assist with coding.
+- **AI Review:** You may use AI to review your code.
+- **Mandatory Testing:** Every line of AI-generated code must be thoroughly test
+  ed by a human.
+- **Mitigate Risks:** Review all code carefully to prevent AI hallucinations and
+  errors.
+
+### Community & Communication
+
+- **No Automated Replies:** Do not use AI to respond to users in Pull Requests
+  or issues.
+- **Human Connection:** All interactions within the community must come from
+  genuine human input.
+
+### Documentation & Issues
+
+- **Full Transparency:** If you use AI to help write documentation or issue
+  descriptions, you must disclose it.
+- **Clear Attribution:** Specify exactly which parts were generated or assisted
+  by AI.
+
+<!-- markdownlint-disable MD033 -->
+<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>
+<!-- markdownlint-enable MD033 -->
+
+---
+
 ## Formatting, Linting, and Type Checking
 
 Before opening a pull request, run all checks locally.
@@ -129,6 +171,12 @@ darglint .
 interrogate
 ```
 
+### Ty
+
+```bash
+ty check .
+```
+
 All checks must pass before a pull request will be reviewed.
 
 ---
@@ -147,8 +195,7 @@ Contributors should:
 Example:
 
 ```python
-def load_project(path: Path) -> dict[str, Any]:
-    ...
+def load_project(path: Path) -> dict[str, Any]: ...
 ```
 
 ---
@@ -187,6 +234,7 @@ fix
 update
 changes
 stuff
+a
 ```
 
 ---
