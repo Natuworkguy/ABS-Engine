@@ -139,6 +139,16 @@ class Entity:
 
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
+    def __del__(self) -> None:
+        """
+        Destructor for the entity.
+        """
+
+        try:
+            self.destroy()
+        except ValueError:
+            logger("Failed to destroy entity", status=LoggerStatus.WARNING)
+
     def _collides_with(self, other: "Entity") -> bool:
         """
         Check if this entity collides with another entity using AABB collision detection.
@@ -241,8 +251,8 @@ class Entity:
         if self.parent is not None:
             try:
                 self.parent.remove(self)
-            except ValueError:
-                logger("Invalid target for destruction", status=LoggerStatus.WARNING)
+            except ValueError as e:
+                raise ValueError("Invalid target for destruction") from e
 
             self.parent = None
 
