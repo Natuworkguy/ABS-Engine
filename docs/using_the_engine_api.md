@@ -43,9 +43,12 @@ game = Game(
 )
 ```
 
-`GP_BASE_PATH` is required and keyword-only. It's the base path ABS Engine
-uses to resolve relative asset paths (such as `icon_path` or an entity's
-`image`), so point it at your game's asset directory.
+`GP_BASE_PATH` is required and keyword-only. It defines the base path ABS Engine
+uses to resolve relative asset references (such as `icon_path` or an entity's
+`image`), so it should point to your game's asset directory.
+Avoid using `.` for `GP_BASE_PATH` in production games. Instead, use a path
+such as `str(Path(__file__).parent)` or another explicit directory that
+contains your game assets.
 
 >[!NOTE]
 > `IS_EDITOR` defaults to `False`, which is correct for a script-driven game.
