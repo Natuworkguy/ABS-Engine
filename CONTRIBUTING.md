@@ -91,12 +91,15 @@ All contributions should prioritize:
 
 ### Code Contributions
 
-- **Human Oversight Required:** You may use AI tools to assist with coding.
-- **AI Review:** You may use AI to review your code.
-- **Mandatory Testing:** Every line of AI-generated code must be thoroughly test
-  ed by a human.
-- **Mitigate Risks:** Review all code carefully to prevent AI hallucinations and
-  errors.
+- **No AI-Assisted Substantive Changes:** AI tools may not be used to generate,
+  modify, or review substantive code, documentation, issue descriptions, or pull
+  request content.
+- **Autocomplete Allowed:** AI autocomplete and inline suggestions are allowed,
+  provided they do not produce large or significant changes.
+- **Trivial Edits Allowed:** Very small, obvious changes such as typo fixes,
+  whitespace cleanup, or minor wording updates are permitted.
+- **Human Responsibility:** All contributions must be reviewed, tested, and
+  approved by a human author.
 
 ### Community & Communication
 
@@ -107,10 +110,9 @@ All contributions should prioritize:
 
 ### Documentation & Issues
 
-- **Full Transparency:** If you use AI to help write documentation or issue
-  descriptions, you must disclose it.
-- **Clear Attribution:** Specify exactly which parts were generated or assisted
-  by AI.
+- **No AI Assistance for Substantive Work:** Do not use AI to write or revise
+  substantive documentation or issue content.
+- **Trivial Changes Only:** Very small edits are allowed.
 
 <!-- markdownlint-disable MD033 -->
 <small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>

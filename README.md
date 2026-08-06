@@ -29,7 +29,7 @@ It provides tools and features to help you create games efficiently.
 
 ## Getting Started
 
-[GitHub Codespaces Users](https://github.com/Natuworkguy/ABS-Engine/tree/main/CONTRIBUTING.md#github-codespaces-users)
+[GitHub Codespaces Users](CONTRIBUTING.md#github-codespaces-users)
 
 1. Clone the repository:
 

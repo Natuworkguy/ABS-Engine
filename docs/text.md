@@ -27,7 +27,7 @@ game.run()
 | `y` | Y position in pixels | `int` | `0` |
 | `text` | The string to render | `str` | `""` |
 | `size` | Font size in points | `int` | `50` |
-| `font` | Path to a font file, or `None` for pygame's default font | `Optional[str]` | `None` |
+| `font` | Path to a font file, or `None` for pygame's default font. If the file is missing, `Text` falls back to pygame's system-font lookup with the same name. | `Optional[str]` | `None` |
 | `color` | RGB color of the text | `tuple[int, int, int]` | `(255, 255, 255)` |
 | `bgcolor` | RGB background color behind the text | `tuple[int, int, int]` | `(0, 0, 0)` |
 | `antialias` | Whether to antialias the rendered glyphs | `bool` | `True` |
@@ -35,12 +35,13 @@ game.run()
 
 ## How It Works
 
-Internally, `Text` uses `pygame.font.Font(font, size).render(...)` to
-rasterize `text` into a surface, then overrides `draw()` to `blit()` that
-surface instead of drawing a colored rectangle like a plain `Entity` does.
-Font rendering and blitting both happen on the CPU (pygame's classic
-`Surface`/`blit()` API is software-rendered), so larger text, longer
-strings, and more frequent re-rendering all cost CPU time.
+Internally, `Text` first tries `pygame.font.Font(font, size)` and falls back
+to `pygame.font.SysFont(font, size)` when the font file cannot be found. It
+then calls `render(...)` to rasterize `text` into a surface and overrides
+`draw()` to `blit()` that surface instead of drawing a colored rectangle like
+a plain `Entity` does. Font rendering and blitting both happen on the CPU
+(pygame's classic `Surface`/`blit()` API is software-rendered), so larger
+text, longer strings, and more frequent re-rendering all cost CPU time.
 
 `width` and `height` (and therefore `rect`, used for collisions) are
 derived from the rendered surface at creation time, so they always match

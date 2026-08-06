@@ -40,7 +40,9 @@ class Text(Entity):
             y (int): Y position. Defaults to 0.
             text (str): The string to render. Defaults to "".
             size (int): Font size in points. Defaults to 50.
-            font (Optional[str]): Path to a font file. Defaults to None (pygame's default font).
+            font (Optional[str]): Path to a font file. Defaults to None (pygame's
+                default font). If the file cannot be found, Text falls back to
+                pygame's system-font lookup with the same name.
             color (RGBType): RGB color of the text. Defaults to (255, 255, 255).
             bgcolor (RGBType): RGB background color behind the text. Defaults to (0, 0, 0).
             antialias (bool): Whether to render the text with antialiasing. Defaults to True.
@@ -57,7 +59,10 @@ class Text(Entity):
         self.antialias: bool = antialias
         self.dynamic: bool = dynamic
 
-        self.font = pygame.font.Font(font, size)
+        try:
+            self.font = pygame.font.Font(font, size)
+        except FileNotFoundError:
+            self.font = pygame.font.SysFont(font, size)
 
         self._update_text_surface()
 
