@@ -5,6 +5,6 @@
 Core engine package
 """
 
-from colorama import just_fix_windows_console
+import colorama
 
-just_fix_windows_console()
+colorama.just_fix_windows_console()
