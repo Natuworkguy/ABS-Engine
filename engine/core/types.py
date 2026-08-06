@@ -7,11 +7,14 @@ Shared type aliases for ABS Engine.
 
 import pygame
 
-from typing import Protocol
+from typing import Union, Protocol
 
 from .image import EntityImage
 
-RGBType = tuple[int, int, int]
+RGBType = Union[
+    tuple[int, int, int],
+    pygame.Color  # For type checkers
+]
 EntityImageType = EntityImage
 
 
