@@ -9,9 +9,7 @@ import inspect
 
 from enum import Enum
 from typing import Any
-from colorama import Fore, Style, just_fix_windows_console
-
-just_fix_windows_console()
+from colorama import Fore, Style
 
 
 class Status(Enum):
