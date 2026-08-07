@@ -12,8 +12,7 @@ from typing import Union, Protocol
 from .image import EntityImage
 
 RGBType = Union[
-    tuple[int, int, int],
-    pygame.Color  # For type checkers
+    tuple[int, int, int], pygame.Color  # Add pygame.Color for type checkers
 ]
 EntityImageType = EntityImage
 
