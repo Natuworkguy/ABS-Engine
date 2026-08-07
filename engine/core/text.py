@@ -80,8 +80,7 @@ class Text(Entity):
         self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
 
     def center(self, pos: tuple[int, int]) -> None:
-        self.x = pos[0] - self.width // 2
-        self.y = pos[1] - self.height // 2
+        super().center(pos)
         self._update_text_surface()
 
     def draw(self, surface: pygame.Surface) -> None:
