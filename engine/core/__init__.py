@@ -55,6 +55,8 @@ class Entity:
             image (Optional[str]): Path to optional image file. Defaults to None.
         """
 
+        self.visible = True
+
         self.x: int = x
         self.y: int = y
         self.width: int = width
@@ -225,10 +227,11 @@ class Entity:
             surface (pygame.Surface): The surface to draw the entity on.
         """
 
-        if self.image is not None:
-            self.image.draw(surface, self.rect)
-        else:
-            pygame.draw.rect(surface, self.color, self.rect)
+        if self.visible:
+            if self.image is not None:
+                self.image.draw(surface, self.rect)
+            else:
+                pygame.draw.rect(surface, self.color, self.rect)
 
     def get_colliding_entities(self) -> list["Entity"]:
         """
