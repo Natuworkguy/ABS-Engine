@@ -245,7 +245,10 @@ class Entity:
 
     def destroy(self) -> None:
         """
-        Destroy this entity
+        Destroy this entity.
+
+        Raises:
+            ValueError: If the entity cannot be removed from its parent.
         """
 
         if self.parent is not None:
