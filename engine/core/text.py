@@ -87,7 +87,8 @@ class Text(Entity):
             surface (pygame.Surface): The surface to draw the text on.
         """
 
-        if self.dynamic:
-            self._update_text_surface()
+        if self.visible:
+            if self.dynamic:
+                self._update_text_surface()
 
-        surface.blit(self.text_surface, self.text_rect)
+            surface.blit(self.text_surface, self.text_rect)
