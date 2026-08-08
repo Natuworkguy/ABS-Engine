@@ -75,7 +75,7 @@ class Text(Entity):
         """
 
         self.text_surface = self.font.render(
-            self.text, antialias=self.antialias, color=self.color, bgcolor=self.bgcolor
+            self.text, self.antialias, self.color, self.bgcolor
         )
         self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
 
