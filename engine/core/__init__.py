@@ -25,6 +25,7 @@ from ..version import __version__ as version
 
 print(
     f"ABS Engine v{version} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
+    "\n"
 )
 
 
