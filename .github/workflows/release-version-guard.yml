@@ -64,17 +64,44 @@ jobs:
 
           echo "old_version=$OLD_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Comment if version not bumped
+      - name: Request changes if version not bumped
         if: steps.label.outputs.release == 'true' && steps.compare.outputs.bumped == 'false'
         uses: actions/github-script@v8
         with:
           script: |
-            await github.rest.issues.createComment({
+            await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
+              pull_number: context.payload.pull_request.number,
+              event: "REQUEST_CHANGES",
               body: "@${{ github.event.pull_request.user.login }} This **release** PR does not bump `engine/version.py` (still `${{ steps.compare.outputs.old_version }}`). Update `__version__` before merging."
             });
+
+      - name: Dismiss prior request-changes review once bumped
+        if: steps.label.outputs.release == 'true' && steps.compare.outputs.bumped == 'true'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pull_number = context.payload.pull_request.number;
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number,
+            });
+            for (const review of reviews) {
+              if (
+                review.user.login === "github-actions[bot]" &&
+                review.state === "CHANGES_REQUESTED"
+              ) {
+                await github.rest.pulls.dismissReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number,
+                  review_id: review.id,
+                  message: "`engine/version.py` bumped — clearing the version guard.",
+                });
+              }
+            }
 
       - name: Fail if version not bumped
         if: steps.label.outputs.release == 'true' && steps.compare.outputs.bumped == 'false'
