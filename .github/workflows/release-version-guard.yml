@@ -69,12 +69,29 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
+            const MARKER = "<!-- release-version-guard -->";
+            const pull_number = context.payload.pull_request.number;
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number,
+            });
+            const alreadyRequested = reviews.some(
+              (review) =>
+                review.user.login === "github-actions[bot]" &&
+                review.state === "CHANGES_REQUESTED" &&
+                (review.body || "").includes(MARKER)
+            );
+            if (alreadyRequested) {
+              console.log("This guard already has an open request-changes review; skipping.");
+              return;
+            }
             await github.rest.pulls.createReview({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
+              pull_number,
               event: "REQUEST_CHANGES",
-              body: "@${{ github.event.pull_request.user.login }} This **release** PR does not bump `engine/version.py` (still `${{ steps.compare.outputs.old_version }}`). Update `__version__` before merging."
+              body: "@${{ github.event.pull_request.user.login }} This **release** PR does not bump `engine/version.py` (still `${{ steps.compare.outputs.old_version }}`). Update `__version__` before merging.\n\n" + MARKER
             });
 
       - name: Dismiss prior request-changes review once bumped
@@ -82,6 +99,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
+            const MARKER = "<!-- release-version-guard -->";
             const pull_number = context.payload.pull_request.number;
             const { data: reviews } = await github.rest.pulls.listReviews({
               owner: context.repo.owner,
@@ -91,7 +109,8 @@ jobs:
             for (const review of reviews) {
               if (
                 review.user.login === "github-actions[bot]" &&
-                review.state === "CHANGES_REQUESTED"
+                review.state === "CHANGES_REQUESTED" &&
+                (review.body || "").includes(MARKER)
               ) {
                 await github.rest.pulls.dismissReview({
                   owner: context.repo.owner,
