@@ -6,6 +6,7 @@ Logging utilities for the engine.
 """
 
 import inspect
+import sys
 
 from enum import Enum
 from typing import Any
@@ -52,10 +53,17 @@ def logger(message: str, *, status: Status = Status.INFO) -> None:
     """
 
     source = _get_caller_module().upper()
+    is_tty: bool = sys.stdout.isatty()
 
-    if status == Status.CRITICAL:
-        print(Fore.RED, end="")
-    elif status == Status.WARNING:
-        print(Fore.YELLOW, end="")
+    if is_tty:
+        if status == Status.CRITICAL:
+            print(Fore.RED, end="")
+        elif status == Status.WARNING:
+            print(Fore.YELLOW, end="")
 
-    print(f"({status.value}) {source}: {message}{Style.RESET_ALL}")
+    print(f"({status.value}) {source}: {message}", end="")
+
+    if is_tty:
+        print(Style.RESET_ALL, end="")
+
+    print()
