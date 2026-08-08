@@ -74,9 +74,7 @@ class Text(Entity):
         text, color, bgcolor, antialias, and position.
         """
 
-        self.text_surface = self.font.render(
-            self.text, self.antialias, self.color, self.bgcolor
-        )
+        self.text_surface = self.font.render(self.text, self.antialias, self.color, self.bgcolor)
         self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
 
     def center(self, pos: tuple[int, int]) -> None:
