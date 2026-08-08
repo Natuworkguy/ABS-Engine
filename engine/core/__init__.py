@@ -14,6 +14,7 @@ import sys
 import tkinter.messagebox
 import uuid
 import os
+import colorama
 
 from typing import Optional, Any, Union
 
@@ -418,6 +419,9 @@ class Game:
 
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
+
+        if sys.stdout.isatty():
+            print(colorama.ansi.set_title(title))
 
         self.set_icon(icon_path)
 
