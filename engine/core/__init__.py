@@ -428,7 +428,10 @@ class Game:
         pygame.display.set_caption(title)
 
         if sys.stdout.isatty():
-            print(colorama.ansi.set_title(title))
+            print(
+                colorama.ansi.set_title(title),
+                end=""
+            )
 
         self.set_icon(icon_path)
 
