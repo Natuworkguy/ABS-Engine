@@ -1,0 +1,3 @@
+* text=auto eol=lf
+
+*.absp text linguist-language=JSON linguist-detectable=true diff=json

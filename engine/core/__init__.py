@@ -14,6 +14,7 @@ import sys
 import tkinter.messagebox
 import uuid
 import os
+import colorama
 
 from typing import Optional, Any, Union
 
@@ -24,6 +25,7 @@ from ..version import __version__ as version
 
 print(
     f"ABS Engine v{version} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
+    "\n"
 )
 
 
@@ -54,6 +56,8 @@ class Entity:
             scriptfile (Optional[str]): Path to optional script file. Defaults to None.
             image (Optional[str]): Path to optional image file. Defaults to None.
         """
+
+        self.visible = True
 
         self.x: int = x
         self.y: int = y
@@ -139,6 +143,16 @@ class Entity:
 
         return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
 
+    def __del__(self) -> None:
+        """
+        Destructor for the entity.
+        """
+
+        try:
+            self.destroy()
+        except ValueError:
+            logger("Failed to destroy entity", status=LoggerStatus.WARNING)
+
     def _collides_with(self, other: "Entity") -> bool:
         """
         Check if this entity collides with another entity using AABB collision detection.
@@ -160,6 +174,18 @@ class Entity:
             parent (Scene): Scene to assign this entity to.
         """
         self.parent = parent
+
+    def center(self, pos: tuple[int, int]) -> None:
+        """
+        Center the entity on a position.
+
+        Args:
+            pos (tuple[int, int]): The (x, y) point to center the entity on.
+        """
+
+        self.x = pos[0] - self.width // 2
+        self.y = pos[1] - self.height // 2
+        self._update_rect()
 
     def init(self) -> None:
         """
@@ -215,10 +241,11 @@ class Entity:
             surface (pygame.Surface): The surface to draw the entity on.
         """
 
-        if self.image is not None:
-            self.image.draw(surface, self.rect)
-        else:
-            pygame.draw.rect(surface, self.color, self.rect)
+        if self.visible:
+            if self.image is not None:
+                self.image.draw(surface, self.rect)
+            else:
+                pygame.draw.rect(surface, self.color, self.rect)
 
     def get_colliding_entities(self) -> list["Entity"]:
         """
@@ -235,14 +262,17 @@ class Entity:
 
     def destroy(self) -> None:
         """
-        Destroy this entity
+        Destroy this entity.
+
+        Raises:
+            ValueError: If the entity cannot be removed from its parent.
         """
 
         if self.parent is not None:
             try:
                 self.parent.remove(self)
-            except ValueError:
-                logger("Invalid target for destruction", status=LoggerStatus.WARNING)
+            except ValueError as e:
+                raise ValueError("Invalid target for destruction") from e
 
             self.parent = None
 
@@ -397,6 +427,9 @@ class Game:
 
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
+
+        if sys.stdout.isatty():
+            print(colorama.ansi.set_title(title), end="")
 
         self.set_icon(icon_path)
 

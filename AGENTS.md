@@ -1,4 +1,6 @@
 <!-- markdownlint-disable MD041 -->
 
-See ABS Engine's [AI Policy](CONTRIBUTING.md#ai-policy) for more information on
+ABS Engine has a strict AI policy.
+
+See [the AI Policy](CONTRIBUTING.md#ai-policy) for more information on
   how AI may be used.

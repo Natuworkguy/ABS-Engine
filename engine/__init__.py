@@ -4,3 +4,7 @@
 """
 Core engine package
 """
+
+import colorama
+
+colorama.just_fix_windows_console()

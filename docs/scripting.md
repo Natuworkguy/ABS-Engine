@@ -88,6 +88,7 @@ The `engine.core.Entity` class has the following properties:
 | `id` | Unique entity UUID | `str` |
 | `get_colliding_entities` | Return a list of colliding entities | `Callable[[], list[Entity]]` |
 | `destroy` | Destroy the entity | `Callable[[], None]` |
+| `visible` | Weather to draw the entity or not | `bool` |
 
 ## Script Functions
 

@@ -74,10 +74,19 @@ class Text(Entity):
         text, color, bgcolor, antialias, and position.
         """
 
-        self.text_surface = self.font.render(
-            self.text, antialias=self.antialias, color=self.color, bgcolor=self.bgcolor
-        )
+        self.text_surface = self.font.render(self.text, self.antialias, self.color, self.bgcolor)
         self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
+
+    def center(self, pos: tuple[int, int]) -> None:
+        """
+        Center the text on a position and rebuild its rendered surface.
+
+        Args:
+            pos (tuple[int, int]): The (x, y) point to center the text on.
+        """
+
+        super().center(pos)
+        self._update_text_surface()
 
     def draw(self, surface: pygame.Surface) -> None:
         """
@@ -87,7 +96,8 @@ class Text(Entity):
             surface (pygame.Surface): The surface to draw the text on.
         """
 
-        if self.dynamic:
-            self._update_text_surface()
+        if self.visible:
+            if self.dynamic:
+                self._update_text_surface()
 
-        surface.blit(self.text_surface, self.text_rect)
+            surface.blit(self.text_surface, self.text_rect)
