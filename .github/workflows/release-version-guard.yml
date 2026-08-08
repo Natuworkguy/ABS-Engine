@@ -117,7 +117,7 @@ jobs:
                   repo: context.repo.repo,
                   pull_number,
                   review_id: review.id,
-                  message: "`engine/version.py` bumped — clearing the version guard.",
+                  message: "`engine/version.py` bumped. Clearing the version guard.",
                 });
               }
             }
