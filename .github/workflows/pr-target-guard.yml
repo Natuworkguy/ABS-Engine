@@ -38,7 +38,7 @@ jobs:
 
       - name: Comment warning on PR
         if: steps.check.outputs.WARN == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.createComment({
