@@ -268,13 +268,17 @@ class Entity:
             ValueError: If the entity cannot be removed from its parent.
         """
 
-        if self.parent is not None:
-            try:
-                self.parent.remove(self)
-            except ValueError as e:
-                raise ValueError("Invalid target for destruction") from e
+        parent = getattr(self, "parent", None)  # See #29
 
-            self.parent = None
+        if parent is None:
+            return
+
+        try:
+            parent.remove(self)
+        except ValueError as e:
+            raise ValueError("Invalid target for destruction") from e
+
+        self.parent = None
 
 
 class Scene:
