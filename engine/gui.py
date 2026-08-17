@@ -3,7 +3,6 @@
 
 import sys
 import os
-import json
 import ctypes
 
 import tkinter as tk
@@ -339,52 +338,101 @@ class Editor:
 
     def view_entity(self, entity_list: tk.Listbox) -> None:
         try:
-            selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
+            selected_item = entity_list.get(entity_list.curselection()[0])
 
             self.view_popup = tk.Toplevel(self.root)
             self.view_popup.wm_title("Entity Data | ABS Engine")
+            self.view_popup.resizable(False, False)
 
-            self.entity_data = tk.Text(self.view_popup, width=50, height=20)
-            self.entity_data.insert(tk.END, json.dumps(self.entities[selected_item], indent=4))
-            self.entity_data.pack(padx=5, pady=5)
+            fields = {
+                "x": int,
+                "y": int,
+                "width": int,
+                "height": int,
+                "scriptfile": str,
+                "image": str,
+            }
+            field_objs = {}
+
+            fields_section = ttk.LabelFrame(self.view_popup, text=f"Editing: {selected_item}")
+            fields_section.pack(fill="both", padx=10, pady=10)
+
+            row = 0
+            for name in fields.keys():
+                label = ttk.Label(fields_section, text=name, anchor="w")
+                label.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+
+                field_objs[name] = ttk.Entry(fields_section, width=30)
+                field_objs[name].insert(0, str(self.entities[selected_item].get(name, "")))
+                field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+                row += 1
+
+            color_label = ttk.Label(fields_section, text="color", anchor="w")
+            color_label.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+
+            color_frame = ttk.Frame(fields_section)
+            color_frame.grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+            default_color = self.entities[selected_item].get("color", (255, 255, 255))
+            color_objs = []
+            for i in range(3):
+                try:
+                    default_component = str(default_color[i])
+                except (IndexError, TypeError):
+                    default_component = "255"
+
+                color_entry = ttk.Entry(color_frame, width=6)
+                color_entry.insert(0, default_component)
+                color_entry.pack(
+                    side="left", expand=True, fill="x", padx=(0, 4) if i < 2 else (0, 0)
+                )
+                color_objs.append(color_entry)
+
+            fields_section.columnconfigure(1, weight=1)
 
             def save_edits() -> None:
-                if self.entity_data is None:
+                if self.view_popup is None:
                     return
-                elif self.view_popup is None:
-                    return
+
+                updates = {}
 
                 try:
-                    data = json.loads(self.entity_data.get("1.0", tk.END + "-1c"))
+                    for name, obj in field_objs.items():
+                        value = obj.get()
 
-                    if isinstance(data, list):
-                        messagebox.showerror(
-                            "Error",
-                            "Failed to save entity data. Ensure that the data is a dictionary.",
-                        )
-                        return
+                        if value.strip() == "":
+                            continue
 
-                    self.entities[selected_item] = data
-                except Exception as e:
+                        updates[name] = fields[name](value)
+
+                    color_values = [c.get().strip() for c in color_objs]
+                    if any(color_values):
+                        updates["color"] = tuple(int(c) for c in color_values)
+                except ValueError as e:
                     messagebox.showerror(
                         "Error",
-                        f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.",
+                        f"Failed to save entity data: {e}\nPlease ensure all fields contain valid values.",
                     )
-                    self.entity_data.focus_set()
-
                     return
 
+                self.entities[selected_item].update(updates)
                 self.view_popup.destroy()
 
+            button_row = ttk.Frame(self.view_popup)
+            button_row.pack(fill="x", padx=10, pady=(0, 10))
+            button_row.columnconfigure(0, weight=1)
+            button_row.columnconfigure(1, weight=1)
+
             self.entity_data_close_button = ttk.Button(
-                self.view_popup, text="Close", command=self.view_popup.destroy
+                button_row, text="Close", command=self.view_popup.destroy
             )
-            self.entity_data_close_button.pack(padx=5, pady=10)
+            self.entity_data_close_button.grid(row=0, column=0, sticky="ew", padx=(0, 5))
 
             self.entity_data_save_button = ttk.Button(
-                self.view_popup, text="Save", command=lambda: save_edits()
+                button_row, text="Save", command=lambda: save_edits()
             )
-            self.entity_data_save_button.pack(padx=5, pady=10)
+            self.entity_data_save_button.grid(row=0, column=1, sticky="ew", padx=(5, 0))
 
         except IndexError:
             messagebox.showerror("Error", "No entity selected.")
