@@ -52,7 +52,7 @@ ignore = [
 
 [tool.interrogate]
 exclude = [
-  "engine/gui.py",
+  "engine/gui/__init__.py",
   "engine/version.py",
   "data/scripts/launch_game.py",
 ]
