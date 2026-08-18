@@ -14,14 +14,15 @@ from _tkinter import TclError
 
 from typing import Optional
 
-from .saveload import (
+from ..saveload import (
     save_project as sl_save_project,
     load_project as sl_load_project,
 )
-from .core import Game as CoreGame, Entity
-from .logger import logger, Status as LoggerStatus
-from .build_tools import build
-from .tcl_loader import tcl_source
+from ..core import Game as CoreGame, Entity
+from ..logger import logger, Status as LoggerStatus
+from ..build_tools import build
+from ..tcl_loader import tcl_source
+from .tooltip import Tooltip as _Tooltip
 
 from pathlib import Path
 
@@ -354,6 +355,10 @@ class Editor:
                 "scriptfile": str,
                 "image": str,
             }
+            field_hints = {
+                "scriptfile": "path, relative to the project root",
+                "image": "path, relative to the project root",
+            }
             field_objs = {}
 
             fields_section = ttk.LabelFrame(self.view_popup, text=f"Editing: {selected_item}")
@@ -361,8 +366,16 @@ class Editor:
 
             row = 0
             for name in fields.keys():
-                label = ttk.Label(fields_section, text=name, anchor="w")
-                label.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+                label_cell = ttk.Frame(fields_section)
+                label_cell.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+
+                label = ttk.Label(label_cell, text=name, anchor="w")
+                label.pack(side="left")
+
+                if name in field_hints:
+                    info_icon = ttk.Label(label_cell, text=" \u24d8", foreground="#4a90d9")
+                    info_icon.pack(side="left")
+                    _Tooltip(info_icon, field_hints[name])
 
                 field_objs[name] = ttk.Entry(fields_section, width=30)
                 field_objs[name].insert(0, str(self.entities[selected_item].get(name, "")))
