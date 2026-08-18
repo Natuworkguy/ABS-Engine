@@ -437,7 +437,10 @@ class Editor:
 
                     color_values = [c.get().strip() for c in color_objs]
                     if any(color_values):
-                        updates["color"] = tuple(int(c) for c in color_values)
+                        parsed_color = tuple(int(c) for c in color_values)
+                        if any(component < 0 or component > 255 for component in parsed_color):
+                            raise ValueError("Color values must be between 0 and 255")
+                        updates["color"] = parsed_color
                 except ValueError as e:
                     messagebox.showerror(
                         "Error",
