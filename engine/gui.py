@@ -413,7 +413,7 @@ class Editor:
                 hex_color = hex_color.lstrip("#")
                 for i, c in enumerate(color_objs):
                     c.delete(0, tk.END)
-                    c.insert(0, str(int(hex_color[i * 2: i * 2 + 2], 16)))
+                    c.insert(0, str(int(hex_color[i * 2 : i * 2 + 2], 16)))  # noqa: E203
 
             color_picker_button = ttk.Button(color_frame, text="Pick...", command=pick_color)
             color_picker_button.pack(side="left", padx=(4, 0))
