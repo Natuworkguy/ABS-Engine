@@ -9,6 +9,7 @@ import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
+import tkinter.colorchooser as colorchooser
 from _tkinter import TclError
 
 from typing import Optional
@@ -388,6 +389,34 @@ class Editor:
                     side="left", expand=True, fill="x", padx=(0, 4) if i < 2 else (0, 0)
                 )
                 color_objs.append(color_entry)
+
+            def pick_color() -> None:
+                initial = []
+                for c in color_objs:
+                    try:
+                        initial.append(max(0, min(255, int(c.get()))))
+                    except ValueError:
+                        initial.append(255)
+
+                _rgb, hex_color = colorchooser.askcolor(
+                    color="#%02x%02x%02x" % tuple(initial),
+                    title="Pick Color",
+                )
+
+                if self.view_popup is not None:
+                    self.view_popup.lift()
+                    self.view_popup.focus_force()
+
+                if hex_color is None:
+                    return
+
+                hex_color = hex_color.lstrip("#")
+                for i, c in enumerate(color_objs):
+                    c.delete(0, tk.END)
+                    c.insert(0, str(int(hex_color[i * 2: i * 2 + 2], 16)))
+
+            color_picker_button = ttk.Button(color_frame, text="Pick...", command=pick_color)
+            color_picker_button.pack(side="left", padx=(4, 0))
 
             fields_section.columnconfigure(1, weight=1)
 
