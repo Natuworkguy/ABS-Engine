@@ -338,7 +338,7 @@ class Editor:
 
     def view_entity(self, entity_list: tk.Listbox) -> None:
         try:
-            selected_item = entity_list.get(entity_list.curselection()[0])
+            selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
             self.view_popup = tk.Toplevel(self.root)
             self.view_popup.wm_title("Entity Data | ABS Engine")
