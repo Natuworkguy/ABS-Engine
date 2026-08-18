@@ -65,6 +65,7 @@ class Editor:
         self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
         self.root.bind("<Control-s>", lambda *args: self.save_project())
         self.root.bind("<Control-o>", lambda *args: self.load_project())
+        self.root.bind("<F9>", lambda *args: self.run_game())
 
         self.menu = tk.Menu(self.root)
 
@@ -78,6 +79,11 @@ class Editor:
         self.file_menu.add_command(label="Exit", command=self.quit)
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
+
+        self.run_menu = tk.Menu(self.menu, tearoff=0)
+        self.run_menu.add_command(label="Run Game", command=self.run_game, accelerator="F9")
+
+        self.menu.add_cascade(label="Run", menu=self.run_menu)
         self.root.config(menu=self.menu)
 
         if "-noicon" not in sys.argv:
@@ -158,11 +164,6 @@ class Editor:
 
         self.engine_section = tk.LabelFrame(self.root, width=200, height=200, text="Engine")
         self.engine_section.pack(fill="both", padx=5, pady=5)
-
-        self.run_game_button = ttk.Button(
-            self.engine_section, text="Run Game", command=self.run_game, width=25
-        )
-        self.run_game_button.pack(padx=5, pady=5)
 
         self.build_game_button = ttk.Button(
             self.engine_section,
