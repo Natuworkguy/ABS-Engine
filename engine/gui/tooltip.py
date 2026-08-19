@@ -1,3 +1,6 @@
+# Copyright (C) Natuworkguy
+# See the LICENSE file for GPLv3
+
 """
 Hover tooltips for tkinter widgets.
 """
