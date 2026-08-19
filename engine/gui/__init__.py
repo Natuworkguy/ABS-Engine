@@ -28,7 +28,12 @@ from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
 LAST_SAVE_DIR: Optional[str] = None
-ENGINE_DATA_PATH = str(Path(__file__).parent.parent / "data")
+ENGINE_DATA_PATH = str(
+    Path(__file__)
+    .parent
+    .parent
+    .parent / "data"
+)
 APP_ID: str = "ABSEngine"
 
 
