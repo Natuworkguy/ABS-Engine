@@ -15,28 +15,50 @@ class Tooltip:
     Show a small popup with ``text`` when the mouse hovers over a widget.
     """
 
-    def __init__(self, widget: tk.Widget, text: str) -> None:
+    def __init__(self, widget: tk.Widget, text: str, time: int = 0) -> None:
         """
         Attach a hover tooltip to ``widget``.
 
         Args:
             widget (tk.Widget): The widget to show the tooltip for.
             text (str): The text to display in the tooltip.
+            time (int): Delay in milliseconds before the tooltip appears after the mouse enters the widget.
         """
 
         self.widget = widget
         self.text = text
+        self.time = time
         self.tip_window: Optional[tk.Toplevel] = None
-        widget.bind("<Enter>", self._show)
+        self._after_id: Optional[str] = None
+        widget.bind("<Enter>", self._schedule)
         widget.bind("<Leave>", self._hide)
 
-    def _show(self, _event: "tk.Event[tk.Widget]") -> None:
+    def _schedule(self, _event: "tk.Event[tk.Widget]") -> None:
         """
-        Create and display the tooltip popup below the widget.
+        Queue the tooltip to appear after ``self.time`` milliseconds.
 
         Args:
             _event (tk.Event[tk.Widget]): The ``<Enter>`` event that triggered the tooltip.
         """
+
+        self._cancel_scheduled()
+        self._after_id = self.widget.after(self.time, self._show)
+
+    def _cancel_scheduled(self) -> None:
+        """
+        Cancel a pending, not-yet-shown tooltip popup, if any.
+        """
+
+        if self._after_id is not None:
+            self.widget.after_cancel(self._after_id)
+            self._after_id = None
+
+    def _show(self) -> None:
+        """
+        Create and display the tooltip popup below the widget.
+        """
+
+        self._after_id = None
 
         if self.tip_window is not None:
             return
@@ -67,6 +89,8 @@ class Tooltip:
         Args:
             _event (tk.Event[tk.Widget]): The ``<Leave>`` event that triggered the tooltip to close.
         """
+
+        self._cancel_scheduled()
 
         if self.tip_window is not None:
             self.tip_window.destroy()

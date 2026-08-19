@@ -431,6 +431,7 @@ class Editor:
 
             color_picker_button = ttk.Button(color_frame, text="Pick...", command=pick_color)
             color_picker_button.pack(side="left", padx=(4, 0))
+            _Tooltip(color_picker_button, "Open a color picker to choose the RGB values", 1000)
 
             fields_section.columnconfigure(1, weight=1)
 
