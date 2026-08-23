@@ -84,6 +84,11 @@ class Editor:
         self.run_menu = tk.Menu(self.menu, tearoff=0)
         self.run_menu.add_command(label="Run Game", command=self.run_game, accelerator="F9")
 
+        self.game_menu = tk.Menu(self.menu, tearoff=0)
+        self.game_menu.add_command(label="Game Settings", command=self.game_settings)
+
+        self.menu.add_cascade(label="Game", menu=self.game_menu)
+
         self.menu.add_cascade(label="Run", menu=self.run_menu)
         self.root.config(menu=self.menu)
 
@@ -174,11 +179,6 @@ class Editor:
             state=DISABLED,
         )
         self.build_game_button.pack(padx=5, pady=5)
-
-        self.game_settings_button = ttk.Button(
-            self.engine_section, text="Game Settings", command=self.game_settings, width=25
-        )
-        self.game_settings_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
         try:
