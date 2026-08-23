@@ -81,17 +81,14 @@ class Editor:
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
 
-        self.run_menu = tk.Menu(self.menu, tearoff=0)
-        self.run_menu.add_command(label="Run Game", command=self.run_game, accelerator="F9")
-
         self.game_menu = tk.Menu(self.menu, tearoff=0)
-        self.game_menu.add_command(label="Game Settings", command=self.game_settings)
 
+        self.game_menu.add_command(label="Game Settings", command=self.game_settings)
         self.game_menu.add_command(label="Build Game", command=self.build_game, state=DISABLED)
+        self.game_menu.add_command(label="Run Game", command=self.run_game, accelerator="F9")
 
         self.menu.add_cascade(label="Game", menu=self.game_menu)
 
-        self.menu.add_cascade(label="Run", menu=self.run_menu)
         self.root.config(menu=self.menu)
 
         if "-noicon" not in sys.argv:
