@@ -87,6 +87,8 @@ class Editor:
         self.game_menu = tk.Menu(self.menu, tearoff=0)
         self.game_menu.add_command(label="Game Settings", command=self.game_settings)
 
+        self.game_menu.add_command(label="Build Game", command=self.build_game, state=DISABLED)
+
         self.menu.add_cascade(label="Game", menu=self.game_menu)
 
         self.menu.add_cascade(label="Run", menu=self.run_menu)
@@ -167,18 +169,6 @@ class Editor:
             command=lambda: self.add_entity(self.add_entity_input.get()),
         )
         self.add_entity_button.pack(padx=5, pady=5)
-
-        self.engine_section = tk.LabelFrame(self.root, width=200, height=200, text="Engine")
-        self.engine_section.pack(fill="both", padx=5, pady=5)
-
-        self.build_game_button = ttk.Button(
-            self.engine_section,
-            text="Build Game",
-            command=self.build_game,
-            width=25,
-            state=DISABLED,
-        )
-        self.build_game_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
         try:
@@ -512,7 +502,7 @@ class Editor:
             self.entity_list.insert(tk.END, entity_name)
 
         messagebox.showinfo("Success", "Project loaded successfully.")
-        self.build_game_button.config(state=NORMAL)
+        self.game_menu.entryconfig("Build Game", state=NORMAL)
 
     def save_project(self) -> None:
         global GP_BASE_PATH, LAST_SAVE_DIR
@@ -539,7 +529,7 @@ class Editor:
 
         GP_BASE_PATH = str(Path(file).parent)
         LAST_SAVE_DIR = str(Path(file).parent)
-        self.build_game_button.config(state=NORMAL)
+        self.game_menu.entryconfig("Build Game", state=NORMAL)
 
     def save_name(self, name: str) -> None:
         self.project_name = name
