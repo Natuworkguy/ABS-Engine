@@ -587,6 +587,7 @@ class Game:
             self.step(dt)
 
         pygame.quit()
+        sys.exit()
 
     def quit(self) -> None:
         """
