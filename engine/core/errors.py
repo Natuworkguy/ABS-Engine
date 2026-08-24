@@ -38,4 +38,3 @@ class ABSFatalError(RuntimeError):
 
         faulthandler.enable()
         os.abort()
-        faulthandler.disable()
