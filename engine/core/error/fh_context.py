@@ -1,6 +1,6 @@
 import faulthandler
 
-from typing import Optional
+from typing import Optional, Literal
 
 from . import _LOG
 
@@ -18,7 +18,7 @@ class FHContext:
         exc_type: Optional[type[BaseException]],
         exc_value: Optional[BaseException],
         traceback: object,
-    ) -> bool:
+    ) -> Literal[False]:
         faulthandler.disable()
         self._log_file.flush()
         self._log_file.close()
