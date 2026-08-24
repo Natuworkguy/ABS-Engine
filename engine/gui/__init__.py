@@ -3,31 +3,32 @@
 
 import sys
 import os
-import json
 import ctypes
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
+import tkinter.colorchooser as colorchooser
 from _tkinter import TclError
 
 from typing import Optional
 
-from .saveload import (
+from ..saveload import (
     save_project as sl_save_project,
     load_project as sl_load_project,
 )
-from .core import Game as CoreGame, Entity
-from .logger import logger, Status as LoggerStatus
-from .build_tools import build
-from .tcl_loader import tcl_source
+from ..core import Game as CoreGame, Entity
+from ..logger import logger, Status as LoggerStatus
+from ..build_tools import build
+from ..tcl_loader import tcl_source
+from .tooltip import Tooltip as _Tooltip
 
 from pathlib import Path
 
 GP_BASE_PATH: str = str(Path(__file__).parent.parent)
 LAST_SAVE_DIR: Optional[str] = None
-ENGINE_DATA_PATH = str(Path(__file__).parent.parent / "data")
+ENGINE_DATA_PATH = str(Path(__file__).parent.parent.parent / "data")
 APP_ID: str = "ABSEngine"
 
 
@@ -65,6 +66,7 @@ class Editor:
         self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
         self.root.bind("<Control-s>", lambda *args: self.save_project())
         self.root.bind("<Control-o>", lambda *args: self.load_project())
+        self.root.bind("<F9>", lambda *args: self.run_game())
 
         self.menu = tk.Menu(self.root)
 
@@ -78,6 +80,15 @@ class Editor:
         self.file_menu.add_command(label="Exit", command=self.quit)
 
         self.menu.add_cascade(label="File", menu=self.file_menu)
+
+        self.game_menu = tk.Menu(self.menu, tearoff=0)
+
+        self.game_menu.add_command(label="Game Settings", command=self.game_settings)
+        self.game_menu.add_command(label="Build Game", command=self.build_game, state=DISABLED)
+        self.game_menu.add_command(label="Run Game", command=self.run_game, accelerator="F9")
+
+        self.menu.add_cascade(label="Game", menu=self.game_menu)
+
         self.root.config(menu=self.menu)
 
         if "-noicon" not in sys.argv:
@@ -155,28 +166,6 @@ class Editor:
             command=lambda: self.add_entity(self.add_entity_input.get()),
         )
         self.add_entity_button.pack(padx=5, pady=5)
-
-        self.engine_section = tk.LabelFrame(self.root, width=200, height=200, text="Engine")
-        self.engine_section.pack(fill="both", padx=5, pady=5)
-
-        self.run_game_button = ttk.Button(
-            self.engine_section, text="Run Game", command=self.run_game, width=25
-        )
-        self.run_game_button.pack(padx=5, pady=5)
-
-        self.build_game_button = ttk.Button(
-            self.engine_section,
-            text="Build Game",
-            command=self.build_game,
-            width=25,
-            state=DISABLED,
-        )
-        self.build_game_button.pack(padx=5, pady=5)
-
-        self.game_settings_button = ttk.Button(
-            self.engine_section, text="Game Settings", command=self.game_settings, width=25
-        )
-        self.game_settings_button.pack(padx=5, pady=5)
 
     def load_theme(self) -> None:
         try:
@@ -343,48 +332,141 @@ class Editor:
 
             self.view_popup = tk.Toplevel(self.root)
             self.view_popup.wm_title("Entity Data | ABS Engine")
+            self.view_popup.resizable(False, False)
 
-            self.entity_data = tk.Text(self.view_popup, width=50, height=20)
-            self.entity_data.insert(tk.END, json.dumps(self.entities[selected_item], indent=4))
-            self.entity_data.pack(padx=5, pady=5)
+            fields = {
+                "x": int,
+                "y": int,
+                "width": int,
+                "height": int,
+                "scriptfile": str,
+                "image": str,
+            }
+            field_hints = {
+                "scriptfile": "path, relative to the project root",
+                "image": "path, relative to the project root",
+            }
+            field_objs = {}
+
+            fields_section = ttk.LabelFrame(self.view_popup, text=f"Editing: {selected_item}")
+            fields_section.pack(fill="both", padx=10, pady=10)
+
+            row = 0
+            for name in fields.keys():
+                label_cell = ttk.Frame(fields_section)
+                label_cell.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+
+                label = ttk.Label(label_cell, text=name, anchor="w")
+                label.pack(side="left")
+
+                if name in field_hints:
+                    info_icon = ttk.Label(label_cell, text=" \u24d8", foreground="#4a90d9")
+                    info_icon.pack(side="left")
+                    _Tooltip(info_icon, field_hints[name])
+
+                field_objs[name] = ttk.Entry(fields_section, width=30)
+                field_objs[name].insert(0, str(self.entities[selected_item].get(name, "")))
+                field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+                row += 1
+
+            color_label = ttk.Label(fields_section, text="color", anchor="w")
+            color_label.grid(row=row, column=0, sticky="w", padx=(10, 10), pady=6)
+
+            color_frame = ttk.Frame(fields_section)
+            color_frame.grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+            default_color = self.entities[selected_item].get("color", (255, 255, 255))
+            color_objs = []
+            for i in range(3):
+                try:
+                    default_component = str(default_color[i])
+                except (IndexError, TypeError):
+                    default_component = "255"
+
+                color_entry = ttk.Entry(color_frame, width=6)
+                color_entry.insert(0, default_component)
+                color_entry.pack(
+                    side="left", expand=True, fill="x", padx=(0, 4) if i < 2 else (0, 0)
+                )
+                color_objs.append(color_entry)
+
+            def pick_color() -> None:
+                initial = []
+                for c in color_objs:
+                    try:
+                        initial.append(max(0, min(255, int(c.get()))))
+                    except ValueError:
+                        initial.append(255)
+
+                _rgb, hex_color = colorchooser.askcolor(
+                    color="#%02x%02x%02x" % tuple(initial),
+                    title="Pick Color",
+                )
+
+                if self.view_popup is not None:
+                    self.view_popup.lift()
+                    self.view_popup.focus_force()
+
+                if hex_color is None:
+                    return
+
+                hex_color = hex_color.lstrip("#")
+                for i, c in enumerate(color_objs):
+                    c.delete(0, tk.END)
+                    c.insert(0, str(int(hex_color[i * 2 : i * 2 + 2], 16)))  # noqa: E203
+
+            color_picker_button = ttk.Button(color_frame, text="Pick...", command=pick_color)
+            color_picker_button.pack(side="left", padx=(4, 0))
+            _Tooltip(color_picker_button, "Open a color picker to choose the RGB values", 1000)
+
+            fields_section.columnconfigure(1, weight=1)
 
             def save_edits() -> None:
-                if self.entity_data is None:
+                if self.view_popup is None:
                     return
-                elif self.view_popup is None:
-                    return
+
+                updates = {}
 
                 try:
-                    data = json.loads(self.entity_data.get("1.0", tk.END + "-1c"))
+                    for name, obj in field_objs.items():
+                        value = obj.get()
 
-                    if isinstance(data, list):
-                        messagebox.showerror(
-                            "Error",
-                            "Failed to save entity data. Ensure that the data is a dictionary.",
-                        )
-                        return
+                        if value.strip() == "":
+                            continue
 
-                    self.entities[selected_item] = data
-                except Exception as e:
+                        updates[name] = fields[name](value)
+
+                    color_values = [c.get().strip() for c in color_objs]
+                    if any(color_values):
+                        parsed_color = tuple(int(c) for c in color_values)
+                        if any(component < 0 or component > 255 for component in parsed_color):
+                            raise ValueError("Color values must be between 0 and 255")
+                        updates["color"] = parsed_color
+                except ValueError as e:
                     messagebox.showerror(
                         "Error",
-                        f"Failed to save entity data: {e}\nPlease ensure the data is in valid JSON format.",
+                        f"Failed to save entity data: {e}\nPlease ensure all fields contain valid values.",
                     )
-                    self.entity_data.focus_set()
-
                     return
 
+                self.entities[selected_item].update(updates)
                 self.view_popup.destroy()
 
+            button_row = ttk.Frame(self.view_popup)
+            button_row.pack(fill="x", padx=10, pady=(0, 10))
+            button_row.columnconfigure(0, weight=1)
+            button_row.columnconfigure(1, weight=1)
+
             self.entity_data_close_button = ttk.Button(
-                self.view_popup, text="Close", command=self.view_popup.destroy
+                button_row, text="Close", command=self.view_popup.destroy
             )
-            self.entity_data_close_button.pack(padx=5, pady=10)
+            self.entity_data_close_button.grid(row=0, column=0, sticky="ew", padx=(0, 5))
 
             self.entity_data_save_button = ttk.Button(
-                self.view_popup, text="Save", command=lambda: save_edits()
+                button_row, text="Save", command=lambda: save_edits()
             )
-            self.entity_data_save_button.pack(padx=5, pady=10)
+            self.entity_data_save_button.grid(row=0, column=1, sticky="ew", padx=(5, 0))
 
         except IndexError:
             messagebox.showerror("Error", "No entity selected.")
@@ -417,7 +499,7 @@ class Editor:
             self.entity_list.insert(tk.END, entity_name)
 
         messagebox.showinfo("Success", "Project loaded successfully.")
-        self.build_game_button.config(state=NORMAL)
+        self.game_menu.entryconfig("Build Game", state=NORMAL)
 
     def save_project(self) -> None:
         global GP_BASE_PATH, LAST_SAVE_DIR
@@ -444,7 +526,7 @@ class Editor:
 
         GP_BASE_PATH = str(Path(file).parent)
         LAST_SAVE_DIR = str(Path(file).parent)
-        self.build_game_button.config(state=NORMAL)
+        self.game_menu.entryconfig("Build Game", state=NORMAL)
 
     def save_name(self, name: str) -> None:
         self.project_name = name

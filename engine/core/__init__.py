@@ -268,13 +268,17 @@ class Entity:
             ValueError: If the entity cannot be removed from its parent.
         """
 
-        if self.parent is not None:
-            try:
-                self.parent.remove(self)
-            except ValueError as e:
-                raise ValueError("Invalid target for destruction") from e
+        parent = getattr(self, "parent", None)  # See #29
 
-            self.parent = None
+        if parent is None:
+            return
+
+        try:
+            parent.remove(self)
+        except ValueError as e:
+            raise ValueError("Invalid target for destruction") from e
+
+        self.parent = None
 
 
 class Scene:
@@ -428,7 +432,7 @@ class Game:
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
 
-        if sys.stdout.isatty():
+        if not IS_EDITOR and sys.stdout.isatty():
             print(colorama.ansi.set_title(title), end="")
 
         self.set_icon(icon_path)
@@ -583,6 +587,7 @@ class Game:
             self.step(dt)
 
         pygame.quit()
+        sys.exit(0)
 
     def quit(self) -> None:
         """

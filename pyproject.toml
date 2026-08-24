@@ -28,6 +28,9 @@ dev = { file = ["requirements-dev.txt"] }
 [tool.setuptools.packages.find]
 include = ["engine*"]
 
+[tool.setuptools.package-data]
+engine = ["py.typed"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
@@ -49,7 +52,7 @@ ignore = [
 
 [tool.interrogate]
 exclude = [
-  "engine/gui.py",
+  "engine/gui/__init__.py",
   "engine/version.py",
   "data/scripts/launch_game.py",
 ]

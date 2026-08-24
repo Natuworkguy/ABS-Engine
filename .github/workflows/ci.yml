@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           echo "Running Interrogate..."
-          interrogate --exclude engine/gui.py --exclude engine/version.py --exclude data/scripts/launch_game.py -vv
+          interrogate -vvc pyproject.toml
 
   lint-ruff:
     name: Lint and Format with Ruff
