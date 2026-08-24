@@ -32,8 +32,7 @@ running.
 ### Constructor
 
 ```python
-def __init__(self, message: str) -> Never:
-    ...
+def __init__(self, message: str) -> Never: ...
 ```
 
 ### Usage
