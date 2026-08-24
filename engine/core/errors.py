@@ -31,7 +31,7 @@ class ABSFatalError(RuntimeError):
         if isatty:
             print(Fore.RED + Style.BRIGHT, end="", file=sys.stderr)
 
-        print(f"ABS Engine hit a fatal exception: {message}\n", file=sys.stderr)
+        print(f"ABS Engine hit a fatal exception: \n\n{message}\nAborting.\n", file=sys.stderr)
 
         if isatty:
             print(Style.RESET_ALL, end="", file=sys.stderr)
