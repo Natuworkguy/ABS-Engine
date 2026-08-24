@@ -4,7 +4,6 @@
 """
 Core engine systems and base components.
 """
-from engine.core.error.fh_context import FHContext
 
 from importlib.machinery import ModuleSpec
 from types import ModuleType
@@ -581,15 +580,14 @@ class Game:
             fps (int): Target frames per second for the game loop. Defaults to 60.
         """
 
-        with FHContext():
-            logger("Starting game loop")
-            self.running = True
-            while self.running:
-                dt: Union[int, float] = self.clock.tick(fps) / 1000.0
-                self.step(dt)
+        logger("Starting game loop")
+        self.running = True
+        while self.running:
+            dt: Union[int, float] = self.clock.tick(fps) / 1000.0
+            self.step(dt)
 
-            pygame.quit()
-            sys.exit(0)
+        pygame.quit()
+        sys.exit(0)
 
     def quit(self) -> None:
         """
