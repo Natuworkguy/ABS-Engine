@@ -20,6 +20,7 @@ from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .errors import ABSFatalError
 from .types import RGBType, EntityImageType
 from ..version import __version__ as version
 
@@ -428,6 +429,9 @@ class Game:
         self.GP_BASE_PATH: str = GP_BASE_PATH
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
+
+        if width < 0 or height < 0:
+            raise ABSFatalError("Window width and height must be positive")
 
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
