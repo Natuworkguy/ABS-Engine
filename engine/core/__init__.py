@@ -269,7 +269,7 @@ class Entity:
             ValueError: If the entity cannot be removed from its parent.
         """
 
-        parent = getattr(self, "parent", None)  # See #29
+        parent: Optional["Scene"] = getattr(self, "parent", None)  # See #29
 
         if parent is None:
             return
