@@ -8,6 +8,7 @@ import dis
 from typing import Never
 from types import FrameType
 from colorama import Fore, Style
+from functools import partial
 
 
 class ABSFatalError(RuntimeError):
@@ -29,14 +30,15 @@ class ABSFatalError(RuntimeError):
         super().__init__(message)
 
         isatty: bool = sys.stderr.isatty()
+        eprint = partial(print, file=sys.stderr)
 
         if isatty:
-            print(Fore.RED + Style.BRIGHT, end="", file=sys.stderr)
+            eprint(Fore.RED + Style.BRIGHT, end="")
 
-        print(f"ABS Engine hit a fatal exception: \n\n{message}\nAborting.\n", file=sys.stderr)
+        eprint(f"ABS Engine hit a fatal exception: \n\n{message}\nAborting.\n")
 
         if isatty:
-            print(Style.RESET_ALL, end="", file=sys.stderr)
+            eprint(Style.RESET_ALL, end="")
 
         frame: FrameType = sys._getframe(1)
 
