@@ -3,8 +3,11 @@
 import faulthandler
 import os
 import sys
+import dis
 
+from functools import partial
 from typing import Never
+from types import FrameType
 from colorama import Fore, Style
 
 
@@ -35,6 +38,12 @@ class ABSFatalError(RuntimeError):
 
         if isatty:
             print(Style.RESET_ALL, end="", file=sys.stderr)
+
+        frame: FrameType = sys._getframe(1)
+
+        print(file=sys.stderr)
+        dis.disassemble(frame.f_code, frame.f_lasti, file=sys.stderr)
+        print(file=sys.stderr)
 
         faulthandler.enable()
         os.abort()
