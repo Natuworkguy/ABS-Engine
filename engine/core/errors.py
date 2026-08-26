@@ -5,7 +5,6 @@ import os
 import sys
 import dis
 
-from functools import partial
 from typing import Never
 from types import FrameType
 from colorama import Fore, Style
