@@ -181,7 +181,7 @@ class Editor:
 
     def build_game(self) -> None:
         do_build = messagebox.askyesno(
-            "Build Tools | ABS Engine",
+            "Build Tools",
             "This will build to the folder containing the .absp project file. Do you want to continue?",
         )
 
@@ -247,11 +247,11 @@ class Editor:
 
             if process.exitcode == 0:
                 logger("Build Tools: Build completed")
-                messagebox.showinfo("Build Tools | ABS Engine", "The build has been completed.")
+                messagebox.showinfo("Build Tools", "The build has been completed.")
             else:
                 logger("Build Tools: Build failed", status=LoggerStatus.WARNING)
                 messagebox.showerror(
-                    "Build Tools | ABS Engine",
+                    "Build Tools",
                     "The build failed. Check the console/log output for details.",
                 )
 
@@ -259,7 +259,7 @@ class Editor:
 
     def game_settings(self) -> None:
         self.game_settings_popup = tk.Toplevel(self.root, height=150)
-        self.game_settings_popup.wm_title("Game Settings | ABS Engine")
+        self.game_settings_popup.wm_title("Game Settings")
         self.game_settings_popup.resizable(False, False)
 
         self.game_settings_dimensions_section = ttk.LabelFrame(
@@ -396,7 +396,7 @@ class Editor:
             selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
             self.view_popup = tk.Toplevel(self.root)
-            self.view_popup.wm_title("Entity Data | ABS Engine")
+            self.view_popup.wm_title("Entity Data")
             self.view_popup.resizable(False, False)
 
             fields = {
