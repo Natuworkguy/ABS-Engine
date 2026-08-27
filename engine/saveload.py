@@ -73,6 +73,9 @@ data/images/abs_*  # Remove if using ABS Engine's logo or other ABS assets
 engine/
 launch_game.py
 run.py
+build/
+dist/
+*.spec
             """.strip())
 
         with open(dir / ".gitattributes", "w") as f:
