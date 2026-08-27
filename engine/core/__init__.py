@@ -420,8 +420,9 @@ class Game:
             IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
             GP_BASE_PATH (str): Base path for game assets
 
+
         Raises:
-            ABSFatalError: If the window size is invalid.
+            ABSFatalError: If the window size is invalid
         """
 
         # For use by entities
