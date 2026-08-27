@@ -63,6 +63,11 @@ class Editor:
         self.root.geometry("530x700")
         self.load_theme()
 
+        try:
+            ttk.Style(self.root).theme_use("vista")
+        except TclError:
+            pass
+
         self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
         self.root.bind("<Control-s>", lambda *args: self.save_project())
         self.root.bind("<Control-o>", lambda *args: self.load_project())
@@ -176,7 +181,7 @@ class Editor:
 
     def build_game(self) -> None:
         do_build = messagebox.askyesno(
-            "Build Tools | ABS Engine",
+            "Build Tools",
             "This will build to the folder containing the .absp project file. Do you want to continue?",
         )
 
@@ -185,16 +190,76 @@ class Editor:
 
         logger("Build Tools: Starting build")
 
-        build(Path(GP_BASE_PATH), ENGINE_DATA_PATH=ENGINE_DATA_PATH)
+        process = build(
+            name=self.project_name_input.get(),
+            directory=Path(GP_BASE_PATH),
+            ENGINE_DATA_PATH=ENGINE_DATA_PATH,
+        )
 
-        logger("Build Tools: Waiting for root")
-        self.root.after(3000, lambda: None)
-        logger("Build Tools: Build completed")
-        messagebox.showinfo("Build Tools | ABS Engine", "The build has been completed.")
+        if process is None:
+            return
+
+        progress_popup = tk.Toplevel(self.root)
+        progress_popup.wm_title("Building Game")
+        progress_popup.resizable(False, False)
+        progress_popup.protocol("WM_DELETE_WINDOW", lambda: None)
+        progress_popup.transient(self.root)
+
+        progress_content = ttk.Frame(progress_popup, padding=(24, 20))
+        progress_content.pack(fill="both", expand=True)
+
+        ttk.Label(
+            progress_content, text="Building Game", font=("Segoe UI", 12, "bold")
+        ).pack(anchor="w")
+
+        ttk.Label(
+            progress_content,
+            text="This may take a few moments, please wait...",
+            foreground="#666666",
+        ).pack(anchor="w", pady=(2, 14))
+
+        progress_bar = ttk.Progressbar(progress_content, mode="indeterminate", length=300)
+        progress_bar.pack(fill="x")
+        progress_bar.start(10)
+
+        ttk.Label(
+            progress_content,
+            text="See the console for detailed logs.",
+            foreground="#999999",
+            font=("Segoe UI", 8),
+        ).pack(anchor="w", pady=(12, 0))
+
+        progress_popup.update_idletasks()
+        popup_x = self.root.winfo_x() + (self.root.winfo_width() - progress_popup.winfo_width()) // 2
+        popup_y = self.root.winfo_y() + (self.root.winfo_height() - progress_popup.winfo_height()) // 2
+        progress_popup.geometry(f"+{popup_x}+{popup_y}")
+
+        progress_popup.grab_set()
+
+        def poll_build() -> None:
+            if process.is_alive():
+                self.root.after(200, poll_build)
+                return
+
+            progress_bar.stop()
+            progress_popup.grab_release()
+            progress_popup.destroy()
+
+            if process.exitcode == 0:
+                logger("Build Tools: Build completed")
+                messagebox.showinfo("Build Tools", "The build has been completed.")
+            else:
+                logger("Build Tools: Build failed", status=LoggerStatus.WARNING)
+                messagebox.showerror(
+                    "Build Tools",
+                    "The build failed. Check the console/log output for details.",
+                )
+
+        self.root.after(200, poll_build)
 
     def game_settings(self) -> None:
         self.game_settings_popup = tk.Toplevel(self.root, height=150)
-        self.game_settings_popup.wm_title("Game Settings | ABS Engine")
+        self.game_settings_popup.wm_title("Game Settings")
         self.game_settings_popup.resizable(False, False)
 
         self.game_settings_dimensions_section = ttk.LabelFrame(
@@ -331,7 +396,7 @@ class Editor:
             selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
             self.view_popup = tk.Toplevel(self.root)
-            self.view_popup.wm_title("Entity Data | ABS Engine")
+            self.view_popup.wm_title("Entity Data")
             self.view_popup.resizable(False, False)
 
             fields = {

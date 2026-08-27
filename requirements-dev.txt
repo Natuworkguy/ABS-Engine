@@ -9,3 +9,4 @@ ty
 
 # Typeshed packages
 types-colorama
+types-pyinstaller
