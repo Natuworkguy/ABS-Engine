@@ -508,7 +508,7 @@ class Editor:
             self.save_project_as()
             return
 
-        file = sl_save_project(self, dir=LAST_SAVE_DIR)
+        file = sl_save_project(self, dir_str=LAST_SAVE_DIR)
 
         if file is None:
             return

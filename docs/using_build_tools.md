@@ -11,22 +11,6 @@ to the folder that contains the project file.
 When you run the new `run.py` file in that folder,
 ABS Engine will emulate its original environment.
 
-## Git Ignore Recommendations
-
-Add the following generated build outputs to your project's
-`.gitignore` file:
-
-```gitignore
-data/images/abs_*  # Remove if using ABS Engine's logo or other assets
-engine/
-launch_game.py
-run.py
-```
-
-These files and directories may change in future ABS Engine updates.
-They should stay out of source control and only be included in
-compiled production executables.
-
 To package the game into a single executable file,
 use a tool like **Pyinstaller**. The command should look like this:
 
