@@ -4,6 +4,7 @@
 import sys
 import os
 import ctypes
+import queue
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
@@ -190,14 +191,16 @@ class Editor:
 
         logger("Build Tools: Starting build")
 
-        process = build(
+        build_handle = build(
             name=self.project_name_input.get(),
             directory=Path(GP_BASE_PATH),
             ENGINE_DATA_PATH=ENGINE_DATA_PATH,
         )
 
-        if process is None:
+        if build_handle is None:
             return
+
+        process, log_queue = build_handle
 
         progress_popup = tk.Toplevel(self.root)
         progress_popup.wm_title("Building Game")
@@ -224,10 +227,45 @@ class Editor:
 
         ttk.Label(
             progress_content,
-            text="See the console for detailed logs.",
+            text="Pyinstaller Output:",
             foreground="#999999",
             font=("Segoe UI", 8),
-        ).pack(anchor="w", pady=(12, 0))
+        ).pack(anchor="w", pady=(12, 4))
+
+        log_frame = ttk.Frame(progress_content)
+        log_frame.pack(fill="both", expand=True)
+
+        log_scrollbar = ttk.Scrollbar(log_frame, orient="vertical")
+        log_scrollbar.pack(side=tk.RIGHT, fill="y")
+
+        log_text = tk.Text(
+            log_frame,
+            width=64,
+            height=12,
+            font=("Consolas", 8),
+            background="#1e1e1e",
+            foreground="#d4d4d4",
+            wrap="word",
+            state=DISABLED,
+            yscrollcommand=log_scrollbar.set,
+        )
+        log_text.pack(side=tk.LEFT, fill="both", expand=True)
+        log_scrollbar.config(command=log_text.yview)
+
+        def drain_log_queue() -> None:
+            while True:
+                try:
+                    line = log_queue.get_nowait()
+                except queue.Empty:
+                    return
+
+                if line is None:
+                    continue
+
+                log_text.configure(state=NORMAL)
+                log_text.insert(tk.END, line + "\n")
+                log_text.see(tk.END)
+                log_text.configure(state=DISABLED)
 
         progress_popup.update_idletasks()
         popup_x = self.root.winfo_x() + (self.root.winfo_width() - progress_popup.winfo_width()) // 2
@@ -237,9 +275,13 @@ class Editor:
         progress_popup.grab_set()
 
         def poll_build() -> None:
+            drain_log_queue()
+
             if process.is_alive():
-                self.root.after(200, poll_build)
+                self.root.after(150, poll_build)
                 return
+
+            drain_log_queue()
 
             progress_bar.stop()
             progress_popup.grab_release()
