@@ -53,7 +53,7 @@ def logger(message: str, *, status: Status = Status.INFO) -> None:
     """
 
     source = _get_caller_module().upper()
-    is_tty: bool = sys.stdout.isatty()
+    is_tty: bool = sys.stdout is not None and sys.stdout.isatty()
 
     if is_tty:
         if status == Status.CRITICAL:

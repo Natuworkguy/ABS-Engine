@@ -440,7 +440,11 @@ class Game:
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
 
-        if not IS_EDITOR and sys.stdout.isatty():
+        if (
+            not IS_EDITOR
+            and sys.stdout is not None
+            and sys.stdout.isatty()
+        ):
             print(colorama.ansi.set_title(title), end="")
 
         self.set_icon(icon_path)
