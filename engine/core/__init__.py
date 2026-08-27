@@ -20,6 +20,7 @@ from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .errors import ABSFatalError
 from .types import RGBType, EntityImageType
 from ..version import __version__ as version
 
@@ -268,7 +269,7 @@ class Entity:
             ValueError: If the entity cannot be removed from its parent.
         """
 
-        parent = getattr(self, "parent", None)  # See #29
+        parent: Optional["Scene"] = getattr(self, "parent", None)  # See #29
 
         if parent is None:
             return
@@ -418,6 +419,10 @@ class Game:
             icon_path (Optional[str]): Path to window icon image. Defaults to None.
             IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
             GP_BASE_PATH (str): Base path for game assets
+
+
+        Raises:
+            ABSFatalError: If the window size is invalid
         """
 
         # For use by entities
@@ -428,6 +433,9 @@ class Game:
         self.GP_BASE_PATH: str = GP_BASE_PATH
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[int, int] = (width, height)
+
+        if width < 0 or height < 0:
+            raise ABSFatalError("Window width and height must be positive")
 
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
@@ -587,7 +595,6 @@ class Game:
             self.step(dt)
 
         pygame.quit()
-        sys.exit(0)
 
     def quit(self) -> None:
         """
