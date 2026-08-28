@@ -68,7 +68,8 @@ def save_project(engine: Any, dir_str: Optional[str] = None) -> Optional[str]:
             )
 
         with open(dir / ".gitignore", "w") as f:
-            f.write("""
+            f.write(
+                """
 data/images/abs_*  # Remove if using ABS Engine's logo or other ABS assets
 engine/
 launch_game.py
@@ -76,12 +77,15 @@ run.py
 build/
 dist/
 *.spec
-            """.strip())
+            """.strip()
+            )
 
         with open(dir / ".gitattributes", "w") as f:
-            f.write("""
+            f.write(
+                """
     *.absp text linguist-language=JSON linguist-detectable=true diff=json
-            """.strip())
+            """.strip()
+            )
 
         messagebox.showinfo("Success", "Project saved successfully.")
 

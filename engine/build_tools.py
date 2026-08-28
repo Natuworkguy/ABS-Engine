@@ -48,10 +48,14 @@ def _build_pyinstaller(name: str, directory: Path) -> None:
         "--onedir",
         "--noconsole",
         "--noconfirm",
-        "--name", name,
-        "--distpath", str(directory / "dist"),
-        "--workpath", str(directory / "build"),
-        "--specpath", str(directory),
+        "--name",
+        name,
+        "--distpath",
+        str(directory / "dist"),
+        "--workpath",
+        str(directory / "build"),
+        "--specpath",
+        str(directory),
         f"--add-data={directory / 'game.absp'!s}{os.pathsep}.",
     ]
 
@@ -101,7 +105,13 @@ def build(name: str, directory: Path, ENGINE_DATA_PATH: str) -> Optional[Process
 
     name = name.replace(" ", "-")
 
-    process = Process(target=_build_pyinstaller, args=(name, directory,))
+    process = Process(
+        target=_build_pyinstaller,
+        args=(
+            name,
+            directory,
+        ),
+    )
     process.start()
 
     return process

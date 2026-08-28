@@ -208,9 +208,9 @@ class Editor:
         progress_content = ttk.Frame(progress_popup, padding=(24, 20))
         progress_content.pack(fill="both", expand=True)
 
-        ttk.Label(
-            progress_content, text="Building Game", font=("Segoe UI", 12, "bold")
-        ).pack(anchor="w")
+        ttk.Label(progress_content, text="Building Game", font=("Segoe UI", 12, "bold")).pack(
+            anchor="w"
+        )
 
         ttk.Label(
             progress_content,
@@ -230,8 +230,12 @@ class Editor:
         ).pack(anchor="w", pady=(12, 0))
 
         progress_popup.update_idletasks()
-        popup_x = self.root.winfo_x() + (self.root.winfo_width() - progress_popup.winfo_width()) // 2
-        popup_y = self.root.winfo_y() + (self.root.winfo_height() - progress_popup.winfo_height()) // 2
+        popup_x = (
+            self.root.winfo_x() + (self.root.winfo_width() - progress_popup.winfo_width()) // 2
+        )
+        popup_y = (
+            self.root.winfo_y() + (self.root.winfo_height() - progress_popup.winfo_height()) // 2
+        )
         progress_popup.geometry(f"+{popup_x}+{popup_y}")
 
         progress_popup.grab_set()
