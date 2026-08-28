@@ -14,7 +14,7 @@ from multiprocessing import Process
 
 from tkinter import messagebox
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 from .saveload import resource_path
 from .logger import logger, Status
@@ -22,7 +22,7 @@ from .logger import logger, Status
 engine_path = Path(__file__).parent
 
 
-def _clear_readonly(func, path, exc: BaseException) -> None:
+def _clear_readonly(func: Any, path: Any, exc: BaseException) -> None:
     os.chmod(path, stat.S_IWRITE)
     func(path)
 
