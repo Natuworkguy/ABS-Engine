@@ -24,25 +24,6 @@ intermediate files are written to a `build/` folder and a generated
 Building again automatically replaces a previous `dist/<ProjectName>/`
 folder, even if it still exists from an earlier build.
 
-## Git Ignore Recommendations
-
-Add the following generated build outputs to your project's
-`.gitignore` file:
-
-```gitignore
-data/images/abs_*  # Remove if using ABS Engine's logo or other assets
-engine/
-launch_game.py
-run.py
-build/
-dist/
-*.spec
-```
-
-These files and directories may change in future ABS Engine updates.
-They should stay out of source control and only be included in
-compiled production executables.
-
 ## Building Manually
 
 Build Game already runs Pyinstaller for you, but if you'd rather

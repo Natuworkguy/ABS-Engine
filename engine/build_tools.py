@@ -14,7 +14,7 @@ from multiprocessing import Process, Queue
 
 from tkinter import messagebox
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any
 
 from .saveload import resource_path
 from .logger import logger, Status
@@ -42,7 +42,7 @@ class _QueueWriter:
         pass
 
 
-def _clear_readonly(func, path, exc: BaseException) -> None:
+def _clear_readonly(func: Any, path: Any, exc: BaseException) -> None:
     os.chmod(path, stat.S_IWRITE)
     func(path)
 
@@ -137,7 +137,14 @@ def build(
     name = name.replace(" ", "-")
 
     log_queue: "Queue[Optional[str]]" = Queue()
-    process = Process(target=_build_pyinstaller, args=(name, directory, log_queue))
+    process = Process(
+        target=_build_pyinstaller,
+        args=(
+            name,
+            directory,
+            log_queue,
+        ),
+    )
     process.start()
 
     return process, log_queue
