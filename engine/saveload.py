@@ -46,9 +46,12 @@ def save_project(engine: Any, dir_str: Optional[str] = None) -> Optional[str]:
     """
 
     if dir_str is None:
-        dir = Path(filedialog.askdirectory())
-    else:
-        dir = Path(dir_str)
+        dir_str = filedialog.askdirectory()
+
+        if not dir_str:
+            return None
+
+    dir = Path(dir_str)
 
     if dir.exists():
         gamefile = dir / "game.absp"
