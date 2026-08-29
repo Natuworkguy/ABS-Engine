@@ -5,7 +5,6 @@
 Squirrel integration utilities for the engine.
 """
 
-import os
 import sys
 
 import squirrel
@@ -48,13 +47,19 @@ def nut_source(script_name: str) -> Any:
 
     Returns:
         Any: Value the script returns, or None if it returns nothing.
+
+    Raises:
+        FileNotFoundError: If no such script exists under engine/nut/.
+        IsADirectoryError: If the path names a directory rather than a file.
     """
 
     script_path = NUT_DIR / script_name
 
-    if not os.path.exists(script_path) or not os.path.isfile(script_path):
-        logger(f"Could not find Squirrel file {script_path}.", status=Status.CRITICAL)
-        sys.exit(1)
+    if not script_path.exists():
+        raise FileNotFoundError(f"Could not find Squirrel file {script_path}.")
+
+    if script_path.is_dir():
+        raise IsADirectoryError(f"{script_path}: Invalid script path (Is a directory)")
 
     return nut_eval(script_path.read_text(encoding="utf-8"))
 
