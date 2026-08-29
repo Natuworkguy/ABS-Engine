@@ -5,6 +5,8 @@
 Core engine systems and base components.
 """
 
+from pathlib import Path
+
 from importlib.machinery import ModuleSpec
 from types import ModuleType
 
@@ -21,6 +23,7 @@ from typing import Optional, Any, Union
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
 from .errors import ABSFatalError
+from .utils import clamp
 from .types import RGBType, EntityImageType
 from ..version import __version__ as version
 
@@ -64,7 +67,11 @@ class Entity:
         self.y: int = y
         self.width: int = width
         self.height: int = height
-        self.color: RGBType = color
+        self.color: RGBType = (
+            int(clamp(color[0], 0, 255)),
+            int(clamp(color[1], 0, 255)),
+            int(clamp(color[2], 0, 255)),
+        )
 
         self.rect: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.id: str = str(uuid.uuid4())
@@ -261,6 +268,23 @@ class Entity:
 
         return self.parent._get_colliding_entities(self)
 
+    def _unload_script(self) -> None:
+        """
+        Drop this entity's script module from sys.modules.
+
+        Each entity registers its script under a unique "esf-<id>" key to keep
+        scripts isolated from one another. Nothing else removes those keys, so
+        without this the module, and everything it references, would stay alive
+        for the rest of the process.
+        """
+
+        entity_id: Optional[str] = getattr(self, "id", None)
+
+        if entity_id is None:
+            return
+
+        sys.modules.pop(f"esf-{entity_id}", None)
+
     def destroy(self) -> None:
         """
         Destroy this entity.
@@ -268,6 +292,8 @@ class Entity:
         Raises:
             ValueError: If the entity cannot be removed from its parent.
         """
+
+        self._unload_script()
 
         parent: Optional["Scene"] = getattr(self, "parent", None)  # See #29
 
@@ -404,7 +430,7 @@ class Game:
         GP_BASE_PATH: str,
         cursor_visible: bool = True,
         fullscreen: bool = False,
-        icon_path: Optional[str] = None,
+        icon_path: Optional[Union[str, Path]] = None,
         IS_EDITOR: bool = False,
     ) -> None:
         """
@@ -416,7 +442,7 @@ class Game:
             height (int): Window height in pixels. Defaults to 600.
             cursor_visible (bool): Whether the mouse cursor is visible. Defaults to True.
             fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
-            icon_path (Optional[str]): Path to window icon image. Defaults to None.
+            icon_path (str | Path | None): Path to window icon image. Defaults to None.
             IS_EDITOR (bool): Whether running in editor mode. Defaults to False.
             GP_BASE_PATH (str): Base path for game assets
 
@@ -440,10 +466,11 @@ class Game:
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
 
-        if not IS_EDITOR and sys.stdout.isatty():
+        if not IS_EDITOR and sys.stdout is not None and sys.stdout.isatty():
             print(colorama.ansi.set_title(title), end="")
 
-        self.set_icon(icon_path)
+        if icon_path is not None:
+            self.set_icon(icon_path)
 
         pygame.mouse.set_visible(cursor_visible)
         self.clock: pygame.time.Clock = pygame.time.Clock()
@@ -458,11 +485,18 @@ class Game:
         """
         Set the background color of the game
 
+        Channels are clamped to 0-255, so a computed color cannot crash the
+        game loop when the screen is filled with it.
+
         Args:
             color (RGBType): Color to set the background to
         """
 
-        self._bg_color = color
+        self._bg_color = (
+            int(clamp(color[0], 0, 255)),
+            int(clamp(color[1], 0, 255)),
+            int(clamp(color[2], 0, 255)),
+        )
 
     def add_scene(self) -> int:
         """
@@ -528,23 +562,20 @@ class Game:
 
         self.scenes[self.current_scene].add(entity)
 
-    def set_icon(self, icon_path: Optional[str]) -> None:
+    def set_icon(self, icon_path: Union[str, Path]) -> None:
         """
         Set the icon for the game window.
 
         Args:
-            icon_path (Optional[str]): The path to the icon file.
+            icon_path (str | Path): The path to the icon file.
         """
 
-        if icon_path is not None:
-            try:
-                image: pygame.Surface = pygame.image.load(
-                    os.path.join(self.GP_BASE_PATH, icon_path)
-                )
-                image = image.convert_alpha()
-                pygame.display.set_icon(image)
-            except (pygame.error, FileNotFoundError) as e:
-                logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
+        try:
+            image: pygame.Surface = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
+            image = image.convert_alpha()
+            pygame.display.set_icon(image)
+        except (pygame.error, FileNotFoundError) as e:
+            logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
 
     def updateall(self, dt: float, /, exclude: Optional[Scene] = None) -> None:
         """

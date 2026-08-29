@@ -10,14 +10,14 @@ import sys
 
 import tkinter as tk
 
-from typing import Final, Any
+from typing import Final
 from pathlib import Path
 
 from .logger import logger, Status
 
 TCL_DIR: Final[Path] = Path(__file__).parent / "tcl"
 
-if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
+if not TCL_DIR.exists() or not TCL_DIR.is_dir():
     logger("Could not find engine/tcl/ directory.", status=Status.CRITICAL)
     sys.exit(1)
 
@@ -38,37 +38,3 @@ def tcl_source(script_name: str, root: tk.Tk) -> None:
         sys.exit(1)
 
     root.tk.call("source", script_path)
-
-
-def tcl_eval(tcl: str, root: tk.Tk) -> Any:
-    """
-    Evaluate a Tcl statement
-
-    Args:
-        tcl (str): string to evaluate
-        root (tk.Tk): Tk instance
-
-    Returns:
-        Any: Result
-    """
-
-    return root.tk.eval(tcl)
-
-
-def tcl_call_procedure(procedure_name: str, *args: Any, root: tk.Tk) -> Any:
-    """
-    Call a Tcl procedure with arguments and return result
-
-    Example:
-        result = tcl_call_procedure("show_info", "Title", "Message", root=tk_root)
-
-    Args:
-        procedure_name (str): procedure to call
-        *args (Any): Arguments passed to the Tcl procedure.
-        root (tk.Tk): Tk instance
-
-    Returns:
-        Any: Result of procedure
-    """
-
-    return root.tk.call(procedure_name, *args)

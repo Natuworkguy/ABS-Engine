@@ -4,12 +4,16 @@
 import sys
 import os
 import ctypes
+import queue
+
+from functools import partial
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 import tkinter.colorchooser as colorchooser
+import tkinter.filedialog as filedialog
 from _tkinter import TclError
 
 from typing import Optional
@@ -62,6 +66,11 @@ class Editor:
         self.root.title("ABS Engine")
         self.root.geometry("530x700")
         self.load_theme()
+
+        try:
+            ttk.Style(self.root).theme_use("vista")
+        except TclError:
+            pass
 
         self.root.bind("<Control-Shift-S>", lambda *args: self.save_project_as())
         self.root.bind("<Control-s>", lambda *args: self.save_project())
@@ -176,7 +185,7 @@ class Editor:
 
     def build_game(self) -> None:
         do_build = messagebox.askyesno(
-            "Build Tools | ABS Engine",
+            "Build Tools",
             "This will build to the folder containing the .absp project file. Do you want to continue?",
         )
 
@@ -185,16 +194,121 @@ class Editor:
 
         logger("Build Tools: Starting build")
 
-        build(Path(GP_BASE_PATH), ENGINE_DATA_PATH=ENGINE_DATA_PATH)
+        build_handle = build(
+            name=self.project_name_input.get(),
+            directory=Path(GP_BASE_PATH),
+            ENGINE_DATA_PATH=ENGINE_DATA_PATH,
+        )
 
-        logger("Build Tools: Waiting for root")
-        self.root.after(3000, lambda: None)
-        logger("Build Tools: Build completed")
-        messagebox.showinfo("Build Tools | ABS Engine", "The build has been completed.")
+        if build_handle is None:
+            return
+
+        process, log_queue = build_handle
+
+        progress_popup = tk.Toplevel(self.root)
+        progress_popup.wm_title("Building Game")
+        progress_popup.resizable(False, False)
+        progress_popup.protocol("WM_DELETE_WINDOW", lambda: None)
+        progress_popup.transient(self.root)
+
+        progress_content = ttk.Frame(progress_popup, padding=(24, 20))
+        progress_content.pack(fill="both", expand=True)
+
+        ttk.Label(progress_content, text="Building Game", font=("Segoe UI", 12, "bold")).pack(
+            anchor="w"
+        )
+
+        ttk.Label(
+            progress_content,
+            text="This may take a few moments, please wait...",
+            foreground="#666666",
+        ).pack(anchor="w", pady=(2, 14))
+
+        progress_bar = ttk.Progressbar(progress_content, mode="indeterminate", length=300)
+        progress_bar.pack(fill="x")
+        progress_bar.start(10)
+
+        ttk.Label(
+            progress_content,
+            text="Pyinstaller Output:",
+            foreground="#999999",
+            font=("Segoe UI", 8),
+        ).pack(anchor="w", pady=(12, 4))
+
+        log_frame = ttk.Frame(progress_content)
+        log_frame.pack(fill="both", expand=True)
+
+        log_scrollbar = ttk.Scrollbar(log_frame, orient="vertical")
+        log_scrollbar.pack(side=tk.RIGHT, fill="y")
+
+        log_text = tk.Text(
+            log_frame,
+            width=64,
+            height=12,
+            font=("Consolas", 8),
+            background="#1e1e1e",
+            foreground="#d4d4d4",
+            wrap="word",
+            state=DISABLED,
+            yscrollcommand=log_scrollbar.set,
+        )
+        log_text.pack(side=tk.LEFT, fill="both", expand=True)
+        log_scrollbar.config(command=log_text.yview)
+
+        def drain_log_queue() -> None:
+            while True:
+                try:
+                    line = log_queue.get_nowait()
+                except queue.Empty:
+                    return
+
+                if line is None:
+                    continue
+
+                log_text.configure(state=NORMAL)
+                log_text.insert(tk.END, line + "\n")
+                log_text.see(tk.END)
+                log_text.configure(state=DISABLED)
+
+        progress_popup.update_idletasks()
+        popup_x = (
+            self.root.winfo_x() + (self.root.winfo_width() - progress_popup.winfo_width()) // 2
+        )
+        popup_y = (
+            self.root.winfo_y() + (self.root.winfo_height() - progress_popup.winfo_height()) // 2
+        )
+        progress_popup.geometry(f"+{popup_x}+{popup_y}")
+
+        progress_popup.grab_set()
+
+        def poll_build() -> None:
+            drain_log_queue()
+
+            if process.is_alive():
+                self.root.after(150, poll_build)
+                return
+
+            drain_log_queue()
+
+            progress_bar.stop()
+            progress_popup.grab_release()
+            progress_popup.destroy()
+
+            if process.exitcode == 0:
+                logger("Build Tools: Build completed")
+                messagebox.showinfo("Build Tools", "The build has been completed.")
+            else:
+                logger("Build Tools: Build failed", status=LoggerStatus.WARNING)
+                messagebox.showerror(
+                    "Build Tools",
+                    "The build failed. Check the console/log output for details.",
+                )
+
+        self.root.after(200, poll_build)
 
     def game_settings(self) -> None:
         self.game_settings_popup = tk.Toplevel(self.root, height=150)
-        self.game_settings_popup.wm_title("Game Settings | ABS Engine")
+        self.game_settings_popup.wm_title("Game Settings")
         self.game_settings_popup.resizable(False, False)
 
         self.game_settings_dimensions_section = ttk.LabelFrame(
@@ -331,7 +445,7 @@ class Editor:
             selected_item = entity_list.get(entity_list.curselection()[0])  # type: ignore[no-untyped-call]
 
             self.view_popup = tk.Toplevel(self.root)
-            self.view_popup.wm_title("Entity Data | ABS Engine")
+            self.view_popup.wm_title("Entity Data")
             self.view_popup.resizable(False, False)
 
             fields = {
@@ -346,10 +460,61 @@ class Editor:
                 "scriptfile": "path, relative to the project root",
                 "image": "path, relative to the project root",
             }
-            field_objs = {}
+            file_filters = {
+                "scriptfile": [("Python scripts", "*.py"), ("All files", "*.*")],
+                "image": [
+                    ("Images", "*.png *.jpg *.jpeg *.gif *.bmp"),
+                    ("All files", "*.*"),
+                ],
+            }
+            field_objs: dict[str, ttk.Entry] = {}
 
             fields_section = ttk.LabelFrame(self.view_popup, text=f"Editing: {selected_item}")
             fields_section.pack(fill="both", padx=10, pady=10)
+
+            def pick_file(field_name: str) -> None:
+                if LAST_SAVE_DIR is None:
+                    messagebox.showerror(
+                        "Error",
+                        "Save or load the project first so file paths can be stored "
+                        "relative to the project root.",
+                    )
+                    return
+
+                root_dir = Path(GP_BASE_PATH).resolve()
+
+                initial_dir = root_dir
+                current = field_objs[field_name].get().strip()
+                if current:
+                    current_dir = (root_dir / current).parent
+                    if current_dir.is_dir():
+                        initial_dir = current_dir
+
+                chosen = filedialog.askopenfilename(
+                    title=f"Select {field_name}",
+                    initialdir=str(initial_dir),
+                    filetypes=file_filters[field_name],
+                )
+
+                if self.view_popup is not None:
+                    self.view_popup.lift()
+                    self.view_popup.focus_force()
+
+                if not chosen:
+                    return
+
+                chosen_path = Path(chosen).resolve()
+
+                if not chosen_path.is_relative_to(root_dir):
+                    messagebox.showerror(
+                        "Error",
+                        f"{chosen_path.name} is outside the project folder.\n"
+                        f"Choose a file inside {root_dir}.",
+                    )
+                    return
+
+                field_objs[field_name].delete(0, tk.END)
+                field_objs[field_name].insert(0, chosen_path.relative_to(root_dir).as_posix())
 
             row = 0
             for name in fields.keys():
@@ -364,9 +529,25 @@ class Editor:
                     info_icon.pack(side="left")
                     _Tooltip(info_icon, field_hints[name])
 
-                field_objs[name] = ttk.Entry(fields_section, width=30)
+                if name in file_filters:
+                    entry_cell = ttk.Frame(fields_section)
+                    entry_cell.grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+                    field_objs[name] = ttk.Entry(entry_cell, width=30)
+                    field_objs[name].pack(side="left", expand=True, fill="x")
+
+                    browse_button = ttk.Button(
+                        entry_cell,
+                        text="Browse...",
+                        command=partial(pick_file, name),
+                    )
+                    browse_button.pack(side="left", padx=(4, 0))
+                    _Tooltip(browse_button, "Pick a file inside the project folder", 1000)
+                else:
+                    field_objs[name] = ttk.Entry(fields_section, width=30)
+                    field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
                 field_objs[name].insert(0, str(self.entities[selected_item].get(name, "")))
-                field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
 
                 row += 1
 
@@ -508,7 +689,7 @@ class Editor:
             self.save_project_as()
             return
 
-        file = sl_save_project(self, dir=LAST_SAVE_DIR)
+        file = sl_save_project(self, dir_str=LAST_SAVE_DIR)
 
         if file is None:
             return

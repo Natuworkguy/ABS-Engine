@@ -33,25 +33,28 @@ def resource_path(relative: str) -> str:
     return os.path.join(os.path.abspath("."), relative)
 
 
-def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
+def save_project(engine: Any, dir_str: Optional[str] = None) -> Optional[str]:
     """
     Save the project as an absp file
 
     Args:
         engine (Any): engine instance to extract the project information from
-        dir (Optional[str]): Directory to save the project in
+        dir_str (Optional[str]): Directory to save the project in
 
     Returns:
         Optional[str]: Path to the saved file or None
     """
 
-    if dir is None:
-        dir = filedialog.askdirectory()
+    if dir_str is None:
+        dir_str = filedialog.askdirectory()
 
-    if dir and os.path.exists(dir):
-        gamefile = str(
-            Path(dir) / "game.absp",
-        )
+        if not dir_str:
+            return None
+
+    dir = Path(dir_str)
+
+    if dir.exists():
+        gamefile = dir / "game.absp"
 
         with open(gamefile, "w", encoding="utf-8") as f:
             dump(
@@ -67,9 +70,29 @@ def save_project(engine: Any, dir: Optional[str] = None) -> Optional[str]:
                 f,
             )
 
+        with open(dir / ".gitignore", "w") as f:
+            f.write(
+                """
+data/images/abs_*  # Remove if using ABS Engine's logo or other ABS assets
+engine/
+launch_game.py
+run.py
+build/
+dist/
+*.spec
+            """.strip()
+            )
+
+        with open(dir / ".gitattributes", "w") as f:
+            f.write(
+                """
+    *.absp text linguist-language=JSON linguist-detectable=true diff=json
+            """.strip()
+            )
+
         messagebox.showinfo("Success", "Project saved successfully.")
 
-        return gamefile
+        return str(gamefile)
 
     return None
 
