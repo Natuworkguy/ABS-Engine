@@ -17,7 +17,7 @@ from .logger import logger, Status
 
 TCL_DIR: Final[Path] = Path(__file__).parent / "tcl"
 
-if not os.path.exists(TCL_DIR) or not os.path.isdir(TCL_DIR):
+if not TCL_DIR.exists() or not TCL_DIR.is_dir():
     logger("Could not find engine/tcl/ directory.", status=Status.CRITICAL)
     sys.exit(1)
 

@@ -22,6 +22,7 @@ from typing import Optional, Any, Union
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
 from .errors import ABSFatalError
+from .utils import clamp
 from .types import RGBType, EntityImageType
 from ..version import __version__ as version
 
@@ -65,7 +66,11 @@ class Entity:
         self.y: int = y
         self.width: int = width
         self.height: int = height
-        self.color: RGBType = color
+        self.color: RGBType = (
+            int(clamp(color[0], 0, 255)),
+            int(clamp(color[1], 0, 255)),
+            int(clamp(color[2], 0, 255)),
+        )
 
         self.rect: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.id: str = str(uuid.uuid4())
@@ -484,11 +489,18 @@ class Game:
         """
         Set the background color of the game
 
+        Channels are clamped to 0-255, so a computed color cannot crash the
+        game loop when the screen is filled with it.
+
         Args:
             color (RGBType): Color to set the background to
         """
 
-        self._bg_color = color
+        self._bg_color = (
+            int(clamp(color[0], 0, 255)),
+            int(clamp(color[1], 0, 255)),
+            int(clamp(color[2], 0, 255)),
+        )
 
     def add_scene(self) -> int:
         """

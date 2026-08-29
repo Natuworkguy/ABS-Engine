@@ -1,3 +1,4 @@
 pygame-ce
 colorama
 pyinstaller
+squirrel-lang

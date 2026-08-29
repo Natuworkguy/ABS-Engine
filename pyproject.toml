@@ -31,6 +31,14 @@ include = ["engine*"]
 [tool.setuptools.package-data]
 engine = ["py.typed"]
 
+[tool.mypy]
+
+# squirrel-lang ships __init__.pyi but no py.typed marker, so PEP 561 forbids
+# mypy from using its inline stubs.
+[[tool.mypy.overrides]]
+module = ["squirrel"]
+ignore_missing_imports = true
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
