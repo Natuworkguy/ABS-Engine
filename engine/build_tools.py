@@ -65,8 +65,8 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
     # Redirect output before importing PyInstaller: its logging setup binds a
     # handler to sys.stderr at import time, so the import must happen after
     # the streams are replaced for build output to reach the log_queue.
-    sys.stdout = _QueueWriter(log_queue)  # type: ignore[assignment]
-    sys.stderr = _QueueWriter(log_queue)  # type: ignore[assignment]
+    sys.stdout = _QueueWriter(log_queue)
+    sys.stderr = _QueueWriter(log_queue)
 
     from PyInstaller.__main__ import run as pyinstaller
 
@@ -77,10 +77,14 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
             "--onedir",
             "--noconsole",
             "--noconfirm",
-            "--name", name,
-            "--distpath", str(directory / "dist"),
-            "--workpath", str(directory / "build"),
-            "--specpath", str(directory),
+            "--name",
+            name,
+            "--distpath",
+            str(directory / "dist"),
+            "--workpath",
+            str(directory / "build"),
+            "--specpath",
+            str(directory),
             f"--add-data={directory / 'game.absp'!s}{os.pathsep}.",
         ]
 
