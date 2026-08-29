@@ -4,6 +4,7 @@
 """
 Core engine systems and base components.
 """
+
 from pathlib import Path
 
 from importlib.machinery import ModuleSpec
@@ -429,12 +430,7 @@ class Game:
         GP_BASE_PATH: str,
         cursor_visible: bool = True,
         fullscreen: bool = False,
-        icon_path: Optional[
-            Union[
-                str,
-                Path
-            ]
-        ] = None,
+        icon_path: Optional[Union[str, Path]] = None,
         IS_EDITOR: bool = False,
     ) -> None:
         """
@@ -575,9 +571,7 @@ class Game:
         """
 
         try:
-            image: pygame.Surface = pygame.image.load(
-                os.path.join(self.GP_BASE_PATH, icon_path)
-            )
+            image: pygame.Surface = pygame.image.load(os.path.join(self.GP_BASE_PATH, icon_path))
             image = image.convert_alpha()
             pygame.display.set_icon(image)
         except (pygame.error, FileNotFoundError) as e:
