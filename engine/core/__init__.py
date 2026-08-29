@@ -262,6 +262,23 @@ class Entity:
 
         return self.parent._get_colliding_entities(self)
 
+    def _unload_script(self) -> None:
+        """
+        Drop this entity's script module from sys.modules.
+
+        Each entity registers its script under a unique "esf-<id>" key to keep
+        scripts isolated from one another. Nothing else removes those keys, so
+        without this the module, and everything it references, would stay alive
+        for the rest of the process.
+        """
+
+        entity_id: Optional[str] = getattr(self, "id", None)
+
+        if entity_id is None:
+            return
+
+        sys.modules.pop(f"esf-{entity_id}", None)
+
     def destroy(self) -> None:
         """
         Destroy this entity.
@@ -269,6 +286,8 @@ class Entity:
         Raises:
             ValueError: If the entity cannot be removed from its parent.
         """
+
+        self._unload_script()
 
         parent: Optional["Scene"] = getattr(self, "parent", None)  # See #29
 
