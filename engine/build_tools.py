@@ -53,7 +53,7 @@ def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> 
 
     for attempt in range(retries):
         try:
-            shutil.rmtree(path, onexc=_clear_readonly)  # ty: ignore[unknown-argument]
+            shutil.rmtree(path, onexc=_clear_readonly)  # pyright: ignore[reportCallIssue] # ty: ignore[unknown-argument]
             return
         except PermissionError:
             if attempt == retries - 1:
