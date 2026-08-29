@@ -7,7 +7,7 @@ Utility functions for the engine.
 
 from typing import TYPE_CHECKING
 
-from ..nut_loader import nut_source, nut_call_function
+from ..loaders.nut_loader import nut_source, nut_call_function
 
 if TYPE_CHECKING:
     from . import Game

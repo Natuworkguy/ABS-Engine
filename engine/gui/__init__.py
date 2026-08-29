@@ -25,7 +25,7 @@ from ..saveload import (
 from ..core import Game as CoreGame, Entity
 from ..logger import logger, Status as LoggerStatus
 from ..build_tools import build
-from ..tcl_loader import tcl_source
+from ..loaders.tcl_loader import tcl_source
 from .tooltip import Tooltip as _Tooltip
 
 from pathlib import Path
