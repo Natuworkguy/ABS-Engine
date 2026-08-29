@@ -1,1 +1,2 @@
 include engine/py.typed
+recursive-include engine/tcl *.tcl
