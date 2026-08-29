@@ -33,11 +33,26 @@ engine = ["py.typed"]
 
 [tool.mypy]
 
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+disallow_subclassing_any = true
+warn_unused_ignores = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+
 # squirrel-lang ships __init__.pyi but no py.typed marker, so PEP 561 forbids
 # mypy from using its inline stubs.
 [[tool.mypy.overrides]]
 module = ["squirrel"]
 ignore_missing_imports = true
+
+[tool.pyright]
+exclude = [".venv", "build", "dist", "**/__pycache__"]
 
 [tool.ruff]
 line-length = 100
