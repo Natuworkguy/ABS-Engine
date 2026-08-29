@@ -66,7 +66,7 @@ class Tooltip:
         x = self.widget.winfo_rootx() + 20
         y = self.widget.winfo_rooty() + self.widget.winfo_height() + 5
 
-        self.tip_window = tk.Toplevel(self.widget)
+        self.tip_window = tk.Toplevel(self.widget, class_="Tooltip")
         self.tip_window.wm_overrideredirect(True)
         self.tip_window.wm_geometry(f"+{x}+{y}")
 
@@ -74,7 +74,6 @@ class Tooltip:
             self.tip_window,
             text=self.text,
             justify="left",
-            background="#f0f0f0",
             relief="solid",
             borderwidth=1,
             padx=6,
