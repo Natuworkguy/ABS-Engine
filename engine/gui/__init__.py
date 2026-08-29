@@ -6,11 +6,14 @@ import os
 import ctypes
 import queue
 
+from functools import partial
+
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 import tkinter.colorchooser as colorchooser
+import tkinter.filedialog as filedialog
 from _tkinter import TclError
 
 from typing import Optional
@@ -457,10 +460,61 @@ class Editor:
                 "scriptfile": "path, relative to the project root",
                 "image": "path, relative to the project root",
             }
-            field_objs = {}
+            file_filters = {
+                "scriptfile": [("Python scripts", "*.py"), ("All files", "*.*")],
+                "image": [
+                    ("Images", "*.png *.jpg *.jpeg *.gif *.bmp"),
+                    ("All files", "*.*"),
+                ],
+            }
+            field_objs: dict[str, ttk.Entry] = {}
 
             fields_section = ttk.LabelFrame(self.view_popup, text=f"Editing: {selected_item}")
             fields_section.pack(fill="both", padx=10, pady=10)
+
+            def pick_file(field_name: str) -> None:
+                if LAST_SAVE_DIR is None:
+                    messagebox.showerror(
+                        "Error",
+                        "Save or load the project first so file paths can be stored "
+                        "relative to the project root.",
+                    )
+                    return
+
+                root_dir = Path(GP_BASE_PATH).resolve()
+
+                initial_dir = root_dir
+                current = field_objs[field_name].get().strip()
+                if current:
+                    current_dir = (root_dir / current).parent
+                    if current_dir.is_dir():
+                        initial_dir = current_dir
+
+                chosen = filedialog.askopenfilename(
+                    title=f"Select {field_name}",
+                    initialdir=str(initial_dir),
+                    filetypes=file_filters[field_name],
+                )
+
+                if self.view_popup is not None:
+                    self.view_popup.lift()
+                    self.view_popup.focus_force()
+
+                if not chosen:
+                    return
+
+                chosen_path = Path(chosen).resolve()
+
+                if not chosen_path.is_relative_to(root_dir):
+                    messagebox.showerror(
+                        "Error",
+                        f"{chosen_path.name} is outside the project folder.\n"
+                        f"Choose a file inside {root_dir}.",
+                    )
+                    return
+
+                field_objs[field_name].delete(0, tk.END)
+                field_objs[field_name].insert(0, chosen_path.relative_to(root_dir).as_posix())
 
             row = 0
             for name in fields.keys():
@@ -475,9 +529,25 @@ class Editor:
                     info_icon.pack(side="left")
                     _Tooltip(info_icon, field_hints[name])
 
-                field_objs[name] = ttk.Entry(fields_section, width=30)
+                if name in file_filters:
+                    entry_cell = ttk.Frame(fields_section)
+                    entry_cell.grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
+                    field_objs[name] = ttk.Entry(entry_cell, width=30)
+                    field_objs[name].pack(side="left", expand=True, fill="x")
+
+                    browse_button = ttk.Button(
+                        entry_cell,
+                        text="Browse...",
+                        command=partial(pick_file, name),
+                    )
+                    browse_button.pack(side="left", padx=(4, 0))
+                    _Tooltip(browse_button, "Pick a file inside the project folder", 1000)
+                else:
+                    field_objs[name] = ttk.Entry(fields_section, width=30)
+                    field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
+
                 field_objs[name].insert(0, str(self.entities[selected_item].get(name, "")))
-                field_objs[name].grid(row=row, column=1, sticky="ew", padx=(0, 10), pady=6)
 
                 row += 1
 
