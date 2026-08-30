@@ -5,6 +5,12 @@ With scripting, you can move and manipulate objects, create animations, and much
 In other words, scripting allows you to make entities in your game _do things_.
 Here's how to get started:
 
+> [!TIP]
+> If you're planning on using the engine API, see:
+>
+> * [Using the Engine API Directly](using_the_engine_api.md)
+> * [OSE Docs](ose.md)
+
 To create a script file, first follow the
 [recommended file structure](game_file_structure.md).
 The `assets/` folder is not needed for this tutorial.
@@ -23,7 +29,7 @@ Then, launch ABS Engine and follow these steps:
 6. Click "Save", then "Save Project"
 7. Verify that `game.absp` was saved in your project folder
 
->[!Tip]
+> [!TIP]
 > Name your scripts after the entity they're attached to.
 > This makes it easy to identify them later.
 
@@ -41,7 +47,7 @@ def update(entity, dt):
 Go back to ABS Engine and click "Run".
 You should see a white square moving continuously from left to right.
 
->[!Tip]
+> [!TIP]
 > Because the engine requires a script to
 > be attached to an entity in your game,
 > put everything in the game that is not
@@ -63,7 +69,9 @@ event(entity: Entity, event: pygame.event.Event) -> None
 ```
 
 `init()`   - Called once when the game starts
+
 `update()` - Called every frame (multiple times per second)
+
 `event()`  - Called when a pygame event is triggered
 
 ## Entity Properties
@@ -94,9 +102,9 @@ The `engine.core.Entity` class has the following properties:
 
 The `init()`, `update()`, and `event()` functions are callback functions that ABS Engine calls at specific times:
 
-- `init(entity: Entity) -> None`                              - Called when the game starts
-- `update(entity: Entity, dt: float) -> None`                 - Called every frame
-- `event(entity: Entity, event: pygame.event.Event) -> None`  - Called when an a pygame event occurs
+* `init(entity: Entity) -> None`                              - Called when the game starts
+* `update(entity: Entity, dt: float) -> None`                 - Called every frame
+* `event(entity: Entity, event: pygame.event.Event) -> None`  - Called when an a pygame event occurs
 
 Here's an example script that creates a simple game with player movement.
 The game uses a top-down perspective with a player-controlled square
