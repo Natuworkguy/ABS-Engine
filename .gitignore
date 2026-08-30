@@ -212,8 +212,3 @@ __marimo__/
 
 # Agents
 .agents/
-
-### ABS Specific ###
-
-# ABS cache files
-abs_cache/
