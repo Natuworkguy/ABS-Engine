@@ -52,7 +52,16 @@ module = ["squirrel"]
 ignore_missing_imports = true
 
 [tool.pyright]
-exclude = [".venv", "build", "dist", "**/__pycache__"]
+exclude = [
+  # == Default Excludes ===
+  "**/.*",
+  "**/node_modules",
+
+  ".venv",
+  "build",
+  "dist",
+  "**/__pycache__"
+]
 
 [tool.ruff]
 line-length = 100
