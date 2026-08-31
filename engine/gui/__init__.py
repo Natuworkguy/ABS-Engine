@@ -5,9 +5,9 @@ import sys
 import os
 import ctypes
 import queue
-import shutil
 
 from functools import partial
+from multiprocessing import get_context
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
@@ -52,7 +52,6 @@ class Editor:
     entity_data: Optional[tk.Text]
 
     def __init__(self) -> None:
-        self.core_game: Optional[CoreGame] = None
         self.view_popup = None
         self.game_settings_popup: Optional[tk.Toplevel] = None
         self.entity_data = None
@@ -726,76 +725,24 @@ class Editor:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
-    def _reload_scripts(self) -> None:
-        """
-        Forget the scripts the last run loaded, so this run reads them again.
-
-        Scripts get edited outside the editor while it stays open. Anything a
-        script imports stays cached in sys.modules under its own name, and its
-        compiled bytecode stays cached in __pycache__, so without clearing both
-        a run keeps using whatever was on disk when the editor started.
-        """
-
-        script_dirs = {
-            str(Path(script).resolve().parent)
-            for script in (
-                game_path(entity_data.get("scriptfile")) for entity_data in self.entities.values()
-            )
-            if script is not None
-        }
-
-        for name, module in list(sys.modules.items()):
-            if name.split(".")[0] == "engine":
-                continue
-
-            file = getattr(module, "__file__", None)
-
-            if file is not None and str(Path(file).resolve().parent) in script_dirs:
-                del sys.modules[name]
-
-        for script_dir in script_dirs:
-            shutil.rmtree(Path(script_dir) / "__pycache__", ignore_errors=True)
-
     def run_game(self, is_editor: bool = True) -> None:
-        self._reload_scripts()
-
-        self.core_game = CoreGame(
-            self.project_name,
-            width=self.game_dimensions[0],
-            height=self.game_dimensions[1],
-            cursor_visible=self.cursor_visible,
-            fullscreen=self.fullscreen,
-            IS_EDITOR=is_editor,
-            GP_BASE_PATH=GP_BASE_PATH,
+        process = get_context("spawn").Process(
+            target=_run_game,
+            args=(
+                {
+                    "name": self.project_name,
+                    "dimensions": self.game_dimensions,
+                    "cursor_visible": self.cursor_visible,
+                    "fullscreen": self.fullscreen,
+                },
+                self.entities,
+                GP_BASE_PATH,
+                is_editor,
+            ),
         )
 
-        for _entity_name, entity_data in self.entities.items():
-            scriptfile = game_path(entity_data.get("scriptfile", None))
-            image_path = entity_data.get("image")
-
-            if image_path:
-                image = game_path(image_path)
-            else:
-                image = None
-
-            entity = Entity(
-                x=entity_data.get("x", 0),
-                y=entity_data.get("y", 0),
-                width=entity_data.get("width", 50),
-                height=entity_data.get("height", 50),
-                color=tuple(entity_data.get("color", (255, 255, 255))),
-                scriptfile=scriptfile,
-                image=image,
-            )
-            self.core_game.add_to_current_scene(entity)
-
-        def run_core_game() -> None:
-            if self.core_game is None:
-                return
-
-            self.core_game.run()
-
-        run_core_game()
+        process.start()
+        process.join()
 
     def run(self) -> None:
         self.root.mainloop()
@@ -803,6 +750,49 @@ class Editor:
     def quit(self) -> None:
         self.root.quit()
         sys.exit()
+
+
+def _run_game(settings: dict, entities: dict, base_path: str, is_editor: bool) -> None:
+    """
+    Run a game to completion. The editor spawns this as a process of its own.
+
+    Args:
+        settings (dict): Window title and display settings for this run.
+        entities (dict): Entity data keyed by name, as the editor stores it.
+        base_path (str): Project root the entities' paths are relative to.
+        is_editor (bool): Whether the game should behave as an editor preview.
+    """
+
+    global GP_BASE_PATH
+
+    GP_BASE_PATH = base_path
+    sys.dont_write_bytecode = True
+
+    core_game = CoreGame(
+        settings["name"],
+        width=settings["dimensions"][0],
+        height=settings["dimensions"][1],
+        cursor_visible=settings["cursor_visible"],
+        fullscreen=settings["fullscreen"],
+        IS_EDITOR=is_editor,
+        GP_BASE_PATH=base_path,
+    )
+
+    for _entity_name, entity_data in entities.items():
+        image_path = entity_data.get("image")
+
+        entity = Entity(
+            x=entity_data.get("x", 0),
+            y=entity_data.get("y", 0),
+            width=entity_data.get("width", 50),
+            height=entity_data.get("height", 50),
+            color=tuple(entity_data.get("color", (255, 255, 255))),
+            scriptfile=game_path(entity_data.get("scriptfile", None)),
+            image=game_path(image_path) if image_path else None,
+        )
+        core_game.add_to_current_scene(entity)
+
+    core_game.run()
 
 
 def run() -> None:
