@@ -5,6 +5,7 @@ import sys
 import os
 import ctypes
 import queue
+import shutil
 
 from functools import partial
 
@@ -713,7 +714,39 @@ class Editor:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
+    def _reload_scripts(self) -> None:
+        """
+        Forget the scripts the last run loaded, so this run reads them again.
+
+        Scripts get edited outside the editor while it stays open. Anything a
+        script imports stays cached in sys.modules under its own name, and its
+        compiled bytecode stays cached in __pycache__, so without clearing both
+        a run keeps using whatever was on disk when the editor started.
+        """
+
+        script_dirs = {
+            str(Path(script).resolve().parent)
+            for script in (
+                game_path(entity_data.get("scriptfile")) for entity_data in self.entities.values()
+            )
+            if script is not None
+        }
+
+        for name, module in list(sys.modules.items()):
+            if name.split(".")[0] == "engine":
+                continue
+
+            file = getattr(module, "__file__", None)
+
+            if file is not None and str(Path(file).resolve().parent) in script_dirs:
+                del sys.modules[name]
+
+        for script_dir in script_dirs:
+            shutil.rmtree(Path(script_dir) / "__pycache__", ignore_errors=True)
+
     def run_game(self, is_editor: bool = True) -> None:
+        self._reload_scripts()
+
         self.core_game = CoreGame(
             self.project_name,
             width=self.game_dimensions[0],
