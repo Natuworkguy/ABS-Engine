@@ -22,6 +22,7 @@ from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .music import Music
 from .errors import ABSFatalError
 from .utils import clamp
 from .types import RGBType, EntityImageType
@@ -461,6 +462,7 @@ class Game:
 
         pygame.init()
         self.GP_BASE_PATH: str = GP_BASE_PATH
+        self.music: Music = Music(GP_BASE_PATH)
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
         self.wsize: tuple[float, float] = (width, height)
 

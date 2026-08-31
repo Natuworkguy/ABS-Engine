@@ -47,18 +47,6 @@ def update(entity, dt):
 Go back to ABS Engine and click "Run".
 You should see a white square moving continuously from left to right.
 
-> [!TIP]
-> Because the engine requires a script to
-> be attached to an entity in your game,
-> put everything in the game that is not
-> entity-specific (e.g. playing background
-> music, etc.) in the script attached to
-> the player entity (The entity that the
-> player controls). This is called a main
-> script. If your game does not have a player
-> entity, place a new entity off screen that
-> has the main script attached to it.
-
 Let's break down what this code does.
 In a script file, three functions are commonly defined:
 
@@ -159,3 +147,17 @@ def event(entity, event):
 > If the game window freezes or shows a black screen at startup,
 > check that your script file has no syntax errors. It is completely normal for a game to crash if there are code errors.
 > See [Debugging Games](debugging_games.md) for help diagnosing issues.
+
+## Main Scripts
+
+> [!TIP]
+> Because the engine requires a script to
+> be attached to an entity in your game,
+> put everything in the game that is not
+> entity-specific (e.g. playing background
+> music, etc.) in the script attached to
+> the player entity (The entity that the
+> player controls). This is called a main
+> script. If your game does not have a player
+> entity, place a new entity off screen that
+> has the main script attached to it.
