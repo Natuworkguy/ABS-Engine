@@ -40,10 +40,10 @@ class Entity:
 
     def __init__(
         self,
-        x: int = 0,
-        y: int = 0,
-        width: int = 50,
-        height: int = 50,
+        x: float = 0,
+        y: float = 0,
+        width: float = 50,
+        height: float = 50,
         color: RGBType = (255, 255, 255),
         scriptfile: Optional[str] = None,
         image: Optional[str] = None,
@@ -52,10 +52,10 @@ class Entity:
         Initialize an entity
 
         Args:
-            x (int):  X position. Defaults to 0.
-            y (int):  Y position. Defaults to 0.
-            width (int): Width of the entity. Defaults to 50.
-            height (int): Height of the entity. Defaults to 50.
+            x (float): X position. Defaults to 0.
+            y (float): Y position. Defaults to 0.
+            width (float): Width of the entity. Defaults to 50.
+            height (float): Height of the entity. Defaults to 50.
             color (RGBType): RGB color value. Defaults to (255, 255, 255).
             scriptfile (Optional[str]): Path to optional script file. Defaults to None.
             image (Optional[str]): Path to optional image file. Defaults to None.
@@ -63,10 +63,10 @@ class Entity:
 
         self.visible = True
 
-        self.x: int = x
-        self.y: int = y
-        self.width: int = width
-        self.height: int = height
+        self.x: float = x
+        self.y: float = y
+        self.width: float = width
+        self.height: float = height
         self.color: RGBType = (
             int(clamp(color[0], 0, 255)),
             int(clamp(color[1], 0, 255)),
@@ -424,8 +424,8 @@ class Game:
         self,
         title: str = "Game",
         /,
-        width: int = 800,
-        height: int = 600,
+        width: float = 800,
+        height: float = 600,
         *,
         GP_BASE_PATH: str,
         cursor_visible: bool = True,
@@ -438,8 +438,8 @@ class Game:
 
         Args:
             title (str): Window title. Defaults to "Game".
-            width (int): Window width in pixels. Defaults to 800.
-            height (int): Window height in pixels. Defaults to 600.
+            width (float): Window width in pixels. Defaults to 800.
+            height (float): Window height in pixels. Defaults to 600.
             cursor_visible (bool): Whether the mouse cursor is visible. Defaults to True.
             fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
             icon_path (str | Path | None): Path to window icon image. Defaults to None.
@@ -458,7 +458,7 @@ class Game:
         pygame.init()
         self.GP_BASE_PATH: str = GP_BASE_PATH
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
-        self.wsize: tuple[int, int] = (width, height)
+        self.wsize: tuple[float, float] = (width, height)
 
         if width < 0 or height < 0:
             raise ABSFatalError("Window width and height must be positive")
