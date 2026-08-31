@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 nut_source("math.nut")
 
 
-def get_center(game: "Game") -> tuple[int, int]:
+def get_center(game: "Game") -> tuple[float, float]:
     """
     Get the center of the game window.
 
