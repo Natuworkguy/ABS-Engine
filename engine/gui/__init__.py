@@ -610,27 +610,39 @@ class Editor:
 
                 updates = {}
 
+                # A blank field means "use the default", and a key this entity does
+                # not carry is exactly what every reader falls back to a default on.
+                cleared = []
+
                 try:
                     for name, obj in field_objs.items():
-                        value = obj.get()
+                        value = obj.get().strip()
 
-                        if value.strip() == "":
+                        if value == "":
+                            cleared.append(name)
                             continue
 
                         updates[name] = fields[name](value)
 
                     color_values = [c.get().strip() for c in color_objs]
                     if any(color_values):
-                        parsed_color = tuple(int(c) for c in color_values)
+                        # A blank component falls back to its own default rather
+                        # than dragging the whole color back to white.
+                        parsed_color = tuple(int(c) if c else 255 for c in color_values)
                         if any(component < 0 or component > 255 for component in parsed_color):
                             raise ValueError("Color values must be between 0 and 255")
                         updates["color"] = parsed_color
+                    else:
+                        cleared.append("color")
                 except ValueError as e:
                     messagebox.showerror(
                         "Error",
                         f"Failed to save entity data: {e}\nPlease ensure all fields contain valid values.",
                     )
                     return
+
+                for name in cleared:
+                    self.entities[selected_item].pop(name, None)
 
                 self.entities[selected_item].update(updates)
                 self.view_popup.destroy()
