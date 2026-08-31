@@ -101,6 +101,10 @@ class Entity:
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
 
+            script_dir = str(Path(scriptfile).resolve().parent)
+            if script_dir not in sys.path:
+                sys.path.append(script_dir)
+
             spec: Optional[ModuleSpec] = importlib.util.spec_from_file_location(esfid, scriptfile)
 
             if spec:
