@@ -23,7 +23,7 @@ def get_center(game: "Game") -> tuple[float, float]:
         game (Game): The game instance.
 
     Returns:
-        tuple[int, int]: The (x, y) coordinates of the center of the game window.
+        tuple[float, float]: The (x, y) coordinates of the center of the game window.
     """
 
     return (game.wsize[0] // 2, game.wsize[1] // 2)
