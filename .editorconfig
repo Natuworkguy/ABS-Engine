@@ -18,6 +18,7 @@ max_line_length = 100
 indent_size = 2
 
 [*.md]
+max_line_length = 81
 trim_trailing_whitespace = false
 
 [*.{cfg,ini,flake8}]
