@@ -188,12 +188,12 @@ class Entity:
         """
         self.parent = parent
 
-    def center(self, pos: tuple[int, int]) -> None:
+    def center(self, pos: tuple[float, float]) -> None:
         """
         Center the entity on a position.
 
         Args:
-            pos (tuple[int, int]): The (x, y) point to center the entity on.
+            pos (tuple[float, float]): The (x, y) point to center the entity on.
         """
 
         self.x = pos[0] - self.width // 2

@@ -77,12 +77,12 @@ class Text(Entity):
         self.text_surface = self.font.render(self.text, self.antialias, self.color, self.bgcolor)
         self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
 
-    def center(self, pos: tuple[int, int]) -> None:
+    def center(self, pos: tuple[float, float]) -> None:
         """
         Center the text on a position and rebuild its rendered surface.
 
         Args:
-            pos (tuple[int, int]): The (x, y) point to center the text on.
+            pos (tuple[float, float]): The (x, y) point to center the text on.
         """
 
         super().center(pos)
