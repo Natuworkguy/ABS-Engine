@@ -20,9 +20,9 @@ class Text(Entity):
 
     def __init__(
         self,
+        text: str = "",
         x: float = 0,
         y: float = 0,
-        text: str = "",
         size: int = 50,
         font: Optional[str] = None,
         color: RGBType = (255, 255, 255),
@@ -36,9 +36,9 @@ class Text(Entity):
         Text entities behave like any other entity, but they render a string of text instead of an image or colored box.
 
         Args:
+            text (str): The string to render. Defaults to "".
             x (float): X position. Defaults to 0.
             y (float): Y position. Defaults to 0.
-            text (str): The string to render. Defaults to "".
             size (int): Font size in points. Defaults to 50.
             font (Optional[str]): Path to a font file. Defaults to None (pygame's
                 default font). If the file cannot be found, Text falls back to
@@ -51,9 +51,9 @@ class Text(Entity):
                 to avoid the per-frame re-render cost. Defaults to True.
         """
 
+        self.text: str = text
         self.x: float = x
         self.y: float = y
-        self.text: str = text
         self.color: RGBType = color
         self.bgcolor: RGBType = bgcolor
         self.antialias: bool = antialias
