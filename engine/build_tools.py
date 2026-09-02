@@ -148,6 +148,8 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
             "--specpath",
             str(directory),
             f"--add-data={directory / 'game.absp'!s}{os.pathsep}.",
+            f"--add-data={directory / 'engine' / 'nut'}{os.pathsep}engine/nut/",
+            f"--add-data={directory / 'engine' / 'tcl'}{os.pathsep}engine/tcl/",
         ]
 
         if (directory / "scripts").exists():
