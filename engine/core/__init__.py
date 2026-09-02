@@ -98,7 +98,10 @@ class Entity:
                 else:
                     self.image = EntityAnim(image)
             except (pygame.error, FileNotFoundError) as e:
-                logger(f"Failed to load image or animation '{image}': {str(e)}", status=LoggerStatus.WARNING)
+                logger(
+                    f"Failed to load image or animation '{image}': {str(e)}",
+                    status=LoggerStatus.WARNING,
+                )
 
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
