@@ -22,10 +22,11 @@ from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .animation import EntityAnim
 from .music import Music
 from .errors import ABSFatalError
 from .utils import clamp
-from .types import RGBType, EntityImageType
+from .types import RGBType, EntityMediaType
 from ..version import __version__ as version
 
 print(
@@ -89,13 +90,16 @@ class Entity:
 
         self.did_init: bool = False
 
-        self.image: Optional[EntityImageType] = None
+        self.image: Optional[EntityMediaType] = None
 
         if image is not None:
             try:
-                self.image = EntityImage(image)
+                if image.lower().endswith((".png", ".jpg", ".jpeg", ".bmp")):
+                    self.image = EntityImage(image)
+                else:
+                    self.image = EntityAnim(image)
             except pygame.error as e:
-                logger(f"Failed to load image '{image}': {str(e)}", status=LoggerStatus.WARNING)
+                logger(f"Failed to load image or animation '{image}': {str(e)}", status=LoggerStatus.WARNING)
             except FileNotFoundError as e:
                 tkinter.messagebox.showerror("File not found", str(e))
 
