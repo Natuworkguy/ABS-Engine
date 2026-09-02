@@ -339,7 +339,8 @@ class Scene:
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
         """
-        Internal collision query used by Entity.get_colliding_entities().
+        Internal collision query used by
+        :meth:`~engine.core.Entity.get_colliding_entities`.
 
         Args:
             entity (Entity): Entity to evaluate collisions for.

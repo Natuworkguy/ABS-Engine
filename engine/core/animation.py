@@ -13,10 +13,11 @@ from typing import Optional
 
 class EntityAnim:
     """
-    Manage an animation for an entity.
+    Manage an animation for an :class:`~engine.core.Entity`.
 
-    Stands in for EntityImage when an entity should show a moving image (GIF
-    or WebP) instead of a still one. It offers the same three methods, so an
+    Stands in for :class:`~engine.core.image.EntityImage`
+    when an entity should show a moving image (GIF or WebP)
+    instead of a still one. It offers the same three methods, so an
     entity holding one needs no special handling, and frames advance off the
     clock on their own: drawing it is all the caller has to do. The animation
     loops for as long as it keeps being drawn, at the pace the file asks for.
