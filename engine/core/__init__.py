@@ -13,7 +13,6 @@ from types import ModuleType
 import pygame
 import importlib.util
 import sys
-import tkinter.messagebox
 import uuid
 import os
 import colorama
@@ -98,10 +97,8 @@ class Entity:
                     self.image = EntityImage(image)
                 else:
                     self.image = EntityAnim(image)
-            except pygame.error as e:
+            except (pygame.error, FileNotFoundError) as e:
                 logger(f"Failed to load image or animation '{image}': {str(e)}", status=LoggerStatus.WARNING)
-            except FileNotFoundError as e:
-                tkinter.messagebox.showerror("File not found", str(e))
 
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
@@ -120,12 +117,12 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        tkinter.messagebox.showerror(
-                            "Error",
+                        logger(
                             f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
+                            status=LoggerStatus.CRITICAL,
                         )
                     except ImportError as e:
-                        tkinter.messagebox.showerror("Error", f"Error when loading script: {e}")
+                        logger(f"Error when loading script: {e}", status=LoggerStatus.CRITICAL)
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:

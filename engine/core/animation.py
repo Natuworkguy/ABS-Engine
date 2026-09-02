@@ -20,19 +20,27 @@ class EntityAnim:
     entity holding one needs no special handling, and frames advance off the
     clock on their own: drawing it is all the caller has to do. The animation
     loops for as long as it keeps being drawn, at the pace the file asks for.
+
+    Pass ``loop=False`` for a one-shot animation, such as a jump: it plays
+    through once, then holds its last frame and reports ``finished``, so the
+    caller can swap in another animation or leave the pose standing. Calling
+    ``restart`` plays it again from the top, which is how the same jump is
+    re-triggered each time the entity leaves the ground.
     """
 
     frames: list[pygame.Surface]
 
-    def __init__(self, anim_path: str) -> None:
+    def __init__(self, anim_path: str, loop: bool = True) -> None:
         """
         Initialize the EntityAnim by loading the animation at ``anim_path``.
 
         Args:
             anim_path (str): The path to the animation file.
+            loop (bool): Whether the animation repeats. Defaults to True.
         """
 
         self.frames = []
+        self.loop: bool = loop
 
         self._starts: list[float] = []
         self._duration: float = 0.0
@@ -43,7 +51,7 @@ class EntityAnim:
 
         self.set_image(anim_path)
 
-    def set_image(self, anim_path: str) -> None:
+    def set_image(self, anim_path: str, loop: Optional[bool] = None) -> None:
         """
         Load ``anim_path`` and store it as an animation.
 
@@ -51,6 +59,8 @@ class EntityAnim:
 
         Args:
             anim_path (str): The path to the animation file.
+            loop (Optional[bool]): Whether the animation repeats. Keeps the
+                current setting when None. Defaults to None.
         """
 
         assert pygame.get_init(), (  # nosec B101
@@ -62,6 +72,9 @@ class EntityAnim:
         assert loaded, f'EntityAnim: "{anim_path}" holds no frames'  # nosec B101
 
         self.frames = [frame.convert_alpha() for frame, _ in loaded]
+
+        if loop is not None:
+            self.loop = loop
 
         self._starts = []
         self._duration = 0.0
@@ -75,6 +88,35 @@ class EntityAnim:
         self._scaled = None
         self._scaled_key = None
 
+    def restart(self) -> None:
+        """
+        Play the animation again from its first frame.
+
+        This is what re-triggers a one-shot animation: call it on every jump
+        rather than reloading the file each time.
+        """
+
+        self._started_at = pygame.time.get_ticks()
+
+    @property
+    def finished(self) -> bool:
+        """
+        Whether a one-shot animation has already played through its last frame.
+
+        A looping animation never finishes, so this is always False for one.
+
+        Returns:
+            bool: True once a non-looping animation has run its course.
+        """
+
+        if self.loop:
+            return False
+
+        if self._duration <= 0.0:
+            return True
+
+        return (pygame.time.get_ticks() - self._started_at) >= self._duration
+
     def _current_index(self) -> int:
         """
         Work out which frame is due, from how long the animation has been running.
@@ -86,7 +128,13 @@ class EntityAnim:
         if self._duration <= 0.0:
             return 0
 
-        elapsed: float = (pygame.time.get_ticks() - self._started_at) % self._duration
+        elapsed: float = float(pygame.time.get_ticks() - self._started_at)
+
+        if not self.loop:
+            if elapsed >= self._duration:
+                return len(self.frames) - 1
+        else:
+            elapsed %= self._duration
 
         return bisect.bisect_right(self._starts, elapsed) - 1
 
