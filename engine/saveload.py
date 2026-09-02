@@ -11,6 +11,7 @@ from json import dump, load
 from typing import Optional, Any
 from pathlib import Path
 
+from . import REPO_URL
 from .logger import logger, Status as LoggerStatus
 
 import sys
@@ -87,6 +88,13 @@ dist/
             f.write(
                 """
     *.absp text linguist-language=JSON linguist-detectable=true diff=json
+            """.strip()
+            )
+
+        with open(dir / "requirements.txt", "w") as f:
+            f.write(
+                f"""
+git+{REPO_URL}
             """.strip()
             )
 
