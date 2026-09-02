@@ -54,13 +54,13 @@ Here are the main parts of the message:
 ```
 
 **Type**: The severity of the message (can be "INFO", "WARNING", or "CRITICAL")
-**Source**: Shows which module the message originated from. In this example, the message came from `engine/core.py`.
+**Source**: Shows which module the message originated from. In this example, the message came from `engine/core/__init__.py`.
 **Message**: The message being printed
 
 Example of a critical error message:
 
 ```text
-(CRITICAL) ENGINE.GUI: Initialized game
+(CRITICAL) ENGINE.GUI: Could not load icon image.
    |              |           |
    |              |______     |_______
    |              |Source|    |Message|

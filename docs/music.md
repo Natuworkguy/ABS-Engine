@@ -26,7 +26,7 @@ from engine.core import Game
 game = Game(GP_BASE_PATH=".")
 
 game.music.set_volume(0.5)
-game.music.play("assets/theme.ogg")
+game.music.play("data/audio/theme.ogg")
 
 game.run()
 ```
@@ -68,7 +68,7 @@ Every method stays safe to call, and none of them do anything:
 def init(entity):
     music = entity.parent.game.music
 
-    music.play("assets/theme.ogg")  # Fine. Silent, but fine.
+    music.play("data/audio/theme.ogg")  # Fine. Silent, but fine.
 
     if not music.available:
         entity.parent.game.gamedata["subtitles"] = True

@@ -9,7 +9,7 @@ Click "Build Game", then "Yes".
 ABS Engine will now compile the game and all of its dependencies
 to the folder that contains the project file, using Pyinstaller
 under the hood. A "Building Game" window stays open with a progress
-bar while this happens, and only closes once Pyinstaller has
+bar and log while this happens, and only closes once Pyinstaller has
 actually finished.
 
 When you run the new `run.py` file in that folder,

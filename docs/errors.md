@@ -4,8 +4,7 @@ This document describes ABS Engine's error module (`engine.core.errors`).
 
 ## Overview
 
-`engine.core.errors` is not only for fatal, unrecoverable errors. It also will
-define precise, engine-specific exception types for situations that
+`engine.core.errors` is not only for fatal, unrecoverable errors. It will also define precise, engine-specific exception types for situations that
 could otherwise be mistaken for an ordinary, expected error (e.g. a
 generic `ValueError` or `KeyError`) but that the user of the engine
 should actually be catching and handling deliberately. Naming these
@@ -41,7 +40,7 @@ def __init__(self, message: str) -> Never: ...
 from engine.core.errors import ABSFatalError
 
 if renderer_context_lost:
-    ABSFatalError("Lost graphics context, cannot continue")
+    raise ABSFatalError("Lost graphics context, cannot continue")
 ```
 
 Do **not** wrap this in a `try`/`except` expecting to recover. It's
