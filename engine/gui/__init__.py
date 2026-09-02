@@ -464,6 +464,7 @@ class Editor:
                 "scriptfile": [("Python scripts", "*.py"), ("All files", "*.*")],
                 "image": [
                     ("Images", "*.png *.jpg *.jpeg *.gif *.bmp"),
+                    ("Animations", "*.gif *.webp"),
                     ("All files", "*.*"),
                 ],
             }
