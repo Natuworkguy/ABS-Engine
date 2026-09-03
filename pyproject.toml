@@ -15,9 +15,10 @@ authors = [
 
 [tool.setuptools]
 include-package-data = true
+package-dir = { abs_engine = "engine" }
 
 [tool.setuptools.dynamic]
-version = { attr = "engine.version.__version__" }
+version = { attr = "abs_engine.version.__version__" }
 
 [tool.setuptools.dynamic.dependencies]
 file = ["requirements.txt"]
@@ -25,11 +26,8 @@ file = ["requirements.txt"]
 [tool.setuptools.dynamic.optional-dependencies]
 dev = { file = ["requirements-dev.txt"] }
 
-[tool.setuptools.packages.find]
-include = ["engine*"]
-
 [tool.setuptools.package-data]
-engine = ["py.typed"]
+abs_engine = ["py.typed"]
 
 [tool.mypy]
 
