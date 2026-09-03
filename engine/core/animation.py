@@ -8,7 +8,7 @@ Animation handling utilities for engine entities.
 import bisect
 import pygame
 
-from typing import Optional
+from typing import Optional, Union
 
 
 class EntityAnim:
@@ -48,7 +48,7 @@ class EntityAnim:
         self._started_at: int = 0
 
         self._scaled: Optional[pygame.Surface] = None
-        self._scaled_key: Optional[tuple[int, int, int]] = None
+        self._scaled_key: Optional[tuple[int, float, float]] = None
 
         self.set_image(anim_path)
 
@@ -139,19 +139,19 @@ class EntityAnim:
 
         return bisect.bisect_right(self._starts, elapsed) - 1
 
-    def draw(self, surface: pygame.Surface, rect: pygame.Rect) -> None:
+    def draw(self, surface: pygame.Surface, rect: Union[pygame.Rect, pygame.FRect]) -> None:
         """
         Draw the current frame of the animation scaled to ``rect`` onto ``surface``.
 
         Args:
             surface (pygame.Surface): surface to draw onto
-            rect (pygame.Rect): rect to scale image to
+            rect (pygame.Rect | pygame.FRect): rect to scale image to
         """
 
         assert self.frames, "EntityAnim.frames was not initialized"  # nosec B101
 
         index: int = self._current_index()
-        key: tuple[int, int, int] = (index, rect.width, rect.height)
+        key: tuple[int, float, float] = (index, rect.width, rect.height)
 
         if key != self._scaled_key or self._scaled is None:
             self._scaled = pygame.transform.scale(self.frames[index], (rect.width, rect.height))

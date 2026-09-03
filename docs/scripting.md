@@ -78,7 +78,7 @@ The `engine.core.Entity` class has the following properties:
 | `width` | Width in pixels | `float` |
 | `height` | Height in pixels | `float` |
 | `color` | RGB color value | `tuple[int, int, int]` |
-| `rect` | Pygame rect object on screen | `pygame.Rect` |
+| `rect` | Pygame rect object on screen | `pygame.FRect` |
 | `scriptfile` | Path to the attached script | `str` |
 | `image` | Image attached to entity | `EntityImage` or `None` |
 | `id` | Unique entity UUID | `str` |

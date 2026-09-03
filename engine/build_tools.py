@@ -124,9 +124,6 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
         log_queue (Queue[Optional[str]]): Queue that receives PyInstaller's output.
     """
 
-    # Redirect output before importing PyInstaller: its logging setup binds a
-    # handler to sys.stderr at import time, so the import must happen after
-    # the streams are replaced for build output to reach the log_queue.
     sys.stdout = _QueueWriter(log_queue)
     sys.stderr = _QueueWriter(log_queue)
 
