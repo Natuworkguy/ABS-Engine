@@ -7,7 +7,7 @@ ABS Engine entry module.
 
 from .logger import Status, logger
 
-package = __package__ or "engine"
+package = __package__ or ""
 
 logger(
     f"The {package} module cannot be run directly to launch the GUI. "
