@@ -41,8 +41,8 @@ class Entity:
 
     def __init__(
         self,
-        x: float = 0,
-        y: float = 0,
+        x: float = 0.0,
+        y: float = 0.0,
         width: float = 50,
         height: float = 50,
         color: RGBType = (255, 255, 255),
