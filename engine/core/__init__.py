@@ -74,7 +74,7 @@ class Entity:
             int(clamp(color[2], 0, 255)),
         )
 
-        self.rect: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.rect: pygame.FRect = pygame.FRect(self.x, self.y, self.width, self.height)
         self.id: str = str(uuid.uuid4())
 
         self.parent: Optional["Scene"] = None
