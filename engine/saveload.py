@@ -94,7 +94,7 @@ dist/
         with open(dir / "requirements.txt", "w") as f:
             f.write(
                 f"""
-git+{REPO_URL}
+git+{REPO_URL}.git
             """.strip()
             )
 
