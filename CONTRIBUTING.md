@@ -115,7 +115,7 @@ All contributions should prioritize:
 - **Trivial Changes Only:** Very small edits are allowed.
 
 <!-- markdownlint-disable MD033 -->
-<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>
+<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md)](https://github.com/Pacsfury/Gravel-Launcher/blob/ed0301ba7aa82342ac937cf1d149d68d00008724/AI-POLICY.md).</small>
 <!-- markdownlint-enable MD033 -->
 
 ---
