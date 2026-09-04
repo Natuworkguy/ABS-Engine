@@ -98,6 +98,7 @@ All contributions should prioritize:
   provided they do not produce large or significant changes.
 - **Trivial Edits Allowed:** Very small, obvious changes such as typo fixes,
   whitespace cleanup, or minor wording updates are permitted.
+- **Commit messages allowed**: Generated commit messages are allowed as long as they are an accurate description of the change being made.
 - **Human Responsibility:** All contributions must be reviewed, tested, and
   approved by a human author.
 
