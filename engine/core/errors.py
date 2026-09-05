@@ -1,3 +1,6 @@
+# Copyright (C) Natuworkguy
+# See the LICENSE file for GPLv3
+
 """ABS Engine's error module."""
 
 import faulthandler
