@@ -98,6 +98,7 @@ All contributions should prioritize:
   provided they do not produce large or significant changes.
 - **Trivial Edits Allowed:** Very small, obvious changes such as typo fixes,
   whitespace cleanup, or minor wording updates are permitted.
+- **Commit messages allowed**: Generated commit messages are allowed as long as they are an accurate description of the change being made.
 - **Human Responsibility:** All contributions must be reviewed, tested, and
   approved by a human author.
 
@@ -115,7 +116,7 @@ All contributions should prioritize:
 - **Trivial Changes Only:** Very small edits are allowed.
 
 <!-- markdownlint-disable MD033 -->
-<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md).</small>
+<small>This AI Policy is derived from [Gravel's AI Policy](https://github.com/Pacsfury/Gravel-Launcher/blob/main/AI-POLICY.md)](https://github.com/Pacsfury/Gravel-Launcher/blob/ed0301ba7aa82342ac937cf1d149d68d00008724/AI-POLICY.md).</small>
 <!-- markdownlint-enable MD033 -->
 
 ---

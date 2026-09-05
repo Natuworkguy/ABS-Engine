@@ -1,3 +1,6 @@
+# Copyright (C) Natuworkguy
+# See the LICENSE file for GPLv3
+
 set font [dict create]
 
 dict set font default [list "Segoe UI" 10]
