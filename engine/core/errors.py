@@ -45,9 +45,9 @@ class ABSFatalError(RuntimeError):
 
         frame: FrameType = sys._getframe(1)
 
-        print(file=sys.stderr)
+        eprint()
         dis.disassemble(frame.f_code, frame.f_lasti, file=sys.stderr)
-        print(file=sys.stderr)
+        eprint()
 
         faulthandler.enable()
         os.abort()
