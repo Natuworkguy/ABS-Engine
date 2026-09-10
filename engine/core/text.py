@@ -66,7 +66,7 @@ class Text(Entity):
 
         self._update_text_surface()
 
-        super().__init__(x, y, width=self.text_rect.width, height=self.text_rect.height)
+        super().__init__(x, y, width=self.text_rect.width, height=self.text_rect.height, color=self.color)
 
     def _update_text_surface(self) -> None:
         """
