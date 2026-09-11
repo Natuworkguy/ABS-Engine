@@ -8,6 +8,8 @@ Animation handling utilities for engine entities.
 import bisect
 import pygame
 
+from array import array
+
 from typing import Optional, Union
 
 from ..loaders.nut_loader import nut_source, nut_call_function
@@ -47,7 +49,7 @@ class EntityAnim:
         self.frames = []
         self.loop: bool = loop
 
-        self._starts: list[float] = []
+        self._starts: array[float] = array("d")
         self._duration: float = 0.0
         self._started_at: int = 0
 
@@ -84,7 +86,9 @@ class EntityAnim:
             self.loop = loop
 
         delays = [delay for _, delay in loaded]
-        timings = [float(t) for t in nut_call_function("frame_starts", delays, len(delays))]
+        timings = array(
+            "d", [float(t) for t in nut_call_function("frame_starts", delays, len(delays))]
+        )
 
         self._starts = timings[:-1]
         self._duration = timings[-1]
