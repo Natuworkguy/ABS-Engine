@@ -10,6 +10,10 @@ import pygame
 
 from typing import Optional, Union
 
+from ..loaders.nut_loader import nut_source, nut_call_function
+
+nut_source("anim.nut")
+
 
 class EntityAnim:
     """
@@ -58,6 +62,8 @@ class EntityAnim:
 
         The animation starts over from its first frame.
 
+        Frame timings are worked out in Squirrel, in engine/nut/anim.nut
+
         Args:
             anim_path (str): The path to the animation file.
             loop (Optional[bool]): Whether the animation repeats. Keeps the
@@ -77,12 +83,11 @@ class EntityAnim:
         if loop is not None:
             self.loop = loop
 
-        self._starts = []
-        self._duration = 0.0
+        delays = [delay for _, delay in loaded]
+        timings = [float(t) for t in nut_call_function("frame_starts", delays, len(delays))]
 
-        for _, delay in loaded:
-            self._starts.append(self._duration)
-            self._duration += max(0.0, delay)
+        self._starts = timings[:-1]
+        self._duration = timings[-1]
 
         self._started_at = pygame.time.get_ticks()
 
