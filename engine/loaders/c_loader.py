@@ -141,6 +141,9 @@ def c_source(source_name: str) -> CModule:
     Raises:
         FileNotFoundError: If no such source or header exists under engine/c/.
         IsADirectoryError: If the path names a directory rather than a file.
+        ModuleNotFoundError: If the compiled module cannot be imported, which
+            usually means engine/c/build/ holds a module built by a different
+            Python than the one running now.
     """
 
     source_path = C_DIR / source_name
@@ -164,7 +167,15 @@ def c_source(source_name: str) -> CModule:
     if str(BUILD_DIR) not in sys.path:
         sys.path.insert(0, str(BUILD_DIR))
 
-    return CModule(source_name, importlib.import_module(module_name))
+    try:
+        module = importlib.import_module(module_name)
+    except ModuleNotFoundError as e:
+        raise ModuleNotFoundError(
+            f"Compiled {source_name}, but {module_name} could not be imported from "
+            f"{BUILD_DIR}. Delete that directory to build it again."
+        ) from e
+
+    return CModule(source_name, module)
 
 
 def c_call_function(source_name: str, function_name: str, *args: Any) -> Any:
