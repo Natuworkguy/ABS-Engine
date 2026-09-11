@@ -14,13 +14,13 @@ python3 run.pyw
 
 Make sure you run it with the `python3` or `py` command. Directly using the file path will not show the console.
 
-Bad Example:
+Don't do this:
 
 ```powershell
 & "C:/Users/User/ABS-Engine/run.pyw"
 ```
 
-*Good* Example:
+Do this:
 
 ```powershell
 py C:/Users/User/ABS-Engine/run.pyw

@@ -1,2 +1,9 @@
 ignores:
   - "LICENSE"
+  - ".venv/**"
+
+globs:
+  - "**/*.{md,markdown}"
+
+config:
+  MD013: false

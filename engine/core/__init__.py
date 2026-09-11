@@ -13,7 +13,6 @@ from types import ModuleType
 import pygame
 import importlib.util
 import sys
-import tkinter.messagebox
 import uuid
 import os
 import colorama
@@ -22,9 +21,11 @@ from typing import Optional, Any, Union
 
 from ..logger import logger, Status as LoggerStatus
 from .image import EntityImage
+from .animation import EntityAnim
+from .music import Music
 from .errors import ABSFatalError
 from .utils import clamp
-from .types import RGBType, EntityImageType
+from .types import RGBType, EntityMediaType
 from ..version import __version__ as version
 
 print(
@@ -40,10 +41,10 @@ class Entity:
 
     def __init__(
         self,
-        x: int = 0,
-        y: int = 0,
-        width: int = 50,
-        height: int = 50,
+        x: float = 0.0,
+        y: float = 0.0,
+        width: float = 50.0,
+        height: float = 50.0,
         color: RGBType = (255, 255, 255),
         scriptfile: Optional[str] = None,
         image: Optional[str] = None,
@@ -52,10 +53,10 @@ class Entity:
         Initialize an entity
 
         Args:
-            x (int):  X position. Defaults to 0.
-            y (int):  Y position. Defaults to 0.
-            width (int): Width of the entity. Defaults to 50.
-            height (int): Height of the entity. Defaults to 50.
+            x (float): X position. Defaults to 0.
+            y (float): Y position. Defaults to 0.
+            width (float): Width of the entity. Defaults to 50.
+            height (float): Height of the entity. Defaults to 50.
             color (RGBType): RGB color value. Defaults to (255, 255, 255).
             scriptfile (Optional[str]): Path to optional script file. Defaults to None.
             image (Optional[str]): Path to optional image file. Defaults to None.
@@ -63,17 +64,17 @@ class Entity:
 
         self.visible = True
 
-        self.x: int = x
-        self.y: int = y
-        self.width: int = width
-        self.height: int = height
+        self.x: float = x
+        self.y: float = y
+        self.width: float = width
+        self.height: float = height
         self.color: RGBType = (
             int(clamp(color[0], 0, 255)),
             int(clamp(color[1], 0, 255)),
             int(clamp(color[2], 0, 255)),
         )
 
-        self.rect: pygame.Rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.rect: pygame.FRect = pygame.FRect(self.x, self.y, self.width, self.height)
         self.id: str = str(uuid.uuid4())
 
         self.parent: Optional["Scene"] = None
@@ -88,18 +89,26 @@ class Entity:
 
         self.did_init: bool = False
 
-        self.image: Optional[EntityImageType] = None
+        self.image: Optional[EntityMediaType] = None
 
         if image is not None:
             try:
-                self.image = EntityImage(image)
-            except pygame.error as e:
-                logger(f"Failed to load image '{image}': {str(e)}", status=LoggerStatus.WARNING)
-            except FileNotFoundError as e:
-                tkinter.messagebox.showerror("File not found", str(e))
+                if image.lower().endswith((".png", ".jpg", ".jpeg", ".bmp")):
+                    self.image = EntityImage(image)
+                else:
+                    self.image = EntityAnim(image)
+            except (pygame.error, FileNotFoundError) as e:
+                logger(
+                    f"Failed to load image or animation '{image}': {str(e)}",
+                    status=LoggerStatus.WARNING,
+                )
 
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
+
+            script_dir = str(Path(scriptfile).resolve().parent)
+            if script_dir not in sys.path:
+                sys.path.append(script_dir)
 
             spec: Optional[ModuleSpec] = importlib.util.spec_from_file_location(esfid, scriptfile)
 
@@ -111,12 +120,12 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        tkinter.messagebox.showerror(
-                            "Error",
+                        logger(
                             f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
+                            status=LoggerStatus.CRITICAL,
                         )
                     except ImportError as e:
-                        tkinter.messagebox.showerror("Error", f"Error when loading script: {e}")
+                        logger(f"Error when loading script: {e}", status=LoggerStatus.CRITICAL)
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
@@ -149,7 +158,9 @@ class Entity:
             str: Debug representation of the entity.
         """
 
-        return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
+        addr: str = "0x" + hex(id(self))[2:].upper()
+
+        return f"<{self.__class__.__name__} at {addr} with id {self.id}>"
 
     def __del__(self) -> None:
         """
@@ -183,12 +194,12 @@ class Entity:
         """
         self.parent = parent
 
-    def center(self, pos: tuple[int, int]) -> None:
+    def center(self, pos: tuple[float, float]) -> None:
         """
         Center the entity on a position.
 
         Args:
-            pos (tuple[int, int]): The (x, y) point to center the entity on.
+            pos (tuple[float, float]): The (x, y) point to center the entity on.
         """
 
         self.x = pos[0] - self.width // 2
@@ -204,6 +215,7 @@ class Entity:
         if self.scriptfile_module is not None:
             if self.scriptfile_funcs["init"]:
                 self.scriptfile_module.init(self)
+                self._update_rect()
                 self.did_init = True
 
     def _update_rect(self) -> None:
@@ -332,7 +344,8 @@ class Scene:
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
         """
-        Internal collision query used by Entity.get_colliding_entities().
+        Internal collision query used by
+        :meth:`~engine.core.Entity.get_colliding_entities`.
 
         Args:
             entity (Entity): Entity to evaluate collisions for.
@@ -424,8 +437,8 @@ class Game:
         self,
         title: str = "Game",
         /,
-        width: int = 800,
-        height: int = 600,
+        width: float = 800,
+        height: float = 600,
         *,
         GP_BASE_PATH: str,
         cursor_visible: bool = True,
@@ -438,8 +451,8 @@ class Game:
 
         Args:
             title (str): Window title. Defaults to "Game".
-            width (int): Window width in pixels. Defaults to 800.
-            height (int): Window height in pixels. Defaults to 600.
+            width (float): Window width in pixels. Defaults to 800.
+            height (float): Window height in pixels. Defaults to 600.
             cursor_visible (bool): Whether the mouse cursor is visible. Defaults to True.
             fullscreen (bool): Whether to start in fullscreen mode. Defaults to False.
             icon_path (str | Path | None): Path to window icon image. Defaults to None.
@@ -457,8 +470,9 @@ class Game:
 
         pygame.init()
         self.GP_BASE_PATH: str = GP_BASE_PATH
+        self.music: Music = Music(GP_BASE_PATH)
         display_flags: int = pygame.FULLSCREEN if fullscreen else 0
-        self.wsize: tuple[int, int] = (width, height)
+        self.wsize: tuple[float, float] = (width, height)
 
         if width < 0 or height < 0:
             raise ABSFatalError("Window width and height must be positive")

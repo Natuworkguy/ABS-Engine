@@ -20,9 +20,9 @@ class Text(Entity):
 
     def __init__(
         self,
-        x: int = 0,
-        y: int = 0,
         text: str = "",
+        x: float = 0,
+        y: float = 0,
         size: int = 50,
         font: Optional[str] = None,
         color: RGBType = (255, 255, 255),
@@ -36,9 +36,9 @@ class Text(Entity):
         Text entities behave like any other entity, but they render a string of text instead of an image or colored box.
 
         Args:
-            x (int): X position. Defaults to 0.
-            y (int): Y position. Defaults to 0.
             text (str): The string to render. Defaults to "".
+            x (float): X position. Defaults to 0.
+            y (float): Y position. Defaults to 0.
             size (int): Font size in points. Defaults to 50.
             font (Optional[str]): Path to a font file. Defaults to None (pygame's
                 default font). If the file cannot be found, Text falls back to
@@ -51,9 +51,9 @@ class Text(Entity):
                 to avoid the per-frame re-render cost. Defaults to True.
         """
 
-        self.x: int = x
-        self.y: int = y
         self.text: str = text
+        self.x: float = x
+        self.y: float = y
         self.color: RGBType = color
         self.bgcolor: RGBType = bgcolor
         self.antialias: bool = antialias
@@ -66,7 +66,9 @@ class Text(Entity):
 
         self._update_text_surface()
 
-        super().__init__(x, y, width=self.text_rect.width, height=self.text_rect.height)
+        super().__init__(
+            x, y, width=self.text_rect.width, height=self.text_rect.height, color=self.color
+        )
 
     def _update_text_surface(self) -> None:
         """
@@ -75,14 +77,14 @@ class Text(Entity):
         """
 
         self.text_surface = self.font.render(self.text, self.antialias, self.color, self.bgcolor)
-        self.text_rect = self.text_surface.get_rect(x=self.x, y=self.y)
+        self.text_rect = self.text_surface.get_frect(x=self.x, y=self.y)
 
-    def center(self, pos: tuple[int, int]) -> None:
+    def center(self, pos: tuple[float, float]) -> None:
         """
         Center the text on a position and rebuild its rendered surface.
 
         Args:
-            pos (tuple[int, int]): The (x, y) point to center the text on.
+            pos (tuple[float, float]): The (x, y) point to center the text on.
         """
 
         super().center(pos)

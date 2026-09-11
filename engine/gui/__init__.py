@@ -7,6 +7,7 @@ import ctypes
 import queue
 
 from functools import partial
+from multiprocessing import get_context
 
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk
@@ -25,7 +26,7 @@ from ..saveload import (
 from ..core import Game as CoreGame, Entity
 from ..logger import logger, Status as LoggerStatus
 from ..build_tools import build
-from ..tcl_loader import tcl_source
+from ..loaders.tcl_loader import tcl_source
 from .tooltip import Tooltip as _Tooltip
 
 from pathlib import Path
@@ -51,7 +52,6 @@ class Editor:
     entity_data: Optional[tk.Text]
 
     def __init__(self) -> None:
-        self.core_game: Optional[CoreGame] = None
         self.view_popup = None
         self.game_settings_popup: Optional[tk.Toplevel] = None
         self.entity_data = None
@@ -464,6 +464,7 @@ class Editor:
                 "scriptfile": [("Python scripts", "*.py"), ("All files", "*.*")],
                 "image": [
                     ("Images", "*.png *.jpg *.jpeg *.gif *.bmp"),
+                    ("Animations", "*.gif *.webp"),
                     ("All files", "*.*"),
                 ],
             }
@@ -609,27 +610,39 @@ class Editor:
 
                 updates = {}
 
+                # A blank field means "use the default", and a key this entity does
+                # not carry is exactly what every reader falls back to a default on.
+                cleared = []
+
                 try:
                     for name, obj in field_objs.items():
-                        value = obj.get()
+                        value = obj.get().strip()
 
-                        if value.strip() == "":
+                        if value == "":
+                            cleared.append(name)
                             continue
 
                         updates[name] = fields[name](value)
 
                     color_values = [c.get().strip() for c in color_objs]
                     if any(color_values):
-                        parsed_color = tuple(int(c) for c in color_values)
+                        # A blank component falls back to its own default rather
+                        # than dragging the whole color back to white.
+                        parsed_color = tuple(int(c) if c else 255 for c in color_values)
                         if any(component < 0 or component > 255 for component in parsed_color):
                             raise ValueError("Color values must be between 0 and 255")
                         updates["color"] = parsed_color
+                    else:
+                        cleared.append("color")
                 except ValueError as e:
                     messagebox.showerror(
                         "Error",
                         f"Failed to save entity data: {e}\nPlease ensure all fields contain valid values.",
                     )
                     return
+
+                for name in cleared:
+                    self.entities[selected_item].pop(name, None)
 
                 self.entities[selected_item].update(updates)
                 self.view_popup.destroy()
@@ -714,43 +727,23 @@ class Editor:
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
 
     def run_game(self, is_editor: bool = True) -> None:
-        self.core_game = CoreGame(
-            self.project_name,
-            width=self.game_dimensions[0],
-            height=self.game_dimensions[1],
-            cursor_visible=self.cursor_visible,
-            fullscreen=self.fullscreen,
-            IS_EDITOR=is_editor,
-            GP_BASE_PATH=GP_BASE_PATH,
+        process = get_context("spawn").Process(
+            target=_run_game,
+            args=(
+                {
+                    "name": self.project_name,
+                    "dimensions": self.game_dimensions,
+                    "cursor_visible": self.cursor_visible,
+                    "fullscreen": self.fullscreen,
+                },
+                self.entities,
+                GP_BASE_PATH,
+                is_editor,
+            ),
         )
 
-        for _entity_name, entity_data in self.entities.items():
-            scriptfile = game_path(entity_data.get("scriptfile", None))
-            image_path = entity_data.get("image")
-
-            if image_path:
-                image = game_path(image_path)
-            else:
-                image = None
-
-            entity = Entity(
-                x=entity_data.get("x", 0),
-                y=entity_data.get("y", 0),
-                width=entity_data.get("width", 50),
-                height=entity_data.get("height", 50),
-                color=tuple(entity_data.get("color", (255, 255, 255))),
-                scriptfile=scriptfile,
-                image=image,
-            )
-            self.core_game.add_to_current_scene(entity)
-
-        def run_core_game() -> None:
-            if self.core_game is None:
-                return
-
-            self.core_game.run()
-
-        run_core_game()
+        process.start()
+        process.join()
 
     def run(self) -> None:
         self.root.mainloop()
@@ -758,6 +751,49 @@ class Editor:
     def quit(self) -> None:
         self.root.quit()
         sys.exit()
+
+
+def _run_game(settings: dict, entities: dict, base_path: str, is_editor: bool) -> None:
+    """
+    Run a game to completion. The editor spawns this as a process of its own.
+
+    Args:
+        settings (dict): Window title and display settings for this run.
+        entities (dict): Entity data keyed by name, as the editor stores it.
+        base_path (str): Project root the entities' paths are relative to.
+        is_editor (bool): Whether the game should behave as an editor preview.
+    """
+
+    global GP_BASE_PATH
+
+    GP_BASE_PATH = base_path
+    sys.dont_write_bytecode = True
+
+    core_game = CoreGame(
+        settings["name"],
+        width=settings["dimensions"][0],
+        height=settings["dimensions"][1],
+        cursor_visible=settings["cursor_visible"],
+        fullscreen=settings["fullscreen"],
+        IS_EDITOR=is_editor,
+        GP_BASE_PATH=base_path,
+    )
+
+    for _entity_name, entity_data in entities.items():
+        image_path = entity_data.get("image")
+
+        entity = Entity(
+            x=entity_data.get("x", 0),
+            y=entity_data.get("y", 0),
+            width=entity_data.get("width", 50),
+            height=entity_data.get("height", 50),
+            color=tuple(entity_data.get("color", (255, 255, 255))),
+            scriptfile=game_path(entity_data.get("scriptfile", None)),
+            image=game_path(image_path) if image_path else None,
+        )
+        core_game.add_to_current_scene(entity)
+
+    core_game.run()
 
 
 def run() -> None:

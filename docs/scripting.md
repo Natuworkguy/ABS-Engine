@@ -5,6 +5,12 @@ With scripting, you can move and manipulate objects, create animations, and much
 In other words, scripting allows you to make entities in your game _do things_.
 Here's how to get started:
 
+> [!TIP]
+> If you're planning on using the engine API, see:
+>
+> * [Using the Engine API Directly](using_the_engine_api.md)
+> * [OSE Docs](ose.md)
+
 To create a script file, first follow the
 [recommended file structure](game_file_structure.md).
 The `assets/` folder is not needed for this tutorial.
@@ -23,7 +29,7 @@ Then, launch ABS Engine and follow these steps:
 6. Click "Save", then "Save Project"
 7. Verify that `game.absp` was saved in your project folder
 
->[!Tip]
+> [!TIP]
 > Name your scripts after the entity they're attached to.
 > This makes it easy to identify them later.
 
@@ -41,18 +47,6 @@ def update(entity, dt):
 Go back to ABS Engine and click "Run".
 You should see a white square moving continuously from left to right.
 
->[!Tip]
-> Because the engine requires a script to
-> be attached to an entity in your game,
-> put everything in the game that is not
-> entity-specific (e.g. playing background
-> music, etc.) in the script attached to
-> the player entity (The entity that the
-> player controls). This is called a main
-> script. If your game does not have a player
-> entity, place a new entity off screen that
-> has the main script attached to it.
-
 Let's break down what this code does.
 In a script file, three functions are commonly defined:
 
@@ -63,7 +57,9 @@ event(entity: Entity, event: pygame.event.Event) -> None
 ```
 
 `init()`   - Called once when the game starts
+
 `update()` - Called every frame (multiple times per second)
+
 `event()`  - Called when a pygame event is triggered
 
 ## Entity Properties
@@ -82,7 +78,7 @@ The `engine.core.Entity` class has the following properties:
 | `width` | Width in pixels | `float` |
 | `height` | Height in pixels | `float` |
 | `color` | RGB color value | `tuple[int, int, int]` |
-| `rect` | Pygame rect object on screen | `pygame.Rect` |
+| `rect` | Pygame rect object on screen | `pygame.FRect` |
 | `scriptfile` | Path to the attached script | `str` |
 | `image` | Image attached to entity | `EntityImage` or `None` |
 | `id` | Unique entity UUID | `str` |
@@ -94,9 +90,9 @@ The `engine.core.Entity` class has the following properties:
 
 The `init()`, `update()`, and `event()` functions are callback functions that ABS Engine calls at specific times:
 
-- `init(entity: Entity) -> None`                              - Called when the game starts
-- `update(entity: Entity, dt: float) -> None`                 - Called every frame
-- `event(entity: Entity, event: pygame.event.Event) -> None`  - Called when an a pygame event occurs
+* `init(entity: Entity) -> None`                              - Called when the game starts
+* `update(entity: Entity, dt: float) -> None`                 - Called every frame
+* `event(entity: Entity, event: pygame.event.Event) -> None`  - Called when an a pygame event occurs
 
 Here's an example script that creates a simple game with player movement.
 The game uses a top-down perspective with a player-controlled square
@@ -151,3 +147,17 @@ def event(entity, event):
 > If the game window freezes or shows a black screen at startup,
 > check that your script file has no syntax errors. It is completely normal for a game to crash if there are code errors.
 > See [Debugging Games](debugging_games.md) for help diagnosing issues.
+
+## Main Scripts
+
+> [!TIP]
+> Because the engine requires a script to
+> be attached to an entity in your game,
+> put everything in the game that is not
+> entity-specific (e.g. playing background
+> music, etc.) in the script attached to
+> the player entity (The entity that the
+> player controls). This is called a main
+> script. If your game does not have a player
+> entity, place a new entity off screen that
+> has the main script attached to it.

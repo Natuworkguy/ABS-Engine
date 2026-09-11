@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,16 +8,18 @@ dynamic = ["version", "dependencies", "optional-dependencies"]
 description = "2D Game engine made by Natuworkguy for public use."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "GPL-3.0-only" }
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [
   { name = "Nathan C." }
 ]
 
 [tool.setuptools]
 include-package-data = true
+package-dir = { abs_engine = "engine" }
 
 [tool.setuptools.dynamic]
-version = { attr = "engine.version.__version__" }
+version = { attr = "abs_engine.version.__version__" }
 
 [tool.setuptools.dynamic.dependencies]
 file = ["requirements.txt"]
@@ -25,19 +27,40 @@ file = ["requirements.txt"]
 [tool.setuptools.dynamic.optional-dependencies]
 dev = { file = ["requirements-dev.txt"] }
 
-[tool.setuptools.packages.find]
-include = ["engine*"]
-
 [tool.setuptools.package-data]
-engine = ["py.typed"]
+abs_engine = ["py.typed"]
 
 [tool.mypy]
+
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+disallow_subclassing_any = true
+warn_unused_ignores = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
 
 # squirrel-lang ships __init__.pyi but no py.typed marker, so PEP 561 forbids
 # mypy from using its inline stubs.
 [[tool.mypy.overrides]]
 module = ["squirrel"]
 ignore_missing_imports = true
+
+[tool.pyright]
+exclude = [
+  # == Default Excludes ===
+  "**/.*",
+  "**/node_modules",
+
+  ".venv",
+  "build",
+  "dist",
+  "**/__pycache__"
+]
 
 [tool.ruff]
 line-length = 100

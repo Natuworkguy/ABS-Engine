@@ -7,19 +7,20 @@ Image handling utilities for engine entities.
 
 import pygame
 
-from typing import Optional
+from typing import Optional, Union
 
 
 class EntityImage:
     """
-    Manage a pygame image surface for an entity.
+    Manage a pygame image surface for an :class:`~engine.core.Entity`.
     """
 
     surface: Optional[pygame.Surface]
 
     def __init__(self, image_path: str) -> None:
         """
-        Initialize the EntityImage by loading the image at ``image_path``.
+        Initialize the :class:`~engine.core.image.EntityImage` by loading the
+        image at ``image_path``.
 
         Args:
             image_path (str): The path to the image file.
@@ -43,13 +44,13 @@ class EntityImage:
 
         self.surface = pygame.image.load(image_path).convert_alpha()
 
-    def draw(self, surface: pygame.Surface, rect: pygame.Rect) -> None:
+    def draw(self, surface: pygame.Surface, rect: Union[pygame.Rect, pygame.FRect]) -> None:
         """
         Draw the image scaled to ``rect`` onto ``surface``.
 
         Args:
             surface (pygame.Surface): surface to draw onto
-            rect (pygame.Rect): rect to scale image to
+            rect (pygame.Rect | pygame.FRect): rect to scale image to
         """
 
         assert self.surface is not None, "EntityImage.surface was not initialized"  # nosec B101

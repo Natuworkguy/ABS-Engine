@@ -11,6 +11,31 @@ This is useful for prototypes, procedurally generated games, or tooling built
 on top of ABS Engine, where driving everything from code is more convenient
 than maintaining a project file.
 
+## Installing the Engine
+
+When the editor builds a project it copies the `engine/` package into the
+game's own directory, so a generated game finds the engine sitting next to
+it. Nothing does that for you if you aren't using the editor, and doing it by
+hand is awkward to keep in sync. Install ABS Engine as a dependency instead:
+put it on the first line of your game's `requirements.txt`, above whatever
+else your game needs.
+
+```requirements
+git+https://github.com/Natuworkguy/ABS-Engine.git
+```
+
+Then set your game up the same way as any other Python project:
+
+```bash
+pip install -r requirements.txt
+```
+
+>[!IMPORTANT]
+> Installed as a dependency, the package is imported as `abs_engine`
+> (`from abs_engine.core import Entity, Game`). The plain `engine` name used
+> in the examples below is the copy the editor drops next to a generated
+> game.
+
 ## A Minimal Game
 
 ```python

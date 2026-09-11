@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+
+    "charliermarsh.ruff",
+    "astral-sh.ty",
+    "ms-python.mypy-type-checker",
+    "ms-python.flake8",
+    "nwgh.bandit",
+    "kennethlove.interrogate",
+    "DavidAnson.vscode-markdownlint",
+
+    "marcinbar.vscode-squirrel",
+    "rashwell.tcl"
+  ]
+}

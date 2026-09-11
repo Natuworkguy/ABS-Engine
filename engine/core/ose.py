@@ -13,11 +13,11 @@ from typing import Any, Optional, Callable
 
 def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
     """
-    Check whether scriptobj itself defines `name`, rather than inheriting
-    it from Entity. Since script classes are commonly subclasses of Entity
-    (for typing convenience), a plain hasattr() check would also match
-    Entity's own init/update/event, causing infinite recursion when they
-    are dispatched.
+    Check whether scriptobj itself defines ``name``, rather than inheriting
+    it from :class:`~engine.core.Entity`. Since script classes are commonly
+    subclasses of :class:`~engine.core.Entity` (for typing convenience), a
+    plain hasattr() check would also match its own init/update/event,
+    causing infinite recursion when they are dispatched.
 
 
     Args:
@@ -25,7 +25,7 @@ def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
         name (str): The name of the method to check for.
 
     Returns:
-        bool: True if scriptobj defines `name`, False otherwise.
+        bool: True if scriptobj defines ``name``, False otherwise.
     """
 
     func: Optional[Callable] = getattr(scriptobj, name, None)
@@ -39,16 +39,20 @@ class ObjectScriptEntity(Entity):
 
     def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any) -> Any:
         """
-        Create an Entity configured to dispatch lifecycle calls to ``scriptobj``.
+        Create an :class:`~engine.core.Entity` configured to dispatch lifecycle
+        calls to ``scriptobj``.
 
         Args:
-            *args (Any): Positional arguments forwarded to Entity.
+            *args (Any): Positional arguments forwarded to
+                Entity.
             scriptobj (EntityScriptType): Object script providing optional
                 init, update, and event methods.
-            **kwargs (Any): Keyword arguments forwarded to Entity.
+            **kwargs (Any): Keyword arguments forwarded to
+                Entity.
 
         Returns:
-            Any: Entity instance with object-script dispatch metadata attached.
+            Any: :class:`~engine.core.Entity` instance with object-script
+                dispatch metadata attached.
         """
 
         kwargs["scriptfile"] = None

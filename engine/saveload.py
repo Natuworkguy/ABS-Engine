@@ -86,7 +86,7 @@ dist/
         with open(dir / ".gitattributes", "w") as f:
             f.write(
                 """
-    *.absp text linguist-language=JSON linguist-detectable=true diff=json
+*.absp text linguist-language=JSON linguist-detectable=true diff=json
             """.strip()
             )
 

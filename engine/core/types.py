@@ -10,11 +10,12 @@ import pygame
 from typing import Union, Protocol
 
 from .image import EntityImage
+from .animation import EntityAnim
 
 RGBType = Union[
     tuple[int, int, int], pygame.Color  # Add pygame.Color for type checkers
 ]
-EntityImageType = EntityImage
+EntityMediaType = Union[EntityImage, EntityAnim]
 
 
 class EntityScript(Protocol):

@@ -12,6 +12,7 @@ Scenes are managed by `engine.core.Game`, and each scene is represented by
 Every `Game` has:
 
 - `game.scenes`: A list of all scenes in the game.
+- `game.music`: See [this article](music.md)
 - `game.current_scene`: The index of the scene currently being shown.
 - `game.add_scene()`: A method that creates a new scene and returns its index.
 - `game.switch_scene(scene_index)`: A method that changes the active scene.

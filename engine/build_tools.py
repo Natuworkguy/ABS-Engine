@@ -26,10 +26,27 @@ class _QueueWriter:
     """A writable stream that forwards each written line to a Queue."""
 
     def __init__(self, log_queue: "Queue[Optional[str]]") -> None:
+        """
+        Wrap a queue in a writable stream.
+
+        Args:
+            log_queue (Queue[Optional[str]]): Queue that receives each completed line.
+        """
+
         self._queue = log_queue
         self._buffer = ""
 
     def write(self, text: str) -> int:
+        """
+        Buffer text, forwarding each line to the queue once it is complete.
+
+        Args:
+            text (str): Text written to the stream.
+
+        Returns:
+            int: Number of characters written, as a writable stream is expected to report.
+        """
+
         self._buffer += text
 
         while "\n" in self._buffer:
@@ -39,21 +56,53 @@ class _QueueWriter:
         return len(text)
 
     def flush(self) -> None:
-        pass
+        """
+        Do nothing. Lines reach the queue as soon as they complete, so nothing
+        is ever held back waiting to be flushed.
+        """
 
 
 def _clear_readonly(func: Any, path: Any, exc: BaseException) -> None:
+    """
+    Clear a path's read-only bit and retry the removal that failed on it.
+
+    Passed to shutil.rmtree as its error handler. This is what lets a previous
+    build be deleted on Windows, where PyInstaller leaves read-only files behind.
+
+    Args:
+        func (Any): The removal function that failed, called again once the
+            permission has been changed.
+        path (Any): Path that could not be removed.
+        exc (BaseException): Exception func raised. Unused, but part of the
+            handler signature rmtree calls back with.
+    """
+
     os.chmod(path, stat.S_IWRITE)
     func(path)
 
 
 def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> None:
+    """
+    Delete a previous build directory, waiting out any lock still held on it.
+
+    A build that has only just finished can keep files open for a moment, so a
+    PermissionError is retried rather than treated as fatal straight away.
+
+    Args:
+        path (Path): Build directory to remove. A missing path is ignored.
+        retries (int): How many removal attempts to make. Defaults to 5.
+        delay (float): Seconds to wait between attempts. Defaults to 0.5.
+
+    Raises:
+        PermissionError: If the directory is still locked after the final attempt.
+    """
+
     if not path.exists():
         return
 
     for attempt in range(retries):
         try:
-            shutil.rmtree(path, onexc=_clear_readonly)  # ty: ignore[unknown-argument]
+            shutil.rmtree(path, onexc=_clear_readonly)  # pyright: ignore[reportCallIssue] # ty: ignore[unknown-argument]
             return
         except PermissionError:
             if attempt == retries - 1:
@@ -62,9 +111,19 @@ def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> 
 
 
 def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[str]]") -> None:
-    # Redirect output before importing PyInstaller: its logging setup binds a
-    # handler to sys.stderr at import time, so the import must happen after
-    # the streams are replaced for build output to reach the log_queue.
+    """
+    Run PyInstaller over a prepared project directory, reporting progress.
+
+    Meant to run in its own process, since it replaces the process-wide output
+    streams. A None item is put on the queue once the build ends, however it
+    ends, so a reader knows no more output is coming.
+
+    Args:
+        name (str): Name to give the built executable.
+        directory (Path): Project directory holding game.absp and run.py.
+        log_queue (Queue[Optional[str]]): Queue that receives PyInstaller's output.
+    """
+
     sys.stdout = _QueueWriter(log_queue)
     sys.stderr = _QueueWriter(log_queue)
 
@@ -86,6 +145,8 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
             "--specpath",
             str(directory),
             f"--add-data={directory / 'game.absp'!s}{os.pathsep}.",
+            f"--add-data={directory / 'engine' / 'nut'}{os.pathsep}engine/nut/",
+            f"--add-data={directory / 'engine' / 'tcl'}{os.pathsep}engine/tcl/",
         ]
 
         if (directory / "scripts").exists():
