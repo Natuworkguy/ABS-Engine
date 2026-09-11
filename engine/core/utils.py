@@ -7,12 +7,12 @@ Utility functions for the engine.
 
 from typing import TYPE_CHECKING
 
-from ..loaders.nut_loader import nut_source, nut_call_function
+from ..loaders.c_loader import c_source
 
 if TYPE_CHECKING:
     from . import Game
 
-nut_source("math.nut")
+_clamp = c_source("mathutil.c").clamp
 
 
 def get_center(game: "Game") -> tuple[float, float]:
@@ -36,7 +36,7 @@ def clamp(value: float, low: float, high: float) -> float:
     Useful for holding an entity on screen, or keeping a color channel
     between 0 and 255.
 
-    *Implemented in Squirrel*
+    *Implemented in C*
 
     Args:
         value (float): The number to limit.
@@ -47,4 +47,4 @@ def clamp(value: float, low: float, high: float) -> float:
         float: The number, or low or high if it fell outside them.
     """
 
-    return float(nut_call_function("clamp", float(value), float(low), float(high)))
+    return float(_clamp(value, low, high))

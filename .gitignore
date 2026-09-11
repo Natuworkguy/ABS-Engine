@@ -214,3 +214,6 @@ __marimo__/
 
 # Agents
 .agents/
+
+# Compiled engine C
+engine/c/build/
