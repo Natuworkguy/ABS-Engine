@@ -158,7 +158,9 @@ class Entity:
             str: Debug representation of the entity.
         """
 
-        return f"<{self.__class__.__name__} at {hex(id(self))} with id {self.id}>"
+        addr: str = "0x" + hex(id(self))[2:].upper()
+
+        return f"<{self.__class__.__name__} at {addr} with id {self.id}>"
 
     def __del__(self) -> None:
         """
