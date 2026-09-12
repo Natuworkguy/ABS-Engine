@@ -12,6 +12,7 @@
     "DavidAnson.vscode-markdownlint",
 
     "marcinbar.vscode-squirrel",
-    "rashwell.tcl"
+    "rashwell.tcl",
+    "njpwerner.autodocstring"
   ]
 }
