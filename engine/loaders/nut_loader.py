@@ -38,22 +38,23 @@ def get_vm() -> squirrel.StaticVM:
     return squirrel.SQVM()
 
 
-def nut_source(script_name: str) -> Any:
+def nut_source(script_name: str, *, dir: Path = NUT_DIR) -> Any:
     """
-    Run a Squirrel script from engine/nut/
+    Run a Squirrel script from engine/nut/, or from another directory
 
     Args:
-        script_name (str): file in engine/nut/ to source from
+        script_name (str): file to source from
+        dir (Path): directory holding that file, engine/nut/ by default
 
     Returns:
         Any: Value the script returns, or None if it returns nothing.
 
     Raises:
-        FileNotFoundError: If no such script exists under engine/nut/.
+        FileNotFoundError: If no such script exists in that directory.
         IsADirectoryError: If the path names a directory rather than a file.
     """
 
-    script_path = NUT_DIR / script_name
+    script_path = dir / script_name
 
     if not script_path.exists():
         raise FileNotFoundError(f"Could not find Squirrel file {script_path}.")
