@@ -21,9 +21,24 @@ from . import _ENGINE_DIR
 C_DIR: Final[Path] = _ENGINE_DIR / "c"
 BUILD_DIR: Final[Path] = C_DIR / "build"
 
+INSTALL_HINT: Final[str] = (
+    "Install one:\n"
+    "  macOS          xcode-select --install\n"
+    "  Debian, Ubuntu sudo apt install build-essential\n"
+    "  Fedora         sudo dnf install gcc\n"
+    "  Windows        the Visual Studio Build Tools, with the C++ workload\n"
+    "Or set CC to a compiler that is already installed somewhere else."
+)
+
 if not C_DIR.exists() or not C_DIR.is_dir():
     logger("Could not find engine/c/ directory.", status=Status.CRITICAL)
     sys.exit(1)
+
+
+class CompilerNotFoundError(RuntimeError):
+    """
+    There is no C compiler on this machine to build engine/c/ with.
+    """
 
 
 class CModule:
@@ -105,6 +120,10 @@ def _build(module_name: str, source_path: Path, header_path: Path) -> None:
         module_name (str): Name to give the compiled module.
         source_path (Path): C file to compile.
         header_path (Path): Header declaring what the C file exposes.
+
+    Raises:
+        CompilerNotFoundError: If the file would not build, which on a
+            machine with no C compiler installed is every time.
     """
 
     ffibuilder = cffi.FFI()
@@ -117,7 +136,13 @@ def _build(module_name: str, source_path: Path, header_path: Path) -> None:
         libraries=[] if sys.platform == "win32" else ["m"],
     )
 
-    ffibuilder.compile(tmpdir=str(BUILD_DIR))
+    try:
+        ffibuilder.compile(tmpdir=str(BUILD_DIR))
+    except cffi.VerificationError as e:
+        raise CompilerNotFoundError(
+            f"Could not build {source_path.name}, which usually means there is no "
+            f"C compiler installed.\n\n{INSTALL_HINT}\n\n{e}"
+        ) from e
 
 
 @cache
@@ -130,7 +155,9 @@ def c_source(source_name: str) -> CModule:
     with no includes and no include guards.
 
     Compiling happens once per file, and only when the C is newer than the last
-    build, so later calls return the same already built module.
+    build, so later calls return the same already built module. Building at all
+    needs a C compiler installed, and raises :class:`CompilerNotFoundError`
+    when there is none.
 
     Args:
         source_name (str): file in engine/c/ to compile
