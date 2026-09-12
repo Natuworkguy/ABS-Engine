@@ -92,26 +92,6 @@ class CModule:
         return f"<{self.__class__.__name__} of {self.source_name}>"
 
 
-def _is_built(module_name: str, *sources: Path) -> bool:
-    """
-    Check whether a compiled module is already present and up to date.
-
-    Args:
-        module_name (str): Name of the compiled module.
-        *sources (Path): Files the module was compiled from.
-
-    Returns:
-        bool: True if the module exists and is newer than every source.
-    """
-
-    newest = max(source.stat().st_mtime for source in sources)
-
-    return any(
-        built.suffix in {".so", ".pyd"} and built.stat().st_mtime >= newest
-        for built in BUILD_DIR.glob(f"{module_name}.*")
-    )
-
-
 def _build(module_name: str, source_path: Path, header_path: Path) -> None:
     """
     Compile a C file into an extension module under engine/c/build/
@@ -154,9 +134,9 @@ def c_source(source_name: str) -> CModule:
     that header to learn what Python may call, so it holds declarations only,
     with no includes and no include guards.
 
-    Compiling happens once per file, and only when the C is newer than the last
-    build, so later calls return the same already built module. Building at all
-    needs a C compiler installed, and raises :class:`CompilerNotFoundError`
+    The file is compiled every time a process first asks for it, and the result
+    is held, so later calls return the same already built module. Compiling
+    needs a C compiler installed, and raises :attr:`~engine.loaders.c_loader.CompilerNotFoundError`
     when there is none.
 
     Args:
@@ -188,8 +168,7 @@ def c_source(source_name: str) -> CModule:
 
     module_name = f"_{source_path.stem}_cffi"
 
-    if not _is_built(module_name, source_path, header_path):
-        _build(module_name, source_path, header_path)
+    _build(module_name, source_path, header_path)
 
     if str(BUILD_DIR) not in sys.path:
         sys.path.insert(0, str(BUILD_DIR))
