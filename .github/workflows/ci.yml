@@ -333,6 +333,28 @@ jobs:
           find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/build/*" -print0 \
             | xargs -0 clang-format --style=file:.clang-format --dry-run --Werror --verbose
 
+  lint-actionlint:
+    name: Lint Workflows with Actionlint
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install Actionlint
+        shell: bash
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
+      - name: Run Actionlint
+        shell: bash
+        run: |
+          echo "Linting GitHub Actions workflows..."
+
+          ./actionlint -color -config-file .github/actionlint.yaml -verbose
+
   pip-audit:
     name: Dependency Audit with pip-audit
     needs: prebuild
@@ -383,6 +405,7 @@ jobs:
       - markdownlint
       - lint-ty
       - lint-clang-format
+      - lint-actionlint
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
