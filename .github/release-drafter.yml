@@ -1,0 +1,12 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+change-template: "* $TITLE by @$AUTHOR"
+change-title-escapes: '\<*_&'
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/Natuworkguy/ABS-Engine/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
