@@ -193,6 +193,7 @@ cython_debug/
 #  (shared workspace config is un-ignored below)
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 
 # Ruff stuff:
 .ruff_cache/
