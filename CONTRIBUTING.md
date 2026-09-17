@@ -238,7 +238,7 @@ For UI-related changes, screenshots are encouraged.
 
 Use concise, descriptive commit messages.
 
-## Examples
+### Examples
 
 ```text
 Add sprite batching optimization
