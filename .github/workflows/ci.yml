@@ -309,6 +309,30 @@ jobs:
         run: |
           ty check .
 
+  lint-clang-format:
+    name: Format Check with clang-format
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install clang-format
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Run clang-format Check
+        shell: bash
+        run: |
+          echo "Checking C formatting with clang-format..."
+
+          find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/build/*" -print0 \
+            | xargs -0 clang-format --style=file:.clang-format --dry-run --Werror --verbose
+
   pip-audit:
     name: Dependency Audit with pip-audit
     needs: prebuild
@@ -358,6 +382,7 @@ jobs:
       - lint-darglint
       - markdownlint
       - lint-ty
+      - lint-clang-format
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

@@ -4,6 +4,8 @@
 
 .github                 export-ignore
 .vscode                 export-ignore
+.clang-format           export-ignore
+.clang-format-ignore    export-ignore
 .editorconfig           export-ignore
 .flake8                 export-ignore
 .gitattributes          export-ignore
