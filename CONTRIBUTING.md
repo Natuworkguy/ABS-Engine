@@ -180,6 +180,23 @@ interrogate
 ty check .
 ```
 
+### Clang-Format
+
+```bash
+find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/build/*" \
+  | xargs clang-format --style=file:.clang-format --dry-run --Werror
+```
+
+### Actionlint
+
+Lints the workflow files under `.github/workflows`. Install it from
+[rhysd/actionlint](https://github.com/rhysd/actionlint#install) (e.g.
+`brew install actionlint` on macOS), then run it from the repo root:
+
+```bash
+actionlint
+```
+
 All checks must pass before a pull request will be reviewed.
 
 ---
