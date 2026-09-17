@@ -302,7 +302,7 @@ docs/api-updates
 
 Do not publicly disclose vulnerabilities or security issues.
 
-Report security-related concerns privately to the maintainers.
+See [SECURITY.md](SECURITY.md) for how to report them privately.
 
 ---
 
