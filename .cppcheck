@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <root name="."/>
+    <platform>unspecified</platform>
+    <check-headers>true</check-headers>
+    <paths>
+        <dir name="engine/c/"/>
+    </paths>
+    <exclude>
+        <path name="engine/c/build/"/>
+    </exclude>
+    <suppressions>
+        <suppression>missingIncludeSystem</suppression>
+    </suppressions>
+</project>

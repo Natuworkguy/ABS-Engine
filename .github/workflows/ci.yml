@@ -333,6 +333,31 @@ jobs:
           find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/build/*" -print0 \
             | xargs -0 clang-format --style=file:.clang-format --dry-run --Werror --verbose
 
+  lint-cppcheck:
+    name: Static Analysis with cppcheck
+    needs: prebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install cppcheck
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        shell: bash
+        run: |
+          echo "Running cppcheck static analysis..."
+
+          cppcheck --project=.cppcheck \
+            --enable=warning,style,performance,portability \
+            --error-exitcode=1
+
   lint-typos:
     name: Spell Check with Typos
     needs: prebuild
@@ -422,6 +447,7 @@ jobs:
       - lint-clang-format
       - lint-actionlint
       - lint-typos
+      - lint-cppcheck
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

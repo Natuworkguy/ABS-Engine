@@ -187,6 +187,17 @@ find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/buil
   | xargs clang-format --style=file:.clang-format --dry-run --Werror
 ```
 
+### cppcheck
+
+Static analysis for the C sources under `engine/c`. Paths, excludes, and
+suppressions are defined in `.cppcheck` at the repo root. Install cppcheck
+from [cppcheck](https://cppcheck.sourceforge.io/#download) (e.g.
+`brew install cppcheck` on macOS), then run it from the repo root:
+
+```bash
+cppcheck --project=.cppcheck --enable=warning,style,performance,portability --error-exitcode=1
+```
+
 ### Typos
 
 Install [crate-ci/typos](https://github.com/crate-ci/typos#install) (e.g.
