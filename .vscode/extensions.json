@@ -13,6 +13,7 @@
 
     "marcinbar.vscode-squirrel",
     "rashwell.tcl",
-    "njpwerner.autodocstring"
+    "njpwerner.autodocstring",
+    "tekumara.typos-vscode"
   ]
 }

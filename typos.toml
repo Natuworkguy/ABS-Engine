@@ -1,0 +1,9 @@
+[files]
+extend-exclude = [
+    ".venv",
+    "*.egg-info",
+    "uv.lock",
+    "LICENSE",
+]
+
+[default.extend-words]

@@ -12,3 +12,4 @@
 .markdownlint-cli2.yaml export-ignore
 .python-version         export-ignore
 AGENTS.md               export-ignore
+typos.toml              export-ignore

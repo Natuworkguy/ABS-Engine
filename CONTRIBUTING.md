@@ -187,6 +187,15 @@ find engine/c -type f \( -name "*.c" -o -name "*.h" \) -not -path "engine/c/buil
   | xargs clang-format --style=file:.clang-format --dry-run --Werror
 ```
 
+### Typos
+
+Install [crate-ci/typos](https://github.com/crate-ci/typos#install) (e.g.
+`brew install typos-cli` on macOS), then run it from the repo root:
+
+```bash
+typos
+```
+
 ### Actionlint
 
 Lints the workflow files under `.github/workflows`. Install it from
