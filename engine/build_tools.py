@@ -14,7 +14,7 @@ from multiprocessing import Process, Queue
 
 from tkinter import messagebox
 from pathlib import Path
-from typing import Optional, Tuple, Any
+from typing import Optional, Tuple, Any, Union
 
 from .saveload import resource_path
 from .logger import logger, Status
@@ -108,7 +108,9 @@ def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> 
             continue
 
 
-def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[str]]") -> None:
+def _build_pyinstaller(
+    name: str, directory: Path, log_queue: "Queue[Optional[str]]", autoadd: list[Union[str, Path]]
+) -> None:
     """
     Run PyInstaller over a prepared project directory, reporting progress.
 
@@ -119,7 +121,8 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
     Args:
         name (str): Name to give the built executable.
         directory (Path): Project directory holding game.absp and run.py.
-        log_queue (Queue[Optional[str]]): Queue that receives PyInstaller's output.
+        log_queue (Queue[str | None]): Queue that receives PyInstaller's output.
+        autoadd (list[str | Path]): Directories to automatically add to the build, if they exist.
     """
 
     sys.stdout = _QueueWriter(log_queue)
@@ -147,8 +150,9 @@ def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[st
             f"--add-data={directory / 'engine' / 'tcl'}{os.pathsep}engine/tcl/",
         ]
 
-        if (directory / "scripts").exists():
-            pyi_args.append(f"--add-data={directory / 'scripts'!s}{os.pathsep}scripts")
+        for path in autoadd:
+            if (directory / path).exists():
+                pyi_args.append(f"--add-data={directory / path!s}{os.pathsep}{path!s}")
 
         pyi_args.append(f"--add-data={directory / 'data'!s}{os.pathsep}data")
         pyi_args.append(str(directory / "run.py"))
@@ -202,11 +206,7 @@ def build(
     log_queue: "Queue[Optional[str]]" = Queue()
     process = Process(
         target=_build_pyinstaller,
-        args=(
-            name,
-            directory,
-            log_queue,
-        ),
+        args=(name, directory, log_queue, ["scripts"]),
     )
     process.start()
 
