@@ -62,23 +62,15 @@ class _QueueWriter:
         """
 
 
-def _clear_readonly(func: Any, path: Any, exc: BaseException) -> None:
+def _clear_readonly(path: Any) -> None:
     """
     Clear a path's read-only bit and retry the removal that failed on it.
 
-    Passed to shutil.rmtree as its error handler. This is what lets a previous
-    build be deleted on Windows, where PyInstaller leaves read-only files behind.
-
     Args:
-        func (Any): The removal function that failed, called again once the
-            permission has been changed.
         path (Any): Path that could not be removed.
-        exc (BaseException): Exception func raised. Unused, but part of the
-            handler signature rmtree calls back with.
     """
 
     os.chmod(path, stat.S_IWRITE)
-    func(path)
 
 
 def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> None:
@@ -102,12 +94,18 @@ def _remove_previous_build(path: Path, retries: int = 5, delay: float = 0.5) -> 
 
     for attempt in range(retries):
         try:
-            shutil.rmtree(path, onexc=_clear_readonly)  # type: ignore[call-arg] # pyright: ignore[reportCallIssue] # ty: ignore[unknown-argument]
+            shutil.rmtree(path)
             return
         except PermissionError:
             if attempt == retries - 1:
                 raise
             time.sleep(delay)
+        except (FileNotFoundError, FileExistsError) as e:
+            messagebox.showerror("Error", f"{e.__class__.__name__}: {e!s}")
+            sys.exit(1)
+        except Exception:
+            _clear_readonly(path)
+            continue
 
 
 def _build_pyinstaller(name: str, directory: Path, log_queue: "Queue[Optional[str]]") -> None:
