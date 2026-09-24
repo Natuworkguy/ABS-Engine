@@ -11,7 +11,7 @@ from json import dump, load
 from typing import Optional, Any
 from pathlib import Path
 
-from .logger import logger, Status as LoggerStatus
+from . import logger
 
 import sys
 import os
@@ -111,10 +111,7 @@ def load_project() -> Optional[list]:
         gamefile = str(Path(dir) / "game.absp")
 
         if not os.path.exists(gamefile):
-            logger(
-                "game.absp file not found in selected directory. Creating.",
-                status=LoggerStatus.WARNING,
-            )
+            logger.warning("game.absp file not found in selected directory. Creating.")
 
             with open(gamefile, "w", encoding="utf-8") as f:
                 f.write("{}")

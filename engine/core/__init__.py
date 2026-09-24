@@ -19,7 +19,7 @@ import colorama
 
 from typing import Optional, Any, Union
 
-from ..logger import logger, Status as LoggerStatus
+from .. import logger
 from .image import EntityImage
 from .animation import EntityAnim
 from .music import Music
@@ -98,10 +98,7 @@ class Entity:
                 else:
                     self.image = EntityAnim(image)
             except (pygame.error, FileNotFoundError) as e:
-                logger(
-                    f"Failed to load image or animation '{image}': {str(e)}",
-                    status=LoggerStatus.WARNING,
-                )
+                logger.warning(f"Failed to load image or animation '{image}': {str(e)}")
 
         if scriptfile is not None:
             esfid = f"esf-{self.id}"
@@ -120,12 +117,11 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        logger(
-                            f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.',
-                            status=LoggerStatus.CRITICAL,
+                        logger.critical(
+                            f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.'
                         )
                     except ImportError as e:
-                        logger(f"Error when loading script: {e}", status=LoggerStatus.CRITICAL)
+                        logger.critical(f"Error when loading script: {e}")
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:
@@ -138,7 +134,7 @@ class Entity:
                     if hasattr(self.scriptfile_module, "event"):
                         self.scriptfile_funcs["event"] = True
             else:
-                logger(f'Script file "{scriptfile}" not found.', status=LoggerStatus.WARNING)
+                logger.warning(f'Script file "{scriptfile}" not found.')
 
     def __str__(self) -> str:
         """
@@ -170,7 +166,7 @@ class Entity:
         try:
             self.destroy()
         except ValueError:
-            logger("Failed to destroy entity", status=LoggerStatus.WARNING)
+            logger.warning("Failed to destroy entity")
 
     def _collides_with(self, other: "Entity") -> bool:
         """
@@ -340,7 +336,7 @@ class Scene:
         self.objects: list[Entity] = []
         self.no_entities: bool = True
 
-        logger("Initialized scene")
+        logger.info("Initialized scene")
 
     def _get_colliding_entities(self, entity: Entity) -> list[Entity]:
         """
@@ -493,7 +489,7 @@ class Game:
         self.current_scene: int = 0
         self._bg_color: RGBType = (0, 0, 0)
 
-        logger("Initialized game")
+        logger.info("Initialized game")
 
     def set_bg_color(self, color: RGBType) -> None:
         """
@@ -589,7 +585,7 @@ class Game:
             image = image.convert_alpha()
             pygame.display.set_icon(image)
         except (pygame.error, FileNotFoundError) as e:
-            logger(f"Error loading icon: {e}", status=LoggerStatus.WARNING)
+            logger.warning(f"Error loading icon: {e}")
 
     def updateall(self, dt: float, /, exclude: Optional[Scene] = None) -> None:
         """
@@ -633,7 +629,7 @@ class Game:
             fps (int): Target frames per second for the game loop. Defaults to 60.
         """
 
-        logger("Starting game loop")
+        logger.info("Starting game loop")
         self.running = True
         while self.running:
             dt: Union[int, float] = self.clock.tick(fps) / 1000.0

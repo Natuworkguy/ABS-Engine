@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Optional, Tuple, Any, Union
 
 from .saveload import resource_path
-from .logger import logger, Status
+from . import logger
 
 engine_path = Path(__file__).parent
 
@@ -182,9 +182,7 @@ def build(
     """
 
     if not directory.exists():
-        logger(
-            f'Build directory "{str(directory.resolve())}" does not exist.', status=Status.WARNING
-        )
+        logger.warning(f'Build directory "{str(directory.resolve())}" does not exist.')
         messagebox.showerror(
             "Build Error",
             f'Build directory "{str(directory.resolve())}" does not exist. Save the project to a valid location and try again.',

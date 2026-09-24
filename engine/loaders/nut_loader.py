@@ -13,13 +13,13 @@ from functools import cache
 from typing import Final, Any
 from pathlib import Path
 
-from ..logger import logger, Status
+from .. import logger
 from . import _ENGINE_DIR
 
 NUT_DIR: Final[Path] = _ENGINE_DIR / "nut"
 
 if not NUT_DIR.exists() or not NUT_DIR.is_dir():
-    logger("Could not find engine/nut/ directory.", status=Status.CRITICAL)
+    logger.critical("Could not find engine/nut/ directory.")
     sys.exit(1)
 
 

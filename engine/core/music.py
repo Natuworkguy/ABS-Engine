@@ -11,7 +11,7 @@ import pygame
 
 from typing import Optional
 
-from ..logger import logger, Status as LoggerStatus
+from .. import logger
 
 
 class Music:
@@ -44,7 +44,7 @@ class Music:
                 pygame.mixer.init()
         except pygame.error as e:
             self.available = False
-            logger(f"No audio device available, music is off: {e}", status=LoggerStatus.WARNING)
+            logger.warning(f"No audio device available, music is off: {e}")
 
     def play(self, track: str, *, loops: int = -1, fade_ms: int = 0) -> None:
         """
@@ -62,7 +62,7 @@ class Music:
         try:
             pygame.mixer.music.load(os.path.join(self.base_path, track))
         except (pygame.error, FileNotFoundError) as e:
-            logger(f'Could not load music "{track}": {e}', status=LoggerStatus.WARNING)
+            logger.warning(f'Could not load music "{track}": {e}')
             return
 
         self.track = track

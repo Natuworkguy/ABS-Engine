@@ -5,12 +5,11 @@
 ABS Engine entry module.
 """
 
-from .logger import Status, logger
+from . import logger
 
 package = __package__ or "engine"
 
-logger(
+logger.critical(
     f"The {package} module cannot be run directly to launch the GUI. "
-    f"You might be trying to run {package}.gui.",
-    status=Status.CRITICAL,
+    f"You might be trying to run {package}.gui."
 )

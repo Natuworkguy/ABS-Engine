@@ -3,67 +3,95 @@
 
 """
 Logging utilities for the engine.
+
+Import the module and call the function for the level you need:
+
+    from engine import logger
+
+    logger.info("Initialized game")
+    logger.warning("Save file was not found")
+    logger.critical("Could not load icon image.")
 """
 
 import inspect
 import sys
+import time
 
-from enum import Enum
-from typing import Any
 from colorama import Fore, Style
 
+_LEVEL_WIDTH = len("CRITICAL")
 
-class Status(Enum):
+
+def _get_caller_module() -> str:
     """
-    Log severity levels used by the logger.
-    """
-
-    CRITICAL = "CRITICAL"
-    WARNING = "WARNING"
-    INFO = "INFO"
-
-
-def _get_caller_module() -> Any:
-    """
-    Get the name of the module of the function that called the logger.
+    Get the name of the first module outside of this one in the call stack.
 
     Returns:
-        Any: The name of the module
+        str: The name of the module, or "unknown" if it cannot be determined.
     """
     frame = inspect.currentframe()
 
     while frame:
         module_name = frame.f_globals.get("__name__")
 
-        if module_name and not module_name.endswith("logger"):
+        if isinstance(module_name, str) and module_name != __name__:
             return module_name
 
         frame = frame.f_back
 
-    return "Unknown"
+    return "unknown"
 
 
-def logger(message: str, *, status: Status = Status.INFO) -> None:
+def _log(level: str, color: str, message: str) -> None:
     """
-    Log a message to the console
+    Write a formatted log line to the console.
+
+    Args:
+        level (str): Level name shown in the log line.
+        color (str): Color of the level name when writing to a terminal.
+        message (str): Message to log.
+    """
+
+    if sys.stdout is None:
+        return
+
+    timestamp = time.strftime("%H:%M:%S")
+    level = level.ljust(_LEVEL_WIDTH)
+    source = _get_caller_module()
+
+    if sys.stdout.isatty():
+        timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
+        level = f"{color}{level}{Style.RESET_ALL}"
+        source = f"{Style.DIM}{source}{Style.RESET_ALL}"
+
+    print(f"{timestamp} {level} {source}: {message}")
+
+
+def info(message: str) -> None:
+    """
+    Log a normal message.
 
     Args:
         message (str): Message to log.
-        status (Status): Log severity level. Defaults to Status.INFO.
     """
+    _log("INFO", Fore.CYAN, message)
 
-    source = _get_caller_module().upper()
-    is_tty: bool = sys.stdout is not None and sys.stdout.isatty()
 
-    if is_tty:
-        if status == Status.CRITICAL:
-            print(Fore.RED, end="")
-        elif status == Status.WARNING:
-            print(Fore.YELLOW, end="")
+def warning(message: str) -> None:
+    """
+    Log a problem that can be recovered from.
 
-    print(f"({status.value}) {source}: {message}", end="")
+    Args:
+        message (str): Message to log.
+    """
+    _log("WARNING", Fore.YELLOW, message)
 
-    if is_tty:
-        print(Style.RESET_ALL, end="")
 
-    print()
+def critical(message: str) -> None:
+    """
+    Log an error that should be handled immediately.
+
+    Args:
+        message (str): Message to log.
+    """
+    _log("CRITICAL", Style.BRIGHT + Fore.RED, message)

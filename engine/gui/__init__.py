@@ -24,7 +24,7 @@ from ..saveload import (
     load_project as sl_load_project,
 )
 from ..core import Game as CoreGame, Entity
-from ..logger import logger, Status as LoggerStatus
+from .. import logger
 from ..build_tools import build
 from ..loaders.tcl_loader import tcl_source
 from .tooltip import Tooltip as _Tooltip
@@ -110,12 +110,9 @@ class Editor:
                     tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")),
                 )
             except TclError as e:
-                logger("Could not load icon image.", status=LoggerStatus.CRITICAL)
-                logger(
-                    "Try running with the -noicon flag if this persists.",
-                    status=LoggerStatus.CRITICAL,
-                )
-                logger(f"Error: {e}", status=LoggerStatus.CRITICAL)
+                logger.critical("Could not load icon image.")
+                logger.critical("Try running with the -noicon flag if this persists.")
+                logger.critical(f"Error: {e}")
                 sys.exit(1)
 
         self.root.resizable(False, False)
@@ -180,8 +177,8 @@ class Editor:
         try:
             tcl_source("theme.tcl", self.root)
         except TclError as e:
-            logger("Failed to load theme.", status=LoggerStatus.WARNING)
-            logger(f"Error: {e}", status=LoggerStatus.WARNING)
+            logger.warning("Failed to load theme.")
+            logger.warning(f"Error: {e}")
 
     def build_game(self) -> None:
         do_build = messagebox.askyesno(
@@ -192,7 +189,7 @@ class Editor:
         if not do_build:
             return
 
-        logger("Build Tools: Starting build")
+        logger.info("Build Tools: Starting build")
 
         build_handle = build(
             name=self.project_name_input.get(),
@@ -295,10 +292,10 @@ class Editor:
             progress_popup.destroy()
 
             if process.exitcode == 0:
-                logger("Build Tools: Build completed")
+                logger.info("Build Tools: Build completed")
                 messagebox.showinfo("Build Tools", "The build has been completed.")
             else:
-                logger("Build Tools: Build failed", status=LoggerStatus.WARNING)
+                logger.warning("Build Tools: Build failed")
                 messagebox.showerror(
                     "Build Tools",
                     "The build failed. Check the console/log output for details.",

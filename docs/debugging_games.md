@@ -14,24 +14,24 @@ This keeps game messages formatted the same way as engine messages and
 includes the script module that emitted the log.
 
 ```python
+from engine import logger
 from engine.core import Entity
-from engine.logger import Status, logger
 
 
 def init(entity: Entity) -> None:
-    logger("Player script initialized")
+    logger.info("Player script initialized")
     ...
-    logger("Save file was not found", status=Status.WARNING)
+    logger.warning("Save file was not found")
 ```
 
-Use `Status.INFO` for normal messages, `Status.WARNING` for problems that the
-game can recover from, and `Status.CRITICAL` for errors that should be handled
+Use `logger.info()` for normal messages, `logger.warning()` for problems that the
+game can recover from, and `logger.critical()` for errors that should be handled
 immediately.
 
-Logs triggered by scripts will show as from a name that starts with `ESF-` (Entity Script File) followed by a UUID:
+Logs triggered by scripts will show as from a name that starts with `esf-` (Entity Script File) followed by a UUID:
 
 ```text
-(INFO) ESF-ABCDEFGH-IJKL-MNOP-QRST-UVWXYZ123456: Log content
+14:02:33 INFO     esf-0b7c6f0e-5d1a-4c3e-9f2b-7a8d4e6c1b23: Log content
 ```
 
 ## Understanding Engine Logs
@@ -39,31 +39,36 @@ Logs triggered by scripts will show as from a name that starts with `ESF-` (Enti
 Let's break down this log message:
 
 ```text
-(INFO) ENGINE.CORE: Initialized game
+14:02:31 INFO     engine.core: Initialized game
 ```
 
 Here are the main parts of the message:
 
 ```text
-(INFO) ENGINE.CORE: Initialized game
-   |          |            |
-   |          |______      |_______
-   |          |Source|     |Message|
-   |____
-   |Type|
+14:02:31 INFO     engine.core: Initialized game
+   |      |           |             |
+   |      |           |             |_______
+   |      |           |______       |Message|
+   |      |____       |Source|
+   |____  |Type|
+   |Time|
 ```
 
+**Time**: When the message was logged (local time, `HH:MM:SS`)
 **Type**: The severity of the message (can be "INFO", "WARNING", or "CRITICAL")
 **Source**: Shows which module the message originated from. In this example, the message came from `engine/core/__init__.py`.
 **Message**: The message being printed
 
+When the console supports colors, the type is shown in cyan (INFO), yellow (WARNING), or red (CRITICAL), and the time and source are dimmed.
+
 Example of a critical error message:
 
 ```text
-(CRITICAL) ENGINE.GUI: Could not load icon image.
-   |              |           |
-   |              |______     |_______
-   |              |Source|    |Message|
-   |____
-   |Type|
+14:02:32 CRITICAL engine.gui: Could not load icon image.
+   |        |         |             |
+   |        |         |             |_______
+   |        |         |______       |Message|
+   |        |____     |Source|
+   |____    |Type|
+   |Time|
 ```
