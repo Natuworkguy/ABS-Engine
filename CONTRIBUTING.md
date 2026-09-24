@@ -198,6 +198,12 @@ from [cppcheck](https://cppcheck.sourceforge.io/#download) (e.g.
 cppcheck --project=.cppcheck --enable=warning,style,performance,portability --error-exitcode=1
 ```
 
+### ShellCheck
+
+```bash
+shellcheck *.sh
+```
+
 ### Typos
 
 Install [crate-ci/typos](https://github.com/crate-ci/typos#install) (e.g.
