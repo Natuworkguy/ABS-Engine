@@ -201,7 +201,7 @@ cppcheck --project=.cppcheck --enable=warning,style,performance,portability --er
 ### ShellCheck
 
 ```bash
-shellcheck *.sh
+shellcheck $(git ls-files '*.sh')
 ```
 
 ### Typos
