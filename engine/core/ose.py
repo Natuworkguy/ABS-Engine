@@ -14,8 +14,8 @@ from typing import Any, Optional, Callable
 def _script_defines(scriptobj: EntityScriptType, name: str) -> bool:
     """
     Check whether scriptobj itself defines ``name``, rather than inheriting
-    it from :class:`~engine.core.Entity`. Since script classes are commonly
-    subclasses of :class:`~engine.core.Entity` (for typing convenience), a
+    it from :class:`engine.core.__init__.Entity`. Since script classes are commonly
+    subclasses of :class:`engine.core.__init__.Entity` (for typing convenience), a
     plain hasattr() check would also match its own init/update/event,
     causing infinite recursion when they are dispatched.
 
@@ -39,7 +39,7 @@ class ObjectScriptEntity(Entity):
 
     def __new__(cls, *args: Any, scriptobj: EntityScriptType, **kwargs: Any) -> Any:
         """
-        Create an :class:`~engine.core.Entity` configured to dispatch lifecycle
+        Create an :class:`engine.core.__init__.Entity` configured to dispatch lifecycle
         calls to ``scriptobj``.
 
         Args:
@@ -51,7 +51,7 @@ class ObjectScriptEntity(Entity):
                 Entity.
 
         Returns:
-            Any: :class:`~engine.core.Entity` instance with object-script
+            Any: :class:`engine.core.__init__.Entity` instance with object-script
                 dispatch metadata attached.
         """
 

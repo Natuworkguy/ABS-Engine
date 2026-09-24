@@ -12,14 +12,14 @@ from typing import Optional, Union
 
 class EntityImage:
     """
-    Manage a pygame image surface for an :class:`~engine.core.Entity`.
+    Manage a pygame image surface for an :class:`engine.core.__init__.Entity`.
     """
 
     surface: Optional[pygame.Surface]
 
     def __init__(self, image_path: str) -> None:
         """
-        Initialize the :class:`~engine.core.image.EntityImage` by loading the
+        Initialize the :class:`engine.core.image.EntityImage` by loading the
         image at ``image_path``.
 
         Args:

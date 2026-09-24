@@ -19,9 +19,9 @@ nut_source("anim.nut")
 
 class EntityAnim:
     """
-    Manage an animated image for an :class:`~engine.core.Entity`.
+    Manage an animated image for an :class:`engine.core.__init__.Entity`.
 
-    Stands in for :class:`~engine.core.image.EntityImage`
+    Stands in for :class:`engine.core.image.EntityImage`
     when an entity should show a moving image (GIF or WebP)
     instead of a still one. It offers the same three methods, so an
     entity holding one needs no special handling, and frames advance off the

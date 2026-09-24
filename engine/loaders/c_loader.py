@@ -136,7 +136,7 @@ def c_source(source_name: str) -> CModule:
 
     The file is compiled every time a process first asks for it, and the result
     is held, so later calls return the same already built module. Compiling
-    needs a C compiler installed, and raises :attr:`~engine.loaders.c_loader.CompilerNotFoundError`
+    needs a C compiler installed, and raises :class:`engine.loaders.c_loader.CompilerNotFoundError`
     when there is none.
 
     Args:
