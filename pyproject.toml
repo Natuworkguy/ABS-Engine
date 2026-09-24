@@ -28,7 +28,7 @@ file = ["requirements.txt"]
 dev = { file = ["requirements-dev.txt"] }
 
 [tool.setuptools.package-data]
-abs_engine = ["py.typed"]
+abs_engine = ["py.typed", "tcl/*.tcl", "nut/*.nut", "c/*.c", "c/*.h"]
 
 [tool.mypy]
 
