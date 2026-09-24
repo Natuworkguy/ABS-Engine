@@ -10,6 +10,10 @@
     "nwgh.bandit",
     "kennethlove.interrogate",
     "DavidAnson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
+    "tamasfe.even-better-toml",
+    "ms-vscode.cpptools",
+    "timonwong.shellcheck",
 
     "marcinbar.vscode-squirrel",
     "rashwell.tcl",
