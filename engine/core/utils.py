@@ -6,13 +6,21 @@ Utility functions for the engine.
 """
 
 from typing import TYPE_CHECKING
+from functools import partial
 
+from ..logger import logger, Status as LoggerStatus
 from ..loaders.c_loader import c_source
+from ..loaders.nut_loader import nut_source, nut_call_function
 
 if TYPE_CHECKING:
     from . import Game
 
-_clamp = c_source("mathutil.c").clamp
+try:
+    _clamp = c_source("mathutil.c").clamp
+except Exception as e:
+    logger(f'{e.__class__.__name__} when loading mathutil.c: "{e!s}"', status=LoggerStatus.WARNING)
+    nut_source("mathutil.nut")
+    _clamp = partial(nut_call_function, "clamp")
 
 
 def get_center(game: "Game") -> tuple[float, float]:
