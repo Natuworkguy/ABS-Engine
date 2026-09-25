@@ -19,7 +19,7 @@ from . import _ENGINE_DIR
 NUT_DIR: Final[Path] = _ENGINE_DIR / "nut"
 
 if not NUT_DIR.exists() or not NUT_DIR.is_dir():
-    logger.critical("Could not find engine/nut/ directory.")
+    logger.error("Could not find engine/nut/ directory.")
     sys.exit(1)
 
 
