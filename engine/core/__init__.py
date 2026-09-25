@@ -14,6 +14,7 @@ import sys
 import uuid
 import os
 import colorama
+import faulthandler
 
 from types import ModuleType
 from typing import Optional, Any, Union
@@ -31,6 +32,8 @@ print(
     f"ABS Engine v{version} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
     "\n"
 )
+
+faulthandler.enable()
 
 
 class Entity:
