@@ -13,6 +13,8 @@ Import the module and call the function for the level you need:
     logger.critical("Could not load icon image.")
 """
 
+from typing import TextIO, Optional
+
 import inspect
 import sys
 import time
@@ -42,7 +44,7 @@ def _get_caller_module() -> str:
     return "unknown"
 
 
-def _log(level: str, color: str, message: str) -> None:
+def _log(level: str, color: str, message: str, file: Optional[TextIO]) -> None:
     """
     Write a formatted log line to the console.
 
@@ -52,46 +54,51 @@ def _log(level: str, color: str, message: str) -> None:
         message (str): Message to log.
     """
 
-    if sys.stdout is None:
+    if file is None:
         return
 
     timestamp = time.strftime("%H:%M:%S")
     level = level.ljust(_LONGEST_LEVEL_WIDTH)
     source = _get_caller_module()
 
-    if sys.stdout.isatty():
+    if file.isatty():
         timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
         level = f"{color}{level}{Style.RESET_ALL}"
         source = f"{Style.DIM}{source}{Style.RESET_ALL}"
 
-    print(f"{timestamp} {level} {source}: {message}")
+    print(f"{timestamp} {level} {source}: {message}", file=file)
 
 
-def info(message: str) -> None:
+def info(message: str, file: Optional[TextIO] = None) -> None:
     """
     Log a normal message.
 
     Args:
         message (str): Message to log.
     """
-    _log("INFO", Fore.CYAN, message)
+    _log("INFO", Fore.CYAN, message, file if file is not None else sys.stdout)
 
 
-def warning(message: str) -> None:
+def warning(message: str, file: Optional[TextIO] = None) -> None:
     """
     Log a problem that can be recovered from.
 
     Args:
         message (str): Message to log.
     """
-    _log("WARNING", Fore.YELLOW, message)
+    _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr)
 
 
-def critical(message: str) -> None:
+def critical(message: str, file: Optional[TextIO] = None) -> None:
     """
     Log an error that should be handled immediately.
 
     Args:
         message (str): Message to log.
     """
-    _log("CRITICAL", Style.BRIGHT + Fore.RED, message)
+    _log(
+        "CRITICAL",
+        Style.BRIGHT + Fore.RED,
+        message,
+        file if file is not None else sys.stderr,
+    )
