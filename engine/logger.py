@@ -21,7 +21,7 @@ import time
 
 from colorama import Fore, Style
 
-_LONGEST_LEVEL_WIDTH = 8
+_LONGEST_LEVEL_WIDTH = 7
 
 
 def _get_caller_module() -> str:

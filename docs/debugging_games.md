@@ -31,7 +31,7 @@ immediately.
 Logs triggered by scripts will show as from a name that starts with `esf-` (Entity Script File) followed by a UUID:
 
 ```text
-14:02:33 INFO     esf-0b7c6f0e-5d1a-4c3e-9f2b-7a8d4e6c1b23: Log content
+14:02:33 INFO    esf-0b7c6f0e-5d1a-4c3e-9f2b-7a8d4e6c1b23: Log content
 ```
 
 ## Understanding Engine Logs
@@ -39,17 +39,17 @@ Logs triggered by scripts will show as from a name that starts with `esf-` (Enti
 Let's break down this log message:
 
 ```text
-14:02:31 INFO     engine.core: Initialized game
+14:02:31 INFO    engine.core: Initialized game
 ```
 
 Here are the main parts of the message:
 
 ```text
-14:02:31 INFO     engine.core: Initialized game
-   |      |           |             |
-   |      |           |             |_______
-   |      |           |______       |Message|
-   |      |____       |Source|
+14:02:31 INFO    engine.core: Initialized game
+   |      |          |             |
+   |      |          |             |_______
+   |      |          |______       |Message|
+   |      |____      |Source|
    |____  |Type|
    |Time|
 ```
@@ -64,11 +64,11 @@ When the console supports colors, the type is shown in cyan (INFO), yellow (WARN
 Example of an error message:
 
 ```text
-14:02:32 ERROR    engine.gui: Could not load icon image.
-   |        |         |             |
-   |        |         |             |_______
-   |        |         |______       |Message|
-   |        |____     |Source|
+14:02:32 ERROR   engine.gui: Could not load icon image.
+   |        |        |             |
+   |        |        |             |_______
+   |        |        |______       |Message|
+   |        |____    |Source|
    |____    |Type|
    |Time|
 ```
