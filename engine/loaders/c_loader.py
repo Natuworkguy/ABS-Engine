@@ -31,7 +31,7 @@ INSTALL_HINT: Final[str] = (
 )
 
 if not C_DIR.exists() or not C_DIR.is_dir():
-    logger.critical("Could not find engine/c/ directory.")
+    logger.error("Could not find engine/c/ directory.")
     sys.exit(1)
 
 

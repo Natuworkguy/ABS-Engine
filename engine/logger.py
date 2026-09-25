@@ -10,7 +10,7 @@ Import the module and call the function for the level you need:
 
     logger.info("Initialized game")
     logger.warning("Save file was not found")
-    logger.critical("Could not load icon image.")
+    logger.error("Could not load icon image.")
 """
 
 from typing import TextIO, Optional
@@ -89,7 +89,7 @@ def warning(message: str, file: Optional[TextIO] = None) -> None:
     _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr)
 
 
-def critical(message: str, file: Optional[TextIO] = None) -> None:
+def error(message: str, file: Optional[TextIO] = None) -> None:
     """
     Log an error that should be handled immediately.
 
@@ -97,7 +97,7 @@ def critical(message: str, file: Optional[TextIO] = None) -> None:
         message (str): Message to log.
     """
     _log(
-        "CRITICAL",
+        "ERROR",
         Style.BRIGHT + Fore.RED,
         message,
         file if file is not None else sys.stderr,

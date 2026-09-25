@@ -32,7 +32,7 @@ class ABSFatalError(RuntimeError):
 
         super().__init__(message)
 
-        logger.critical(f"ABS Engine hit a fatal error: {message}")
+        logger.error(f"ABS Engine hit a fatal error: {message}")
 
         frame: FrameType = sys._getframe(1)
 

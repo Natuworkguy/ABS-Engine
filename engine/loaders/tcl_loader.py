@@ -18,7 +18,7 @@ from . import _ENGINE_DIR
 TCL_DIR: Final[Path] = _ENGINE_DIR / "tcl"
 
 if not TCL_DIR.exists() or not TCL_DIR.is_dir():
-    logger.critical("Could not find engine/tcl/ directory.")
+    logger.error("Could not find engine/tcl/ directory.")
     sys.exit(1)
 
 

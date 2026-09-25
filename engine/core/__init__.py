@@ -117,11 +117,11 @@ class Entity:
                     try:
                         spec.loader.exec_module(self.scriptfile_module)
                     except FileNotFoundError:
-                        logger.critical(
+                        logger.error(
                             f'Script file "{scriptfile}" not found. Please ensure the file exists and try again.'
                         )
                     except ImportError as e:
-                        logger.critical(f"Error when loading script: {e}")
+                        logger.error(f"Error when loading script: {e}")
 
             if self.scriptfile_module is not None:
                 if self.scriptfile is not None:

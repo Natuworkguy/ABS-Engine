@@ -110,9 +110,9 @@ class Editor:
                     tk.PhotoImage(file=os.path.join(ENGINE_DATA_PATH, "images", "abs_icon.png")),
                 )
             except TclError as e:
-                logger.critical("Could not load icon image.")
-                logger.critical("Try running with the -noicon flag if this persists.")
-                logger.critical(f"Error: {e}")
+                logger.error("Could not load icon image.")
+                logger.error("Try running with the -noicon flag if this persists.")
+                logger.error(f"Error: {e}")
                 sys.exit(1)
 
         self.root.resizable(False, False)
