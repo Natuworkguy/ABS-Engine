@@ -19,7 +19,7 @@ import time
 
 from colorama import Fore, Style
 
-_LEVEL_WIDTH = len("CRITICAL")
+_LONGEST_LEVEL_WIDTH = 8
 
 
 def _get_caller_module() -> str:
@@ -56,7 +56,7 @@ def _log(level: str, color: str, message: str) -> None:
         return
 
     timestamp = time.strftime("%H:%M:%S")
-    level = level.ljust(_LEVEL_WIDTH)
+    level = level.ljust(_LONGEST_LEVEL_WIDTH)
     source = _get_caller_module()
 
     if sys.stdout.isatty():
