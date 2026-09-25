@@ -52,6 +52,7 @@ def _log(level: str, color: str, message: str, file: Optional[TextIO]) -> None:
         level (str): Level name shown in the log line.
         color (str): Color of the level name when writing to a terminal.
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Nothing is logged if None.
     """
 
     if file is None:
@@ -75,6 +76,7 @@ def info(message: str, file: Optional[TextIO] = None) -> None:
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stdout.
     """
     _log("INFO", Fore.CYAN, message, file if file is not None else sys.stdout)
 
@@ -85,6 +87,7 @@ def warning(message: str, file: Optional[TextIO] = None) -> None:
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stderr.
     """
     _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr)
 
@@ -95,6 +98,7 @@ def error(message: str, file: Optional[TextIO] = None) -> None:
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stderr.
     """
     _log(
         "ERROR",
