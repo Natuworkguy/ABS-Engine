@@ -6,9 +6,7 @@ Core engine systems and base components.
 """
 
 from pathlib import Path
-
 from importlib.machinery import ModuleSpec
-from types import ModuleType
 
 import pygame
 import importlib.util
@@ -17,6 +15,7 @@ import uuid
 import os
 import colorama
 
+from types import ModuleType
 from typing import Optional, Any, Union
 
 from .. import logger
