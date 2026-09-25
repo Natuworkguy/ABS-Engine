@@ -19,6 +19,7 @@ try:
     _clamp = c_source("mathutil.c").clamp
 except Exception as e:
     logger.warning(f'{e.__class__.__name__} when loading mathutil.c: "{e!s}"')
+    logger.warning("Falling back to mathutil.nut")
     nut_source("mathutil.nut")
     _clamp = partial(nut_call_function, "clamp")
 

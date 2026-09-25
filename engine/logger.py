@@ -55,6 +55,7 @@ def _log(
         level (str): Level name shown in the log line.
         color (str): Color of the level name when writing to a terminal.
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Nothing is logged if None.
         show_source (bool): Weather to show the package that the message came from.
     """
 
@@ -88,6 +89,7 @@ def info(message: str, file: Optional[TextIO] = None, show_source: bool = True) 
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stdout.
         show_source (bool): Weather to show the package that the message came from.
     """
     _log("INFO", Fore.CYAN, message, file if file is not None else sys.stdout, show_source)
@@ -99,6 +101,7 @@ def warning(message: str, file: Optional[TextIO] = None, show_source: bool = Tru
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stderr.
         show_source (bool): Weather to show the package that the message came from.
     """
     _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr, show_source)
@@ -110,6 +113,7 @@ def error(message: str, file: Optional[TextIO] = None, show_source: bool = True)
 
     Args:
         message (str): Message to log.
+        file (Optional[TextIO]): Stream to write to. Defaults to sys.stderr.
         show_source (bool): Weather to show the package that the message came from.
     """
     _log(

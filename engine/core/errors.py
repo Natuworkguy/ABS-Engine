@@ -36,9 +36,11 @@ class ABSFatalError(RuntimeError):
 
         frame: FrameType = sys._getframe(1)
 
-        print(f"\nIn {frame.f_globals.get('__file__') or '<Unknown>'}:", file=sys.stderr)
+        print(f"\nIn {frame.f_globals.get('__file__') or '<Unknown>'} (dis):", file=sys.stderr)
         dis.disassemble(frame.f_code, frame.f_lasti, file=sys.stderr)
         print(file=sys.stderr)
 
-        faulthandler.enable()
+        if not faulthandler.is_enabled():
+            faulthandler.enable()
+
         os.abort()

@@ -6,9 +6,7 @@ Core engine systems and base components.
 """
 
 from pathlib import Path
-
 from importlib.machinery import ModuleSpec
-from types import ModuleType
 
 import pygame
 import importlib.util
@@ -16,7 +14,9 @@ import sys
 import uuid
 import os
 import colorama
+import faulthandler
 
+from types import ModuleType
 from typing import Optional, Any, Union
 
 from .. import logger
@@ -32,6 +32,8 @@ print(
     f"ABS Engine v{version} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}, pygame {pygame.ver})"
     "\n"
 )
+
+faulthandler.enable()
 
 
 class Entity:
