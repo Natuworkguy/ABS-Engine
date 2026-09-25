@@ -80,6 +80,7 @@ run.py
 build/
 dist/
 *.spec
+__pycache__/
             """.strip()
             )
 
