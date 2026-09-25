@@ -13,13 +13,14 @@ Import the module and call the function for the level you need:
     logger.error("Could not load icon image.")
 """
 
-from typing import TextIO, Optional
+from typing import TextIO, Optional, Union
 
 import inspect
 import sys
 import time
 
 from colorama import Fore, Style
+from colorama.ansi import code_to_chars
 
 _LONGEST_LEVEL_WIDTH = 7
 
@@ -44,7 +45,9 @@ def _get_caller_module() -> str:
     return "unknown"
 
 
-def _log(level: str, color: str, message: str, file: Optional[TextIO]) -> None:
+def _log(
+    level: str, color: Union[str, int], message: str, file: Optional[TextIO], show_source: bool
+) -> None:
     """
     Write a formatted log line to the console.
 
@@ -52,6 +55,7 @@ def _log(level: str, color: str, message: str, file: Optional[TextIO]) -> None:
         level (str): Level name shown in the log line.
         color (str): Color of the level name when writing to a terminal.
         message (str): Message to log.
+        show_source (bool): Weather to show the package that the message came from.
     """
 
     if file is None:
@@ -59,46 +63,59 @@ def _log(level: str, color: str, message: str, file: Optional[TextIO]) -> None:
 
     timestamp = time.strftime("%H:%M:%S")
     level = level.ljust(_LONGEST_LEVEL_WIDTH)
-    source = _get_caller_module()
+
+    if isinstance(color, int):
+        color = code_to_chars(color)
+
+    source: Optional[str] = None
+    if show_source:
+        source = _get_caller_module()
 
     if file.isatty():
         timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
         level = f"{color}{level}{Style.RESET_ALL}"
         source = f"{Style.DIM}{source}{Style.RESET_ALL}"
 
-    print(f"{timestamp} {level} {source}: {message}", file=file)
+    print(
+        f"{timestamp} {level}{' ' if source is not None else ''}{source if source is not None else ''}: {message}",
+        file=file,
+    )
 
 
-def info(message: str, file: Optional[TextIO] = None) -> None:
+def info(message: str, file: Optional[TextIO] = None, show_source: bool = True) -> None:
     """
     Log a normal message.
 
     Args:
         message (str): Message to log.
+        show_source (bool): Weather to show the package that the message came from.
     """
-    _log("INFO", Fore.CYAN, message, file if file is not None else sys.stdout)
+    _log("INFO", Fore.CYAN, message, file if file is not None else sys.stdout, show_source)
 
 
-def warning(message: str, file: Optional[TextIO] = None) -> None:
+def warning(message: str, file: Optional[TextIO] = None, show_source: bool = True) -> None:
     """
     Log a problem that can be recovered from.
 
     Args:
         message (str): Message to log.
+        show_source (bool): Weather to show the package that the message came from.
     """
-    _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr)
+    _log("WARNING", Fore.YELLOW, message, file if file is not None else sys.stderr, show_source)
 
 
-def error(message: str, file: Optional[TextIO] = None) -> None:
+def error(message: str, file: Optional[TextIO] = None, show_source: bool = True) -> None:
     """
     Log an error that should be handled immediately.
 
     Args:
         message (str): Message to log.
+        show_source (bool): Weather to show the package that the message came from.
     """
     _log(
         "ERROR",
         Style.BRIGHT + Fore.RED,
         message,
         file if file is not None else sys.stderr,
+        show_source,
     )
