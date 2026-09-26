@@ -466,6 +466,14 @@ class Game:
         self.IS_EDITOR: bool = IS_EDITOR
         self.gamedata: dict = {}
 
+        os.environ.setdefault("SDL_VIDEO_CENTERED", "1")
+
+        if not IS_EDITOR:
+            os.environ.setdefault("SDL_APP_NAME", title)
+            os.environ["SDL_VIDEO_X11_WMCLASS"] = title
+            if sys.stdout is not None and sys.stdout.isatty():
+                print(colorama.ansi.set_title(title), end="")
+
         pygame.init()
         self.GP_BASE_PATH: str = GP_BASE_PATH
         self.music: Music = Music(GP_BASE_PATH)
@@ -477,11 +485,6 @@ class Game:
 
         self.screen: pygame.Surface = pygame.display.set_mode(self.wsize, display_flags)
         pygame.display.set_caption(title)
-
-        if not IS_EDITOR:
-            os.environ["SDL_APP_NAME"] = title
-            if sys.stdout is not None and sys.stdout.isatty():
-                print(colorama.ansi.set_title(title), end="")
 
         if icon_path is not None:
             self.set_icon(icon_path)
