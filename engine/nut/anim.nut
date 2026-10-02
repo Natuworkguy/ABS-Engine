@@ -1,6 +1,8 @@
 // Copyright (C) Natuworkguy
 // See the LICENSE file for GPLv3
 
+// delays: list[float]
+// count: int
 function frame_starts(delays, count) {
     local starts = []
     local total = 0.0
