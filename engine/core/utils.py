@@ -45,7 +45,7 @@ def clamp(value: float, low: float, high: float) -> float:
     Useful for holding an entity on screen, or keeping a color channel
     between 0 and 255.
 
-    *Implemented in C*
+    *Implemented in C, falls back to Squirrel*
 
     Args:
         value (float): The number to limit.
