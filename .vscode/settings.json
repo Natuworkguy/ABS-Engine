@@ -23,6 +23,9 @@
 
   "python.analysis.typeCheckingMode": "basic",
 
+  "shellcheck.enable": true,
+  "shellcheck.run": "onType",
+
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "files.trimTrailingWhitespace": false
