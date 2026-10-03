@@ -4,6 +4,8 @@
 // value: float
 // low: float
 // high: float
+//
+// returns: float
 function clamp(value, low, high) {
     if (value < low) {
         return low

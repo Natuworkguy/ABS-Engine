@@ -3,6 +3,8 @@
 
 // delays: list[float]
 // count: int
+//
+// returns: list[float]
 function frame_starts(delays, count) {
     local starts = []
     local total = 0.0
