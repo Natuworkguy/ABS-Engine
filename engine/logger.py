@@ -22,8 +22,6 @@ import time
 from colorama import Fore, Style
 from colorama.ansi import code_to_chars
 
-_LONGEST_LEVEL_WIDTH = 7
-
 
 def _get_caller_module() -> str:
     """
@@ -63,7 +61,6 @@ def _log(
         return
 
     timestamp = time.strftime("%H:%M:%S")
-    level = level.ljust(_LONGEST_LEVEL_WIDTH)
 
     if isinstance(color, int):
         color = code_to_chars(color)
@@ -75,10 +72,10 @@ def _log(
     if file.isatty():
         timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
         level = f"{color}{level}{Style.RESET_ALL}"
-        source = f"{Style.DIM}{source if source is not None else ''}{Style.RESET_ALL}"
+        source_colored = f"{Style.DIM}{source if source is not None else ''}{Style.RESET_ALL}"
 
     print(
-        f"{timestamp} {level}{' ' if source is not None else ''}: {message}",
+        f"{timestamp} {level}{' ' + source_colored if source is not None else ''}: {message}",
         file=file,
     )
 
