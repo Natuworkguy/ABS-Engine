@@ -8,7 +8,6 @@ Contributions of all types are welcome, including:
 - Performance improvements
 - Documentation updates
 - Refactoring
-- Testing improvements
 - New features
 - Tooling and CI enhancements
 
@@ -254,7 +253,6 @@ When submitting a pull request:
 - Write clear commit messages
 - Ensure CI passes
 - Update documentation when necessary
-- Add or update tests if applicable
 
 For UI-related changes, screenshots are encouraged.
 
