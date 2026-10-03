@@ -94,11 +94,14 @@ class Entity:
         self.image: Optional[EntityMediaType] = None
 
         if image is not None:
+            image_path: Path = Path(image)
             try:
-                if image.lower().endswith((".png", ".jpg", ".jpeg", ".bmp")):
+                if image_path.suffix in (".png", ".jpg", ".jpeg", ".bmp"):
                     self.image = EntityImage(image)
-                else:
+                elif image_path.suffix in (".gif", ".webp"):
                     self.image = EntityAnim(image)
+                else:
+                    logger.warning(f"Unable to determine Entity media type for {image_path.suffix}")
             except (pygame.error, FileNotFoundError) as e:
                 logger.warning(f"Failed to load image or animation '{image}': {str(e)}")
 
