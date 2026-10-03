@@ -75,10 +75,10 @@ def _log(
     if file.isatty():
         timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
         level = f"{color}{level}{Style.RESET_ALL}"
-        source = f"{Style.DIM}{source}{Style.RESET_ALL}"
+        source = f"{Style.DIM}{source if source is not None else ''}{Style.RESET_ALL}"
 
     print(
-        f"{timestamp} {level}{' ' if source is not None else ''}{source if source is not None else ''}: {message}",
+        f"{timestamp} {level}{' ' if source is not None else ''}: {message}",
         file=file,
     )
 
