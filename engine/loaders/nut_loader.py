@@ -23,6 +23,37 @@ if not NUT_DIR.exists() or not NUT_DIR.is_dir():
     sys.exit(1)
 
 
+def _nut_include(path: str) -> Any:
+    """
+    Squirrel's include(): run a script relative to the calling script
+
+    nut_source compiles each script under its own path, so the caller's
+    stack frame names its file. Code with no file (e.g. nut_eval) resolves
+    against engine/nut/.
+
+    Args:
+        path (str): script path, relative to the calling script's directory
+
+    Returns:
+        Any: Value the script returns, or None if it returns nothing.
+    """
+
+    caller = get_vm().get_roottable()["getstackinfos"](2)
+    caller_path = Path(caller["src"]) if caller is not None else None
+
+    if caller_path is not None and caller_path.is_file():
+        base = caller_path.parent
+    else:
+        base = NUT_DIR
+
+    script_path = base / path
+
+    return nut_source(script_path.name, dir=script_path.parent)
+
+
+BUILTINS: dict[str, Any] = {"include": _nut_include}
+
+
 @cache
 def get_vm() -> squirrel.StaticVM:
     """
@@ -35,7 +66,12 @@ def get_vm() -> squirrel.StaticVM:
         squirrel.StaticVM: The Squirrel VM.
     """
 
-    return squirrel.SQVM()
+    vm = squirrel.SQVM()
+
+    for name, func in BUILTINS.items():
+        vm.bindfunc(funcname=name, func=func)
+
+    return vm
 
 
 def nut_source(script_name: str, *, dir: Path = NUT_DIR) -> Any:
@@ -62,7 +98,11 @@ def nut_source(script_name: str, *, dir: Path = NUT_DIR) -> Any:
     if script_path.is_dir():
         raise IsADirectoryError(f"{script_path}: Invalid script path (Is a directory)")
 
-    return nut_eval(script_path.read_text(encoding="utf-8"))
+    script = get_vm().get_roottable()["compilestring"](
+        script_path.read_text(encoding="utf-8"), str(script_path.resolve())
+    )
+
+    return script()
 
 
 def nut_eval(nut: str) -> Any:

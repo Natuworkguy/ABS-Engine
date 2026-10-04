@@ -17,3 +17,5 @@ function clamp(value, low, high) {
 
     return value
 }
+
+return this
