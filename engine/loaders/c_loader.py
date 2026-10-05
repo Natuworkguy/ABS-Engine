@@ -92,7 +92,21 @@ class CModule:
         return f"<{self.__class__.__name__} of {self.source_name}>"
 
 
-def _build(module_name: str, source_path: Path, header_path: Path) -> None:
+def _module_name(source_path: Path) -> str:
+    """
+    Name of the extension module a C file compiles to
+
+    Args:
+        source_path (Path): C file in engine/c/
+
+    Returns:
+        str: Module name, e.g. _mathutil_cffi for mathutil.c
+    """
+
+    return f"_{source_path.stem}_cffi"
+
+
+def _build(module_name: str, source_path: Path, header_path: Path) -> Path:
     """
     Compile a C file into an extension module under engine/c/build/
 
@@ -100,6 +114,9 @@ def _build(module_name: str, source_path: Path, header_path: Path) -> None:
         module_name (str): Name to give the compiled module.
         source_path (Path): C file to compile.
         header_path (Path): Header declaring what the C file exposes.
+
+    Returns:
+        Path: The compiled extension module.
 
     Raises:
         CompilerNotFoundError: If the file would not build, which on a
@@ -117,12 +134,30 @@ def _build(module_name: str, source_path: Path, header_path: Path) -> None:
     )
 
     try:
-        ffibuilder.compile(tmpdir=str(BUILD_DIR))
+        return Path(ffibuilder.compile(tmpdir=str(BUILD_DIR)))
     except cffi.VerificationError as e:
         raise CompilerNotFoundError(
             f"Could not build {source_path.name}, which usually means there is no "
             f"C compiler installed.\n\n{INSTALL_HINT}\n\n{e}"
         ) from e
+
+
+def build_all() -> list[Path]:
+    """
+    Compile every C file in engine/c/, for shipping with a built game
+
+    Built games load these instead of compiling, so players need no C compiler.
+    Raises :class:`engine.loaders.c_loader.CompilerNotFoundError` when there is
+    no C compiler to build them with.
+
+    Returns:
+        list[Path]: The compiled extension modules, one per C file.
+    """
+
+    return [
+        _build(_module_name(source_path), source_path, source_path.with_suffix(".h"))
+        for source_path in sorted(C_DIR.glob("*.c"))
+    ]
 
 
 @cache
@@ -139,6 +174,9 @@ def c_source(source_name: str) -> CModule:
     needs a C compiler installed, and raises :class:`engine.loaders.c_loader.CompilerNotFoundError`
     when there is none.
 
+    A built game never compiles. It loads the module :func:`build_all` made when
+    the game was built.
+
     Args:
         source_name (str): file in engine/c/ to compile
 
@@ -150,7 +188,8 @@ def c_source(source_name: str) -> CModule:
         IsADirectoryError: If the path names a directory rather than a file.
         ModuleNotFoundError: If the compiled module cannot be imported, which
             usually means engine/c/build/ holds a module built by a different
-            Python than the one running now.
+            Python than the one running now, or, in a built game, that there
+            was no C compiler when the game was built.
     """
 
     source_path = C_DIR / source_name
@@ -166,9 +205,11 @@ def c_source(source_name: str) -> CModule:
     if not header_path.exists():
         raise FileNotFoundError(f"Could not find C header {header_path}.")
 
-    module_name = f"_{source_path.stem}_cffi"
+    module_name = _module_name(source_path)
+    frozen = getattr(sys, "frozen", False)
 
-    _build(module_name, source_path, header_path)
+    if not frozen:
+        _build(module_name, source_path, header_path)
 
     if str(BUILD_DIR) not in sys.path:
         sys.path.insert(0, str(BUILD_DIR))
@@ -176,6 +217,11 @@ def c_source(source_name: str) -> CModule:
     try:
         module = importlib.import_module(module_name)
     except ModuleNotFoundError as e:
+        if frozen:
+            raise ModuleNotFoundError(
+                f"{source_name} was not compiled when this game was built."
+            ) from e
+
         raise ModuleNotFoundError(
             f"Compiled {source_name}, but {module_name} could not be imported from "
             f"{BUILD_DIR}. Delete that directory to build it again."
