@@ -69,6 +69,8 @@ def _log(
     if show_source:
         source = _get_caller_module()
 
+    source_colored = source or ""
+
     if file.isatty():
         timestamp = f"{Style.DIM}{timestamp}{Style.RESET_ALL}"
         level = f"{color}{level}{Style.RESET_ALL}"
