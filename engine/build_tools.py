@@ -129,9 +129,16 @@ def _build_pyinstaller(
     sys.stderr = _QueueWriter(log_queue)
 
     from PyInstaller.__main__ import run as pyinstaller
+    from .loaders.c_loader import build_all, CompilerNotFoundError
 
     try:
         _remove_previous_build(directory / "dist" / name)
+
+        try:
+            c_modules = build_all()
+        except CompilerNotFoundError as e:
+            print(f"WARNING: {e!s}\n\nThe game will use the Squirrel fallbacks.")
+            c_modules = []
 
         pyi_args = [
             "--onedir",
@@ -148,7 +155,12 @@ def _build_pyinstaller(
             f"--add-data={directory / 'game.absp'!s}{os.pathsep}.",
             f"--add-data={directory / 'engine' / 'nut'}{os.pathsep}engine/nut/",
             f"--add-data={directory / 'engine' / 'tcl'}{os.pathsep}engine/tcl/",
+            f"--add-data={directory / 'engine' / 'c' / '*.c'}{os.pathsep}engine/c/",
+            f"--add-data={directory / 'engine' / 'c' / '*.h'}{os.pathsep}engine/c/",
         ]
+
+        for module in c_modules:
+            pyi_args.append(f"--add-binary={module!s}{os.pathsep}engine/c/build/")
 
         for path in autoadd:
             if (directory / path).exists():
