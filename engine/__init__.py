@@ -13,6 +13,6 @@ from .version import __version__
 colorama.just_fix_windows_console()
 os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
 
-__all__ = [
+__all__: list[str] = [
     "__version__"
 ]
