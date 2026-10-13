@@ -25,7 +25,7 @@ from .animation import EntityAnim
 from .music import Music
 from .errors import ABSFatalError
 from .utils import clamp
-from .types import RGBType, EntityMediaType
+from .types import RGBType, EntityMediaType, EntityScript
 from .. import __version__ as version
 
 print(
@@ -319,6 +319,28 @@ class Entity:
             raise ValueError("Invalid target for destruction") from e
 
         self.parent = None
+
+
+class Script(Entity, EntityScript):
+    """
+    Base class for script objects passed to ObjectScriptEntity.
+
+    This class exists for type checkers and editors. Subclassing it gives
+    script classes the Entity attributes and methods plus the EntityScript
+    hooks (init, update and event), so they type check without extra
+    annotations.
+
+    Inheriting from Script is optional. ObjectScriptEntity only dispatches to
+    hooks the subclass itself defines; the stubs inherited from Entity are
+    ignored, so leaving a hook out is safe.
+
+    Example:
+        class Player(Script):
+            def update(self, dt: float) -> None:
+                self.x += 100 * dt
+
+        entity = ObjectScriptEntity(scriptobj=Player)
+    """
 
 
 class Scene:
